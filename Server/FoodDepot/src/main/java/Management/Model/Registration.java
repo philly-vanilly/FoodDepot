@@ -1,6 +1,6 @@
 package Management.Model;
 
-public class Account {
+public class Registration {
 	
 	private String id = "asdas" ;
 	private String firstName;
@@ -10,7 +10,7 @@ public class Account {
 	private String userName;
 	private String password;
 	
-	public Account(String firstName, String lastName,String userName, String password){
+	public Registration(String firstName, String lastName,String userName, String password){
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
