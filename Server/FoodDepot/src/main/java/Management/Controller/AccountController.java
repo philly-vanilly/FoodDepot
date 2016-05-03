@@ -29,7 +29,7 @@ public class AccountController {
     @RequestMapping("/getAccount")
     public Registration greeting(@RequestParam(value="name", defaultValue="World") String name) {
     	
-    	
+   
     	return new Registration("max", "max@mustermann.de", "123", "Max", "Mustermann");
     }
     
@@ -57,8 +57,8 @@ public class AccountController {
     
     @RequestMapping("/login/getAccount")
     public User getAccount() {
-  
-        return accountService.findByEmail(this.getUserID());
+    	String id = this.getUserID();
+        return accountService.findByID(id);
     }
     
     private String getUserID() {

@@ -72,11 +72,14 @@ public class AcoountServiceImpl implements AccountService, UserDetailsService {
     
     public Management.Model.Login.User findByEmail(String email){
     	Criteria emailCrit = Criteria.where("email").is(email);
-    	System.out.println("Test");
     	Management.Model.Login.User user =  operations.findOne(new Query(emailCrit),Management.Model.Login.User.class, "users");
-    	System.out.println(user.getEmail());
     	return user;
-    	//TASK
+    }
+    
+    public Management.Model.Login.User findByID(String id){
+    	Criteria idCrit = Criteria.where("_id").is(id);
+    	Management.Model.Login.User user =  operations.findOne(new Query(idCrit),Management.Model.Login.User.class, "users");
+    	return user;
     }
 
 }
