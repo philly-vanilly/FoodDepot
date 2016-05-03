@@ -35,6 +35,7 @@ public class AcoountServiceImpl implements AccountService, UserDetailsService {
 		//operations.sav
 		return true;
 	}
+
 	
 	
 
@@ -69,7 +70,7 @@ public class AcoountServiceImpl implements AccountService, UserDetailsService {
         return new ArrayList<GrantedAuthority>(setAuths);
     }
     
-    private Management.Model.Login.User findByEmail(String email){
+    public Management.Model.Login.User findByEmail(String email){
     	Criteria emailCrit = Criteria.where("email").is(email);
     	System.out.println("Test");
     	Management.Model.Login.User user =  operations.findOne(new Query(emailCrit),Management.Model.Login.User.class, "users");

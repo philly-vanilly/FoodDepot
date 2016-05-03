@@ -1,6 +1,8 @@
 package Management.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,6 +54,20 @@ public class AccountController {
     public Account test2(@RequestParam(value="name", defaultValue="World") String name) {
         return new Account("Hans", "Franz","Hansi","123");
     }
+    
+    @RequestMapping("/login/getAccount")
+    public User getAccount() {
+  
+        return accountService.findByEmail(this.getUserID());
+    }
+    
+    private String getUserID() {
+		Authentication auth = SecurityContextHolder.getContext()
+				.getAuthentication();
+		return auth.getName();
+	}
+    
+    
 
     
     
