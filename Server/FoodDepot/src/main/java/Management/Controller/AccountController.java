@@ -3,8 +3,12 @@ package Management.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import Management.Model.Account;
@@ -12,6 +16,7 @@ import Management.Model.Message;
 import Management.Model.Login.Registration;
 import Management.Model.Login.User;
 import Management.Service.AccountService;
+import interactiveLecture.model.voting.Vote;
 
 @RestController
 public class AccountController {
@@ -33,20 +38,23 @@ public class AccountController {
     	return new Registration("max", "max@mustermann.de", "123", "Max", "Mustermann");
     }
     
-    @RequestMapping("/createAccount")
-    public Message createAccount() {
-    	Registration registration = new Registration("max", "max@mustermann.de", "123", "Max", "Mustermann");
-    	User user = User.createUser(
-    			registration.getUsername(),
-    			registration.getEmail(),
-				registration.getPassword(), 
-				registration.getFirstName(), 
-				registration.getLastName());
-    	
-    	
-    	accountService.createAccount(user);
-   
-    	return new Message(true, "The Users was created.");
+    @RequestMapping(value = "/createAccount", method = RequestMethod.POST)
+    public Message createAccount(Registration registration, BindingResult result) {
+    	//Registration registration = new Registration("max", "max@mustermann.de", "123", "Max", "Mustermann");
+    	Message message = new Message(false, "The User wasn't created");
+    	if (!result.hasErrors()) {
+	    	User user = User.createUser(
+	    			registration.getUsername(),
+	    			registration.getEmail(),
+					registration.getPassword(), 
+					registration.getFirstName(), 
+					registration.getLastName());
+	    	
+	    	
+	    	accountService.createAccount(user);
+	    	message = new Message(true, "The Users was created.");
+    	} 
+    	return message;
      
     }
     
