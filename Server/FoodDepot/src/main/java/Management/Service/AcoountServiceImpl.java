@@ -2,6 +2,7 @@ package Management.Service;
 
 import java.util.ArrayList;
 
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.mongodb.WriteResult;
 
 import Management.Model.Login.UserRole;
 
@@ -82,4 +85,23 @@ public class AcoountServiceImpl implements AccountService, UserDetailsService {
     	return user;
     }
 
+
+
+
+	@Override
+	public boolean changeUserPassword(String email, String oldPassword, String newPassword) {
+		Management.Model.Login.User user = this.findByEmail(email);
+		
+		if(oldPassword.equals(user.getPassword())){
+			user.setPassword(newPassword);
+			Query query = new Query(Criteria.where("id").is(user.getId()));
+			WriteResult result = this.operations.updateFirst(query, Update.update("password", newPassword), Management.Model.Login.User.class, "users");
+			return true; 
+		}
+			
+		return false;
+	}
+
+    
+    
 }

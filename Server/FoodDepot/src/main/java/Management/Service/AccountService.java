@@ -9,4 +9,6 @@ public interface AccountService {
 	public User findByEmail(String email);
 	
 	public User findByID(String id);
+	
+	public boolean changeUserPassword(String email, String oldPassword, String newPassword);
 }

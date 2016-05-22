@@ -1,6 +1,7 @@
 package Management.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
@@ -16,7 +17,6 @@ import Management.Model.Message;
 import Management.Model.Login.Registration;
 import Management.Model.Login.User;
 import Management.Service.AccountService;
-import interactiveLecture.model.voting.Vote;
 
 @RestController
 public class AccountController {
@@ -61,6 +61,25 @@ public class AccountController {
     @RequestMapping("/login/account")
     public Account test2(@RequestParam(value="name", defaultValue="World") String name) {
         return new Account("Hans", "Franz","Hansi","123");
+    }
+    @RequestMapping("/login/account2")
+    public Account test3(@RequestParam(value="name", defaultValue="World") String name) {
+        return new Account("Hans", "Franz","Hansi","123");
+    }
+    
+    @RequestMapping("/changePassword")
+    public Message changePassword(@RequestParam(value="email", defaultValue="World") String email,
+    								@RequestParam(value="oldPassword", defaultValue="World") String oldPassword,
+    									@RequestParam(value="newPassword", defaultValue="World") String newPassword) {
+        
+    	Boolean result = accountService.changeUserPassword(email, oldPassword, newPassword);
+    	
+    	if(result){
+    		return new Message(true, "The Users was created.");
+    	} else {
+    		return new Message(false, "There went something wrong.");
+    	}
+    	
     }
     
     @RequestMapping("/login/getAccount")
