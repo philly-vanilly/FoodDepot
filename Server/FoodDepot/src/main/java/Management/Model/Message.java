@@ -3,10 +3,10 @@ package Management.Model;
 public class Message {
 	
 	private boolean success; 
-	private String data;
+	private Object data;
 	
 	
-	public Message(boolean success, String data){
+	public Message(boolean success, Object data){
 		this.success = success;
 		this.data = data;
 	}
@@ -19,7 +19,7 @@ public class Message {
 		this.success = success;
 	}
 
-	public String getData() {
+	public Object getData() {
 		return data;
 	}
 
