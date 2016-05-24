@@ -34,9 +34,12 @@ public class AcoountServiceImpl implements AccountService, UserDetailsService {
 	
 	@Override
 	public boolean createAccount(Management.Model.Login.User user) {
-		operations.save(user, "users");
-		//operations.sav
-		return true;
+		if(user != null){
+			operations.save(user, "users");
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	

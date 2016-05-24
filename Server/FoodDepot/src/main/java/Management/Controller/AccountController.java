@@ -1,15 +1,19 @@
 package Management.Controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import Management.Model.Account;
@@ -29,6 +33,8 @@ public class AccountController {
 	public AccountController(AccountService accountService){
 		this.accountService = accountService;
 	}
+	
+	
 	
 
     @RequestMapping("/getAccount")
@@ -75,12 +81,36 @@ public class AccountController {
     	Boolean result = accountService.changeUserPassword(email, oldPassword, newPassword);
     	
     	if(result){
-    		return new Message(true, "The Users was created.");
+    		return new Message(true, "The Password was changed.");
     	} else {
     		return new Message(false, "There went something wrong.");
     	}
     	
     }
+    
+    @RequestMapping("/login")
+    public Message login() {	
+    	Authentication auth = SecurityContextHolder.getContext()
+				.getAuthentication();
+    	if(auth.isAuthenticated()){
+    		return new Message(true, "You are authenticated.");
+    	} else {
+    		return new Message(false, "You are not authenticated.");
+    	}
+    }
+   
+    @RequestMapping("/logout")
+    public Message logout(HttpServletRequest request, HttpServletResponse response) {
+        
+    	try {
+			request.logout();
+			return new Message(true, "You were logged out.");
+		} catch (ServletException e) {
+			return new Message(true, "You were not logged out.");
+		}
+        
+    }
+    
     
     @RequestMapping("/login/getAccount")
     public User getAccount() {
@@ -93,6 +123,8 @@ public class AccountController {
 				.getAuthentication();
 		return auth.getName();
 	}
+    
+    
     
     
 
