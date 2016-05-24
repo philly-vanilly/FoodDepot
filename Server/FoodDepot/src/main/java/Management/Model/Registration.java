@@ -2,18 +2,12 @@ package Management.Model;
 
 public class Registration {
 	
-	private String id = "asdas" ;
 	private String firstName;
 	private String lastName;
 	
 	private String eMail;
 	private String userName;
 	private String password;
-	
-	public Registration(String firstName, String lastName,String userName, String password){
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
 	
 	
 	public String getLastName() {
@@ -25,15 +19,10 @@ public class Registration {
 	public String getFirstName() {
 		return firstName;
 	}
-	public void setPreName(String firstName) {
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+	
 
 
 	public String getUserName() {

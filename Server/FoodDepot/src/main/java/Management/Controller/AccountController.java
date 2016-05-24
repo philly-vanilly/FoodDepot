@@ -3,6 +3,7 @@ package Management.Controller;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -45,19 +46,19 @@ public class AccountController {
     }
     
     @RequestMapping(value = "/createAccount", method = RequestMethod.POST)
-    public Message createAccount(Registration registration, BindingResult result) {
+    public Message createAccount(@Valid Registration registration, BindingResult result) {
     	//Registration registration = new Registration("max", "max@mustermann.de", "123", "Max", "Mustermann");
     	Message message = new Message(false, "The User wasn't created");
     	if (!result.hasErrors()) {
-	    	User user = User.createUser(
-	    			registration.getUsername(),
-	    			registration.getEmail(),
-					registration.getPassword(), 
-					registration.getFirstName(), 
-					registration.getLastName());
+//	    	User user = User.createUser(
+//	    			registration.getUsername(),
+//	    			registration.getEmail(),
+//					registration.getPassword(), 
+//					registration.getFirstName(), 
+//					registration.getLastName());
 	    	
 	    	
-	    	accountService.createAccount(user);
+	    	//accountService.createAccount(user);
 	    	message = new Message(true, "The Users was created.");
     	} 
     	return message;
