@@ -13,6 +13,8 @@ public class Box {
 	
 	private String content;
 	
+	private boolean open = false;
+	
 	public Box(String id, String name, double[] position, String content){
 		this.id = id;
 		this.name = name;
@@ -42,6 +44,15 @@ public class Box {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+
+
+	public void open() {
+		this.open = true;
+	}
+	public void close() {
+		this.open = false;
 	}
 	
 }

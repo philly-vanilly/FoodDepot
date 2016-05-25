@@ -1,5 +1,6 @@
 package Management.Controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,9 +8,33 @@ import org.springframework.web.bind.annotation.RestController;
 import Management.Model.Box;
 import Management.Model.Message;
 import Management.Model.Login.Registration;
+import Management.Service.AccountService;
+import Management.Service.BoxService;
 
 @RestController
 public class BoxController {
+	
+	private BoxService boxService;
+	
+	@Autowired
+	public BoxController(BoxService boxService){
+		this.boxService = boxService;
+	}
+	
+	@RequestMapping("/openBox")
+    public Message openBox(@RequestParam(value="boxId") String boxId){
+		
+		boolean result = boxService.openBox(boxId);
+		
+		if(result){
+			return new Message(true, "The Box opened");
+		} else {
+			return new Message(false, "You couldn't open the Box");
+		}
+
+	}
+    	
+	
 	
 	 @RequestMapping("/searchBox")
 	    public Message searchBox(@RequestParam(value="latitude") String latitude, @RequestParam(value="longitude") String longitude,
