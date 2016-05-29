@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="de.uni_hamburg.vsis.fooddepot.fooddepotclient.SettingsActivity">
+    <item
+        android:id="@+id/action_save_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_save"
+        android:icon="@drawable/ic_done_white_24"
+        app:showAsAction="always" />
+    <!--android:icon="@android:drawable/ic_menu_save"-->
+
+</menu>

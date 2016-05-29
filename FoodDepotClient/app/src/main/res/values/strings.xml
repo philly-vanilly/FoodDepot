@@ -21,7 +21,6 @@
     <string name="drawer_close">R.string.drawer_close</string>
 
 
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -29,9 +28,91 @@
     <string name="action_open_box">Open Box</string>
     <string name="action_view_as_list">View as List</string>
     <string name="action_settings">Settings</string>
-    <string name="action_edit_profile">Settings</string>
+    <string name="action_edit_settings">Settings</string>
+    <string name="action_edit_profile">Profile</string>
     <string name="action_sell">Sell</string>
+    <string name="action_save">Save</string>
     <string name="action_fill_a_box">Fill a Box</string>
     <string name="label_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+
+    <!-- Strings related to Settings -->
+
+    <string name="pref_personal_settings_title">About you</string>
+    <string name="pref_title_first_name">Fistname</string>
+    <string name="pref_title_last_name">Lastname</string>
+
+    <string name="pref_title_email">E-Mail</string>
+
+    <string name="pref_notify_title">Allow us to notify you when something interesting happens</string>
+    <string name="pref_summary_notify_food">We will notify you if your favorite food appears in a box close to you</string>
+    <string name="pref_title_notify_food">Favorite Food</string>
+    <string name="pref_summary_notify_box">We will notify you when the boxes you frequent are filled up</string>
+    <string name="pref_title_notify_box">Favorite Boxes</string>
+    <string name="pref_summary_notify_new">We will notify you about offers we didn\'t have before</string>
+    <string name="pref_title_notify_new">New Items</string>
+
+    <string name="pref_category_delete_account">We would have to lose you but...</string>
+    <string name="pref_summary_delete_account">All of your data will be lost</string>
+    <string name="pref_title_delete_account">Delete Account</string>
+
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_open_box">OpenBoxActivity</string>
 
 </resources>

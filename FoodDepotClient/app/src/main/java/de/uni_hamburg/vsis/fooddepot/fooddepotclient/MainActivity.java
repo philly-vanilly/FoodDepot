@@ -1,18 +1,22 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -54,46 +58,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
-
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-//        final DrawerArrowDrawable navButton = new DrawerArrowDrawable(this);
-//
-//
-//
-//        final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//
-//
-//
-//        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
-//                this,                  /* host Activity */
-//                mDrawerLayout,         /* DrawerLayout object */
-//                myToolbar,
-////                R.drawable.fooddepot_logo,  /* nav drawer icon to replace 'Up' caret */
-//                R.string.drawer_open,  /* "open drawer" description */
-//                R.string.drawer_close  /* "close drawer" description */
-//        ) {
-//
-//            /** Called when a drawer has settled in a completely closed state. */
-//            public void onDrawerClosed(View view) {
-//                super.onDrawerClosed(view);
-//                getActionBar().setTitle("mTitle");
-//            }
-//
-//            /** Called when a drawer has settled in a completely open state. */
-//            public void onDrawerOpened(View drawerView) {
-//                super.onDrawerOpened(drawerView);
-//                getActionBar().setTitle("mDrawerTitle");
-//            }
-//        };
-//
-//
-//
-//
-//
-
-//
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
     }
 
@@ -112,14 +78,52 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng hamburg = new LatLng(53.4, 9.9);
+        mMap.addMarker(new MarkerOptions().position(hamburg).title("Marker in Hamburg"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(hamburg));
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException e){
+            Log.e("MY_LOCATION", "no permission?");
+        }
     }
 
+
+    //for the items in the Navigation menu
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        return false;
+
+        int id = item.getItemId();
+
+        if (id == R.id.nav_open_box) {
+            openBox();
+        } else if (id == R.id.nav_toggle_sell) {
+
+        } else if (id == R.id.nav_profile) {
+            showProfile();
+        } else if (id == R.id.nav_manage) {
+            showSettings();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    //for the items in the AppBar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_toggle_list_view_mode) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -128,4 +132,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
+
+    private void showSettings(){
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void openBox(){
+        Intent intent = new Intent(this, OpenBoxActivity.class);
+        startActivity(intent);
+    }
+
+    private void showProfile(){
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+
+
 }

@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single"
         android:id="@+id/group_primary_items">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_open_box"
             android:icon="@drawable/ic_nfc_black_24"
             android:title="@string/action_open_box" />
         <!--android:icon="@drawable/ic_menu_camera"-->
@@ -21,10 +21,14 @@
                 android:title="@string/action_fill_a_box" />
 
         <!--android:icon="@drawable/ic_add_shopping_cart_black_24dp"-->
-            <item
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_account_circle_black_24px"
+            android:title="@string/action_edit_profile" />
+        <item
                 android:id="@+id/nav_manage"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="@string/action_edit_profile" />
+                android:title="@string/action_edit_settings" />
     </group>
     <!--<group android:checkableBehavior="single">-->
         <!--<item-->
