@@ -35,7 +35,6 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -43,6 +42,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class MainActivity   extends
@@ -116,6 +118,7 @@ public class MainActivity   extends
         navigationView.setNavigationItemSelectedListener(this);
 
         createLocationRequest();
+        updateBoxList(new LatLng(1.0, 1.0));
 
     }
 
@@ -250,9 +253,28 @@ public class MainActivity   extends
     }
 
     @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+
+    @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "connected to googleApiClient");
         createLocationRequest();
+//        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+//                mGoogleApiClient);
+//        if (mLastLocation != null) {
+//            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
+//            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
+//        }
     }
 
     @Override
@@ -380,6 +402,7 @@ public class MainActivity   extends
     public void onLocationChanged(Location location) {
         Log.d(TAG, "new location received");
         setUserLocationMarker(location);
+        updateBoxList(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
 
@@ -395,4 +418,32 @@ public class MainActivity   extends
 
 
     }
+
+    private void updateBoxList(LatLng position){
+        rest.RestClient.search("", position.latitude, position.longitude, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                if(responseBody != null) {
+                    Log.d(TAG, "search box success:" + new String(responseBody));
+                } else {
+                    Log.e(TAG, "search box success but resopnse body null" );
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if(responseBody != null) {
+                    Log.e(TAG, "search box failed:" + new String(responseBody));
+                } else {
+                    Log.e(TAG, "search box failed" );
+                }
+
+            }
+        });
+
+    }
+
+
+
 }
