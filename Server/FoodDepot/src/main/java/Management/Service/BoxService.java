@@ -1,8 +1,8 @@
 package Management.Service;
 
-import Management.Model.Box;
+import Management.Model.box.BoxImpl;
 
 public interface BoxService {
 	public boolean openBox(String id);
-	public boolean createBox(Box box);
+	public boolean createBox(BoxImpl box);
 }

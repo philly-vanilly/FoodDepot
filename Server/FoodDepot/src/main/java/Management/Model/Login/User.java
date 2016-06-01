@@ -4,7 +4,9 @@ import java.util.HashSet;
 
 import java.util.Set;
 
-public class User {
+import Management.Model.AccountClient;
+
+public class User implements AccountClient {
 
 	private String id;
 

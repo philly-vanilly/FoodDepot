@@ -3,27 +3,25 @@ package Management.Controller;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import Management.Model.Account;
+import Management.Model.AccountClient;
 import Management.Model.Message;
-import Management.Model.Login.Registration;
+import Management.Model.RegistrationImpl;
 import Management.Model.Login.User;
 import Management.Service.AccountService;
 
-@RestController
+@Controller
 public class AccountController {
 
    
@@ -36,46 +34,39 @@ public class AccountController {
 	}
 	
 	
-	
 
-    @RequestMapping("/getAccount")
-    public Registration greeting(@RequestParam(value="name", defaultValue="World") String name) {
-    	
-   
-    	return new Registration("max", "max@mustermann.de", "123", "Max", "Mustermann");
-    }
+    
     
     @RequestMapping(value = "/createAccount", method = RequestMethod.POST)
-    public Message createAccount(@Valid Registration registration, BindingResult result) {
-    	//Registration registration = new Registration("max", "max@mustermann.de", "123", "Max", "Mustermann");
+    public @ResponseBody Message createAccount(@RequestBody RegistrationImpl registration, BindingResult result) {
+    	
+    	if(registration != null){
+    		System.out.println(registration.getFirstName());		
+    		
+    	}
+    	
     	Message message = new Message(false, "The User wasn't created");
     	if (!result.hasErrors()) {
-//	    	User user = User.createUser(
-//	    			registration.getUsername(),
-//	    			registration.getEmail(),
-//					registration.getPassword(), 
-//					registration.getFirstName(), 
-//					registration.getLastName());
-	    	
-	    	
-	    	//accountService.createAccount(user);
-	    	message = new Message(true, "The Users was created.");
+	    	if(registration != null){
+	    		User user = User.createUser(
+		    			registration.getUsername(),
+		    			registration.getEmail(),
+						registration.getPassword(), 
+						registration.getFirstName(), 
+						registration.getLastName());
+	    		accountService.createAccount(user);
+	    		message = new Message(true, "The Users was created.");
+	    	}
+  	
     	} 
     	return message;
      
     }
     
-    @RequestMapping("/login/account")
-    public Account test2(@RequestParam(value="name", defaultValue="World") String name) {
-        return new Account("Hans", "Franz","Hansi","123");
-    }
-    @RequestMapping("/login/account2")
-    public Account test3(@RequestParam(value="name", defaultValue="World") String name) {
-        return new Account("Hans", "Franz","Hansi","123");
-    }
+   
     
     @RequestMapping("/changePassword")
-    public Message changePassword(@RequestParam(value="email", defaultValue="World") String email,
+    public @ResponseBody Message changePassword(@RequestParam(value="email", defaultValue="World") String email,
     								@RequestParam(value="oldPassword", defaultValue="World") String oldPassword,
     									@RequestParam(value="newPassword", defaultValue="World") String newPassword) {
         
@@ -90,7 +81,7 @@ public class AccountController {
     }
     
     @RequestMapping("/login")
-    public Message login() {	
+    public @ResponseBody Message login() {	
     	Authentication auth = SecurityContextHolder.getContext()
 				.getAuthentication();
     	if(auth.isAuthenticated()){
@@ -101,7 +92,7 @@ public class AccountController {
     }
    
     @RequestMapping("/logout")
-    public Message logout(HttpServletRequest request, HttpServletResponse response) {
+    public @ResponseBody Message logout(HttpServletRequest request, HttpServletResponse response) {
         
     	try {
 			request.logout();
@@ -113,10 +104,11 @@ public class AccountController {
     }
     
     
-    @RequestMapping("/login/getAccount")
-    public User getAccount() {
+    @RequestMapping("/getAccount")
+    public @ResponseBody AccountClient getAccount() {
     	String id = this.getUserID();
-        return accountService.findByID(id);
+    	AccountClient result = accountService.findByID(id);
+    	return result;
     }
     
     private String getUserID() {

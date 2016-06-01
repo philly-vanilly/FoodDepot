@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import Management.Model.Box;
+import Management.Model.box.BoxImpl;
 
 @Service
 public class BoxServiceImpl implements BoxService {
@@ -16,7 +16,7 @@ public class BoxServiceImpl implements BoxService {
 	
 	
 	@Override
-	public boolean createBox(Box box) {
+	public boolean createBox(BoxImpl box) {
 		if(box != null){
 			operations.save(box, "boxes");
 			return true;
@@ -29,7 +29,7 @@ public class BoxServiceImpl implements BoxService {
 	@Override
 	public boolean openBox(String id) {
 		Criteria idCrit = Criteria.where("_id").is(id);
-    	Box box =  operations.findOne(new Query(idCrit),Box.class, "boxes");
+    	BoxImpl box =  operations.findOne(new Query(idCrit),BoxImpl.class, "boxes");
         
     	if(box != null){
     		box.open();

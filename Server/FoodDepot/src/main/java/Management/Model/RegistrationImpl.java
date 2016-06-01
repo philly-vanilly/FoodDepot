@@ -1,6 +1,6 @@
 package Management.Model;
 
-public class Registration {
+public class RegistrationImpl implements AccountClient{
 	
 	private String firstName;
 	private String lastName;

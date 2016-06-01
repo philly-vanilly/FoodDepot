@@ -1,8 +1,8 @@
-package Management.Model;
+package Management.Model.box;
 
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 
-public class Box {
+public class BoxImpl implements BoxClient {
 	
 	private String id;
 	
@@ -15,7 +15,7 @@ public class Box {
 	
 	private boolean open = false;
 	
-	public Box(String id, String name, double[] position, String content){
+	public BoxImpl(String id, String name, double[] position, String content){
 		this.id = id;
 		this.name = name;
 		this.position = position;

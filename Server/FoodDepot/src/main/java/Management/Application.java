@@ -2,6 +2,7 @@ package Management;
 
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.MongoDbFactory;
@@ -12,6 +13,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
 @SpringBootApplication
+@EnableAutoConfiguration
 public class Application {
 
     public static void main(String[] args) {
@@ -35,4 +37,5 @@ public class Application {
     	
         return new MongoTemplate(mongoDbFactory());
     }
+
 }
