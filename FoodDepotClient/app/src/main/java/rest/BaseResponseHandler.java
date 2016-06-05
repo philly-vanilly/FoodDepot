@@ -2,6 +2,7 @@ package rest;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import cz.msebera.android.httpclient.Header;
@@ -12,6 +13,7 @@ import cz.msebera.android.httpclient.Header;
 public abstract class BaseResponseHandler extends AsyncHttpResponseHandler {
 
     private static String REQUEST_FAILED = "REQUEST_FAILED";
+    public final static Gson gson = new Gson();
 
 //    @Override
 //    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

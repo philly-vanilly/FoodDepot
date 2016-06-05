@@ -1,17 +1,11 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient;
 
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,14 +20,13 @@ import android.widget.TextView;
 
 import com.google.android.gms.location.LocationListener;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import rest.BaseResponseHandler;
 import rest.RestClient;
 import rest.beans.Response;
 import rest.beans.Box;
@@ -44,20 +37,14 @@ public class MainActivity extends
         AppCompatActivity
         implements
         NavigationView.OnNavigationItemSelectedListener,
-
-
         LocationListener {
     private final static String TAG = "MainActivity";
-    private static Gson mGson = new Gson();
+
 
 
 
 
     private FDepotGoogleApiClient mGoogleApiClient = null;
-
-
-
-
     private boolean mapMode = true;
     private Location mLastLocation = null;
     private String mCurrentSearchString = "";
@@ -241,7 +228,7 @@ public class MainActivity extends
     }
 
     private void updateBoxList(double latitude, double longitude, String keys) {
-        RestClient.search(keys, latitude, longitude, new AsyncHttpResponseHandler() {
+        RestClient.search(keys, latitude, longitude, new BaseResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -251,22 +238,13 @@ public class MainActivity extends
 
 
                     Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
-                    Response<List<Box>> boxResponse = mGson.fromJson(responseAsString,collectionType );
+                    Response<List<Box>> boxResponse = gson.fromJson(responseAsString,collectionType );
 
 
                     updateBoxFragment(boxResponse.data);
 
                 } else {
                     Log.e(TAG, "search box success but resopnse body null");
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if (responseBody != null) {
-                    Log.e(TAG, "search box failed:" + new String(responseBody));
-                } else {
-                    Log.e(TAG, "search box failed");
                 }
             }
         });
