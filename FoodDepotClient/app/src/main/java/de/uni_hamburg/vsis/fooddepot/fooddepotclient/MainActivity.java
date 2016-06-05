@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -57,13 +58,13 @@ import cz.msebera.android.httpclient.Header;
 import rest.RestClient;
 import rest.beans.Response;
 import rest.beans.Box;
+import rest.beans.User;
 
 
 public class MainActivity extends
         AppCompatActivity
         implements
         NavigationView.OnNavigationItemSelectedListener,
-        OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
@@ -75,7 +76,7 @@ public class MainActivity extends
     private static final int REQUEST_CHECK_SETTINGS = 123;
 
 
-    private GoogleMap mMap;
+
     private GoogleApiClient mGoogleApiClient = null;
 
 
@@ -85,13 +86,11 @@ public class MainActivity extends
     private Location mLastLocation = null;
     private String mCurrentSearchString = "";
 
+    private BoxListFragmentInterface currentBoxListView = null;
+
 
     private final int LOCATION_PERMISSION = 34;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
 
 
     @Override
@@ -100,10 +99,9 @@ public class MainActivity extends
         setContentView(R.layout.activity_main);
 
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+
+        currentBoxListView = (BoxListFragmentInterface) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         mapMode = true;
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -137,9 +135,21 @@ public class MainActivity extends
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        User user  = FDepotApplication.getApplication().getCurrentUser();
+        if(user != null){
+            TextView emailTextView = (TextView)findViewById(R.id.emailTextView);
+            TextView usernameTextView = (TextView)findViewById(R.id.usernameTextView);
+            if(emailTextView != null && usernameTextView != null){
+                emailTextView.setText(user.email );
+                usernameTextView.setText(user.firstName + " "  + user.lastName);
+            }
+
+        }
+
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -152,48 +162,7 @@ public class MainActivity extends
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
 
-        // Here, thisActivity is the current activity
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                Log.d(TAG, "need to show rationale");
-
-            } else {
-                Log.d(TAG, " no need to show rationale");
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        LOCATION_PERMISSION);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-
-        }
-
-
-
-        try {
-            mMap.setMyLocationEnabled(true);
-        } catch (SecurityException e) {
-            Log.e(TAG, "no permission?");
-        }
-    }
 
     protected void startLocationUpdates() {
         try {
@@ -258,44 +227,12 @@ public class MainActivity extends
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://de.uni_hamburg.vsis.fooddepot.fooddepotclient/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://de.uni_hamburg.vsis.fooddepot.fooddepotclient/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.disconnect();
     }
 
 
@@ -516,30 +453,10 @@ public class MainActivity extends
     }
 
     private void updateBoxFragment(List<Box> boxList) {
-        double avgLatitude =0, avgLongitude = 0;
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        for (Box box : boxList) {
-
-
-       BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.box_location_marker);
-
-
-
-            {
-                mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(box.latitude, box.longitude))
-                        .title(box.name)
-                        .snippet(box.content)
-//                        .icon(bitmap)
-
-                );
-                builder.include(new LatLng(box.latitude, box.longitude));
-            }
-
+        if(boxList != null){
+            currentBoxListView.updateBoxList(boxList);
         }
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
     }
 
 
