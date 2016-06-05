@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -15,12 +16,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -40,47 +44,60 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import cz.msebera.android.httpclient.Header;
+import rest.RestClient;
+import rest.beans.Response;
+import rest.beans.Box;
 
 
-public class MainActivity   extends
-                            AppCompatActivity
-                            implements
-                            NavigationView.OnNavigationItemSelectedListener,
-                            OnMapReadyCallback,
-                            GoogleApiClient.ConnectionCallbacks,
-                            GoogleApiClient.OnConnectionFailedListener,
-                            ActivityCompat.OnRequestPermissionsResultCallback,
-                            LocationListener
-{
+public class MainActivity extends
+        AppCompatActivity
+        implements
+        NavigationView.OnNavigationItemSelectedListener,
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        ActivityCompat.OnRequestPermissionsResultCallback,
+        LocationListener {
     private final static String TAG = "MainActivity";
+    private static Gson mGson = new Gson();
+
+
     private static final int REQUEST_CHECK_SETTINGS = 123;
 
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient = null;
-    private Marker userLocationMarker = null;
+
 
     LocationRequest mLocationRequest = null;
 
     private boolean mapMode = true;
+    private Location mLastLocation = null;
+    private String mCurrentSearchString = "";
 
 
     private final int LOCATION_PERMISSION = 34;
-
-
-
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -92,6 +109,7 @@ public class MainActivity   extends
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */,
                         this /* OnConnectionFailedListener */)
+                .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
 
@@ -107,6 +125,7 @@ public class MainActivity   extends
                         .setAction("Action", null).show();
             }
         });
+        fab.setVisibility(View.INVISIBLE);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -117,9 +136,10 @@ public class MainActivity   extends
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        createLocationRequest();
-        updateBoxList(new LatLng(1.0, 1.0));
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -138,54 +158,36 @@ public class MainActivity   extends
 
         // Here, thisActivity is the current activity
 
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                    // Show an expanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-                    Log.d(TAG, "need to show rationale");
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Log.d(TAG, "need to show rationale");
 
-                } else {
-                    Log.d(TAG, " no need to show rationale");
-                    // No explanation needed, we can request the permission.
+            } else {
+                Log.d(TAG, " no need to show rationale");
+                // No explanation needed, we can request the permission.
 
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            LOCATION_PERMISSION);
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_PERMISSION);
 
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-                }
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
 
         }
 
 
 
-
-        // Add a marker in Sydney and move the camera
-        LatLng hamburg = new LatLng(53.4, 9.9);
-
-//        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.box_location_marker);
-//        if(bitmap != null) {
-//            userLocationMarker = mMap.addMarker(new MarkerOptions().position(hamburg).title("Apfel Box").snippet("contains 500g apples")
-//
-//                    .icon(bitmap)
-//            );
-//        } else
-        {
-            Log.e(TAG, "box bitmapdescriptor is null");
-            userLocationMarker = mMap.addMarker(new MarkerOptions().position(hamburg).title("Apfel Box").snippet("contains 500g apples")
-
-            );
-        }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(hamburg));
         try {
             mMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
@@ -202,7 +204,7 @@ public class MainActivity   extends
             } else {
                 Log.d(TAG, "can't request location updates, request == null");
             }
-        } catch (SecurityException e){
+        } catch (SecurityException e) {
             Log.e(TAG, "can't request location updates no permission?");
         }
     }
@@ -229,8 +231,8 @@ public class MainActivity   extends
                 }
 
 
-                }
-                break;
+            }
+            break;
             default:
                 Log.d(TAG, "we have unknown permission");
                 break;
@@ -256,12 +258,44 @@ public class MainActivity   extends
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://de.uni_hamburg.vsis.fooddepot.fooddepotclient/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://de.uni_hamburg.vsis.fooddepot.fooddepotclient/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.disconnect();
     }
 
 
@@ -269,12 +303,22 @@ public class MainActivity   extends
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "connected to googleApiClient");
         createLocationRequest();
-//        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-//                mGoogleApiClient);
-//        if (mLastLocation != null) {
-//            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
-//            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
-//        }
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            updateBoxList(mLastLocation.getLatitude(), mLastLocation.getLongitude(), mCurrentSearchString);
+
+        }
     }
 
     @Override
@@ -283,10 +327,7 @@ public class MainActivity   extends
     }
 
 
-
-
-
-                                            //for the items in the Navigation menu
+    //for the items in the Navigation menu
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -327,21 +368,47 @@ public class MainActivity   extends
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search)
+                .getActionView();
+        if (null != searchView) {
+//            searchView.setSearchableInfo(searchManager
+//                    .getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(true);
+        }
+
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            public boolean onQueryTextChange(String newText) {
+                mCurrentSearchString = newText;
+                updateBoxList();
+                return true;
+            }
+
+            public boolean onQueryTextSubmit(String query) {
+                mCurrentSearchString = query;
+                updateBoxList();
+                return true;
+
+            }
+        };
+        searchView.setOnQueryTextListener(queryTextListener);
+
+
         return true;
     }
 
 
-    private void showSettings(){
+    private void showSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
-    private void openBox(){
+    private void openBox() {
         Intent intent = new Intent(this, OpenBoxActivity.class);
         startActivity(intent);
     }
 
-    private void showProfile(){
+    private void showProfile() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
@@ -401,42 +468,46 @@ public class MainActivity   extends
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "new location received");
-        setUserLocationMarker(location);
-        updateBoxList(new LatLng(location.getLatitude(), location.getLongitude()));
+        mLastLocation = location;
+        updateBoxList();
     }
 
 
 
-    private void setUserLocationMarker(Location location){
-        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        if(userLocationMarker != null){
-            userLocationMarker.setPosition(userLocation);
-            BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.box_location_marker);
-            userLocationMarker.setIcon(bitmap);
 
+    private void updateBoxList(){
+        if(mLastLocation != null) {
+            updateBoxList(mLastLocation.getLatitude(), mLastLocation.getLongitude(), mCurrentSearchString);
         }
-
-
     }
 
-    private void updateBoxList(LatLng position){
-        rest.RestClient.search("", position.latitude, position.longitude, new AsyncHttpResponseHandler() {
+    private void updateBoxList(double latitude, double longitude, String keys) {
+        RestClient.search(keys, latitude, longitude, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
-                if(responseBody != null) {
-                    Log.d(TAG, "search box success:" + new String(responseBody));
+                if (responseBody != null) {
+                    String responseAsString = new String(responseBody);
+                    Log.d(TAG, "search box success:" + responseAsString);
+
+
+                    Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
+                    Response<List<Box>> boxResponse = mGson.fromJson(responseAsString,collectionType );
+
+
+                    updateBoxFragment(boxResponse.data);
+
                 } else {
-                    Log.e(TAG, "search box success but resopnse body null" );
+                    Log.e(TAG, "search box success but resopnse body null");
                 }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if(responseBody != null) {
+                if (responseBody != null) {
                     Log.e(TAG, "search box failed:" + new String(responseBody));
                 } else {
-                    Log.e(TAG, "search box failed" );
+                    Log.e(TAG, "search box failed");
                 }
 
             }
@@ -444,6 +515,32 @@ public class MainActivity   extends
 
     }
 
+    private void updateBoxFragment(List<Box> boxList) {
+        double avgLatitude =0, avgLongitude = 0;
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        for (Box box : boxList) {
+
+
+       BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.box_location_marker);
+
+
+
+            {
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(box.latitude, box.longitude))
+                        .title(box.name)
+                        .snippet(box.content)
+//                        .icon(bitmap)
+
+                );
+                builder.include(new LatLng(box.latitude, box.longitude));
+            }
+
+        }
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+    }
 
 
 }

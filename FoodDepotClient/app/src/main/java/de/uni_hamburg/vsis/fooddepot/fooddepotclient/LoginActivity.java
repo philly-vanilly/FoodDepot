@@ -39,7 +39,7 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import rest.BaseResponseHandler;
 import rest.RestClient;
-import rest.beans.BaseResponse;
+import rest.beans.Response;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -230,7 +230,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Log.d("REGISTER RESULT", new String(responseBody));
 
                     showProgress(false);
-                    BaseResponse  response = (new Gson()).fromJson(new String(responseBody), rest.beans.BaseResponse.class);
+                    Response response = (new Gson()).fromJson(new String(responseBody), Response.class);
 
 
 
@@ -306,7 +306,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Log.d("LOGIN RESULT", new String(responseBody));
 
                     showProgress(false);
-                    BaseResponse  response = (new Gson()).fromJson(new String(responseBody), rest.beans.BaseResponse.class);
+                    Response response = (new Gson()).fromJson(new String(responseBody), Response.class);
 
 
 

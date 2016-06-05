@@ -1,9 +1,13 @@
 package rest.beans;
 
+
+
 /**
  * Created by paul on 26.04.16.
  */
-public class BaseResponse {
+public class Response<T>{
     public boolean success;
-    public Object data;
+    public T data;
+
+
 }
