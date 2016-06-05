@@ -3,6 +3,7 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -40,6 +41,7 @@ import cz.msebera.android.httpclient.Header;
 import rest.BaseResponseHandler;
 import rest.RestClient;
 import rest.beans.Response;
+import rest.beans.User;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -74,6 +76,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -90,6 +94,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
         });
+
+        FDepotApplication.getApplication().loadUser(this);
+        User user = FDepotApplication.getApplication().getCurrentUser();
+
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -108,33 +116,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
 
-        final EditText searchText = (EditText) findViewById(R.id.search_text);
-        Button searchButton = (Button) findViewById(R.id.search_button);
-        searchButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptSearch(searchText.getText().toString());
-            }
-        });
+
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        if(user != null){
+            mEmailView.setText(user.email, true );
+            mPasswordView.setText(user.password );
+
+            attemptLogin();
+        }
     }
 
 
-    private void attemptSearch(String searchString){
-        RestClient.search(searchString, 1.0, 1.0, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Log.d("SEARCH", new String(responseBody));
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.d("SEARCH", new String(responseBody));
-            }
-        });
-    }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -224,7 +220,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
 //            mAuthTask = new UserLoginTask(email, password);
 //            mAuthTask.execute((Void) null);
-            RestClient.createAccount("testUser", email, password, new BaseResponseHandler() {
+            RestClient.createAccount("testUser4", password, email, new BaseResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.d("REGISTER RESULT", new String(responseBody));
@@ -235,7 +231,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
                     if(response.success){
-
+                        FDepotApplication.getApplication().saveUser(LoginActivity.this);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
                         finish();
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -311,6 +309,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
                     if(response.success){
+                            FDepotApplication.getApplication().saveUser(LoginActivity.this);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+
+
 
                             finish();
                         } else {
