@@ -24,29 +24,8 @@ import android.view.View;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -65,22 +44,19 @@ public class MainActivity extends
         AppCompatActivity
         implements
         NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        ActivityCompat.OnRequestPermissionsResultCallback,
+
+
         LocationListener {
     private final static String TAG = "MainActivity";
     private static Gson mGson = new Gson();
 
 
-    private static final int REQUEST_CHECK_SETTINGS = 123;
+
+
+    private FDepotGoogleApiClient mGoogleApiClient = null;
 
 
 
-    private GoogleApiClient mGoogleApiClient = null;
-
-
-    LocationRequest mLocationRequest = null;
 
     private boolean mapMode = true;
     private Location mLastLocation = null;
@@ -89,7 +65,6 @@ public class MainActivity extends
     private BoxListFragmentInterface currentBoxListView = null;
 
 
-    private final int LOCATION_PERMISSION = 34;
 
 
 
@@ -104,13 +79,8 @@ public class MainActivity extends
                 .findFragmentById(R.id.map);
         mapMode = true;
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */,
-                        this /* OnConnectionFailedListener */)
-                .addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .build();
 
+        mGoogleApiClient = new FDepotGoogleApiClient(this, this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -153,76 +123,6 @@ public class MainActivity extends
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-
-    protected void startLocationUpdates() {
-        try {
-            if (mLocationRequest != null) {
-                Log.d(TAG, "requesting location updates");
-                LocationServices.FusedLocationApi.requestLocationUpdates(
-                        mGoogleApiClient, mLocationRequest, this);
-            } else {
-                Log.d(TAG, "can't request location updates, request == null");
-            }
-        } catch (SecurityException e) {
-            Log.e(TAG, "can't request location updates no permission?");
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-
-        Log.i(TAG, "permission request received");
-        switch (requestCode) {
-            case LOCATION_PERMISSION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    Log.d(TAG, "we have location permission");
-                    MainActivity.this.startLocationUpdates();
-
-
-                } else {
-                    Log.d(TAG, "we don't have location permission");
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-
-
-            }
-            break;
-            default:
-                Log.d(TAG, "we have unknown permission");
-                break;
-
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // An unresolvable error has occurred and a connection to Google APIs
-        // could not be established. Display an error message, or handle
-        // the failure silently
-
-        // ...
-
-        Log.e(TAG, "couldn't connect to googleApiClient");
-    }
-
     @Override
     protected void onStart() {
         mGoogleApiClient.connect();
@@ -236,32 +136,6 @@ public class MainActivity extends
     }
 
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.d(TAG, "connected to googleApiClient");
-        createLocationRequest();
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            updateBoxList(mLastLocation.getLatitude(), mLastLocation.getLongitude(), mCurrentSearchString);
-
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.e(TAG, "temporally disconnected from googleApiClient");
-    }
 
 
     //for the items in the Navigation menu
@@ -329,8 +203,6 @@ public class MainActivity extends
             }
         };
         searchView.setOnQueryTextListener(queryTextListener);
-
-
         return true;
     }
 
@@ -350,56 +222,6 @@ public class MainActivity extends
         startActivity(intent);
     }
 
-
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
-                        builder.build());
-
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            //@Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                final LocationSettingsStates states = result.getLocationSettingsStates();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        // All location settings are satisfied. The client can
-                        // initialize location requests here.
-                        Log.d(TAG, "location settings satisfied");
-
-
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied, but this can be fixed
-                        // by showing the user a dialog.
-                        Log.d(TAG, "location not settings satisfied");
-                        try {
-
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            status.startResolutionForResult(
-                                    MainActivity.this,
-                                    REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way
-                        // to fix the settings so we won't show the dialog.
-
-                        break;
-                }
-            }
-        });
-    }
 
 
     @Override
@@ -446,18 +268,13 @@ public class MainActivity extends
                 } else {
                     Log.e(TAG, "search box failed");
                 }
-
             }
         });
-
     }
 
     private void updateBoxFragment(List<Box> boxList) {
         if(boxList != null){
             currentBoxListView.updateBoxList(boxList);
         }
-
     }
-
-
 }
