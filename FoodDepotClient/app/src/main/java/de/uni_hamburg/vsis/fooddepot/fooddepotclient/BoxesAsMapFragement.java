@@ -23,12 +23,12 @@ import rest.beans.Box;
 /**
  * Created by paul on 05.06.16.
  */
-public class BoxListAsMapFragement
+public class BoxesAsMapFragement
         extends SupportMapFragment
         implements OnMapReadyCallback,
-        BoxListFragmentInterface {
+        BoxesFragmentInterface {
 
-    private final String TAG = "BoxListAsMapFragement";
+    private final String TAG = "BoxesAsMapFragement";
 
     private GoogleMap mMap;
 

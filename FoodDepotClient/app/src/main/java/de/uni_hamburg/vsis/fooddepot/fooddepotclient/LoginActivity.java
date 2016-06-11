@@ -32,7 +32,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -232,7 +231,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     if(response.success){
                         FDepotApplication.getApplication().saveUser(LoginActivity.this);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, BoxesActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
@@ -310,7 +309,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     if(response.success){
                             FDepotApplication.getApplication().saveUser(LoginActivity.this);
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, BoxesActivity.class);
                             startActivity(intent);
 
 

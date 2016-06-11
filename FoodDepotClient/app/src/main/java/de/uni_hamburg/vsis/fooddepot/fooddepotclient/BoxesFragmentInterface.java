@@ -7,7 +7,7 @@ import rest.beans.Box;
 /**
  * Created by paul on 05.06.16.
  */
-public interface BoxListFragmentInterface {
+public interface BoxesFragmentInterface {
 
     void updateBoxList(List<Box> boxList);
 

@@ -33,12 +33,12 @@ import rest.beans.Box;
 import rest.beans.User;
 
 
-public class MainActivity extends
+public class BoxesActivity extends
         AppCompatActivity
         implements
         NavigationView.OnNavigationItemSelectedListener,
         LocationListener {
-    private final static String TAG = "MainActivity";
+    private final static String TAG = "BoxesActivity";
 
 
 
@@ -49,7 +49,7 @@ public class MainActivity extends
     private Location mLastLocation = null;
     private String mCurrentSearchString = "";
 
-    private BoxListFragmentInterface currentBoxListView = null;
+    private BoxesFragmentInterface currentBoxListView = null;
 
 
 
@@ -62,7 +62,7 @@ public class MainActivity extends
 
 
 
-        currentBoxListView = (BoxListFragmentInterface) getSupportFragmentManager()
+        currentBoxListView = (BoxesFragmentInterface) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapMode = true;
 
