@@ -1,9 +1,9 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient;
 
-import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -21,8 +21,7 @@ import java.util.List;
 
 import rest.beans.Box;
 
-public class BoxesAsListFragement extends Fragment
-        implements BoxesFragmentInterface {
+public class BoxesAsListFragement extends Fragment implements BoxesFragmentInterface {
 
     private final String TAG = "BoxesAsListFragement";
 
@@ -39,7 +38,5 @@ public class BoxesAsListFragement extends Fragment
 
         for (Box box : boxList) {
         }
-
-       //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
     }
 }

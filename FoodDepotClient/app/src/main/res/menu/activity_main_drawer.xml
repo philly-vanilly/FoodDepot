@@ -29,6 +29,11 @@
                 android:id="@+id/nav_manage"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/action_edit_settings" />
+
+        <item
+            android:id="@+id/nav_switch_map_list"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/action_edit_settings" />
     </group>
     <!--<group android:checkableBehavior="single">-->
         <!--<item-->
