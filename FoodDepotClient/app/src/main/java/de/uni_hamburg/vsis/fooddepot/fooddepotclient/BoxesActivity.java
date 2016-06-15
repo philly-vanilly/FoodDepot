@@ -74,7 +74,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         // manages fragments (adding them to activities) and also manages the backstack of
         // saved fragment transactions
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment currentBoxesView = fragmentManager.findFragmentById(R.id.fragment_container);
+         currentBoxesView = (BoxesFragmentInterface) fragmentManager.findFragmentById(R.id.container_fragment_map);
 
         // fragment could already be in the list after being recreated by the FragmentManager
         // after allocating memory. But when it is null, create new. onStart() makes it visible,
@@ -85,7 +85,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             } else {
                 currentBoxesView = new BoxesAsListFragment();
             }
-            fragmentManager.beginTransaction().add(R.id.fragment_container, currentBoxesView).commit();
+            fragmentManager.beginTransaction().add(R.id.fragment_container, (Fragment)currentBoxesView).commit();
         }
 
         mGoogleApiClient = new FDepotGoogleApiClient(this, this);
@@ -125,14 +125,15 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 } else {
                     fragmentClass = BoxesAsListFragment.class;
                 }
-                Fragment fragment = null;
+                BoxesFragmentInterface fragment = null;
                 try {
-                    fragment = (Fragment) fragmentClass.newInstance();
+                    fragment = (BoxesFragmentInterface) fragmentClass.newInstance();
+                    currentBoxesView = fragment;
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
                 }
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.fragment_container, (Fragment) fragment).commit();
                 break;
             case R.id.nav_open_box:
                 startActivity(new Intent(this, OpenBoxActivity.class));
@@ -263,7 +264,8 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     }
 
     private void updateBoxFragment(List<Box> boxList) {
-        if(boxList != null){
+        if(boxList != null
+        && currentBoxesView != null){
             currentBoxesView.updateBoxList(boxList);
         }
     }
