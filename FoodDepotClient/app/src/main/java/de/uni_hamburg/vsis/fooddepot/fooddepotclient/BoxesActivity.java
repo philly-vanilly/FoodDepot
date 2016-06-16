@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +43,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private String mCurrentSearchString = "";
 
     private BoxesFragmentInterface currentBoxesView = null;
+    private AppBarLayout mAppBarLayout = null;
 
 
     private DrawerLayout mDrawer;
@@ -48,6 +51,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private boolean isMapMode = true; // TODO: persist on pause, stop, ...
+
 
 
     @Override
@@ -58,6 +62,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         //finding and setting up a toolbar to replace actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout) ;
 
         //finding drawer view and binding events to actionbartoggle
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -136,13 +141,21 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         switch(menuItem.getItemId()){
             case R.id.nav_switch_map_list:
                 BoxesFragmentInterface newFragment = null;
+                CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)mAppBarLayout.getLayoutParams();
+
                 try {
                     if (isMapMode){
                         newFragment = new BoxesAsListFragment();
-                        menuItem.setTitle(R.string.action_view_as_list);
+                        //menuItem.setTitle(R.string.action_view_as_list);
+                        params.setMargins( 0, 0, 0, 0);
+                        mAppBarLayout.setLayoutParams(params);
                     } else {
                         newFragment = new BoxesAsMapFragment();
-                        menuItem.setTitle(R.string.action_view_as_map);
+                        params.setMargins( 30, 30, 30, 30);
+                        mAppBarLayout.setLayoutParams(params);
+
+
+                        //menuItem.setTitle(R.string.action_view_as_map);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));

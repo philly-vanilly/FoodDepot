@@ -8,12 +8,13 @@
     android:fitsSystemWindows="true"
     tools:context=".BoxesActivity">
 
-    <!--<include layout="@layout/fragment_map" />-->
+    <include layout="@layout/fragment_container" />
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        android:layout_margin="30px">
+        android:layout_margin="30dp">
 
         <android.support.v7.widget.Toolbar
             xmlns:android="http://schemas.android.com/apk/res/android"

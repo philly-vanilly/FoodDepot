@@ -1,4 +1,4 @@
-<!--<?xml version="1.0" encoding="utf-8"?>-->
+<?xml version="1.0" encoding="utf-8"?>
 <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
 <!--xmlns:tools="http://schemas.android.com/tools"-->
@@ -17,15 +17,23 @@
 
 
 
-
-
-<!--</RelativeLayout>-->
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container_fragment_map"
-    android:name="de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxesAsMapFragment"
+<!--FrameLayout-Container to be filled with fragment to display boxes-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BoxesActivity" />
+    android:id="@+id/fragment_container"
+>
+
+<!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:map="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:id="@+id/container_fragment_map"-->
+    <!--android:name="de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxesAsMapFragment"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:context=".BoxesActivity" />-->
+
+
     <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
+    </FrameLayout>
