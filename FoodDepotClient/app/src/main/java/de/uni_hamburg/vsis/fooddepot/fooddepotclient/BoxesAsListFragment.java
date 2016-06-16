@@ -13,6 +13,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import rest.beans.Box;
 
@@ -34,6 +36,12 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
         //List<Box> boxes = getBoxes();
         List<Box> boxes = new ArrayList<Box>(20); //TODO: replace placeholder
+        for(int i = 0; i < boxes.size(); i++){
+            Box box = new Box();
+            box.setId(UUID.randomUUID().toString());
+            box.setLatitude(ThreadLocalRandom.current().nextDouble(50.0, 60.0));
+            box.setLongitude(ThreadLocalRandom.current().nextDouble(9.0, 10.0));
+        }
 
         mBoxesListAdapter = new BoxesListAdapter(boxes);
         mBoxesListRecyclerView.setAdapter(mBoxesListAdapter);

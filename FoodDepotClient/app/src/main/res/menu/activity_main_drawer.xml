@@ -13,7 +13,6 @@
         android:id="@+id/nav_switch_map_list"
         android:icon="@drawable/ic_menu_camera"
         android:title="@string/action_view_as_list" />
-        <!--android:icon="@drawable/ic_switch"-->
     </group>
 
     <group
