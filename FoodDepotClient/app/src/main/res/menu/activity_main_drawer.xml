@@ -8,8 +8,6 @@
             android:icon="@drawable/ic_nfc_black_24"
             android:title="@string/action_open_box" />
         <!--android:icon="@drawable/ic_menu_camera"-->
-
-
     </group>
 
     <group
@@ -29,12 +27,17 @@
                 android:id="@+id/nav_manage"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/action_edit_settings" />
+    </group>
 
+    <group
+        android:id="@+id/group_tertiary_items"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_switch_map_list"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/action_edit_settings" />
+            android:icon="@drawable/ic_switch"
+            android:title="@string/action_view_as_list" />
     </group>
+
     <!--<group android:checkableBehavior="single">-->
         <!--<item-->
             <!--android:id="@+id/nav_camera"-->

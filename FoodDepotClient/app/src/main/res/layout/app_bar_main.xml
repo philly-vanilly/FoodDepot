@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,11 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".BoxesActivity">
 
-
-
-    <include layout="@layout/fragment_map" />
-
-
+    <!--<include layout="@layout/fragment_map" />-->
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,18 +16,17 @@
         android:layout_margin="30px">
 
         <android.support.v7.widget.Toolbar
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/toolbar"
+            android:minHeight="?attr/actionBarSize"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-
-
-            />
-
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -39,5 +35,4 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_menu_mylocation" />
-
 </android.support.design.widget.CoordinatorLayout>

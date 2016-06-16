@@ -10,9 +10,9 @@
         app:actionViewClass="android.support.v7.widget.SearchView" />
     <!--app:showAsAction="ifRoom|collapseActionView"-->
 
-    <item
-        android:id="@+id/action_toggle_list_view_mode"
-        android:orderInCategory="100"
-        android:title="@string/action_view_as_list"
-        app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/action_toggle_list_view_mode"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/action_switch_map_list"-->
+        <!--app:showAsAction="never" />-->
 </menu>

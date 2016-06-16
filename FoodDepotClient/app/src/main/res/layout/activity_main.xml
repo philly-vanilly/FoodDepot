@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--drawer Layout for Navigation Drawer coming from the left-->
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
@@ -16,12 +17,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!--Action bar displayed at the top-->
+        <!--Action bar displayed at the top plus floating action button-->
         <include
             layout="@layout/app_bar_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+        <!--FrameLayout-Container to be filled with fragment to display boxes-->
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
@@ -29,7 +31,7 @@
     </LinearLayout>
 
 
-    <!--Navigation drawer coming from the left-->
+    <!--Navigation drawer coming from the left itself-->
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

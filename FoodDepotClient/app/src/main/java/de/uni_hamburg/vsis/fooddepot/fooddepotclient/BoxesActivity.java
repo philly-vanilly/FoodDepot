@@ -71,21 +71,38 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         // nvDrawer.setNavigationItemSelectedListener(this); //needed????
         setupDrawerContent(nvDrawer);
 
-        // manages fragments (adding them to activities) and also manages the backstack of
-        // saved fragment transactions
-        FragmentManager fragmentManager = getSupportFragmentManager();
-         currentBoxesView = (BoxesFragmentInterface) fragmentManager.findFragmentById(R.id.container_fragment_map);
+        //activity should use the layout with an existing fragment_container
+        if(findViewById(R.id.fragment_container) != null) {
+            //dont setup another fragment if restored from previous state or else you get
+            // overlapping fragments
+            if(savedInstanceState == null && currentBoxesView == null){
+                // manages fragments (adding them to activities) and also manages the backstack of
+                // saved fragment transactions
+                FragmentManager fragmentManager = getSupportFragmentManager();
 
-        // fragment could already be in the list after being recreated by the FragmentManager
-        // after allocating memory. But when it is null, create new. onStart() makes it visible,
-        // onResume() returns it to foreground
-        if (currentBoxesView == null) {
-            if (isMapMode) {
-                currentBoxesView = new BoxesAsMapFragment();
-            } else {
-                currentBoxesView = new BoxesAsListFragment();
+                // fragment could already be in the list after being recreated by the FragmentManager
+                // after allocating memory. But when it is null, create new. onStart() makes it visible,
+                // onResume() returns it to foreground
+                try{
+                    if (isMapMode) {
+                        currentBoxesView = new BoxesAsMapFragment();
+                    } else {
+                        currentBoxesView = new BoxesAsListFragment();
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, Log.getStackTraceString(e));
+                }
+
+                // In case this activity was started with special instructions from an
+                // Intent, pass the Intent's extras to the fragment as arguments
+                ((Fragment) currentBoxesView).setArguments(getIntent().getExtras());
+
+                //add fragment to Frame Layout called fragment_container
+                fragmentManager
+                        .beginTransaction()
+                        .add(R.id.fragment_container, (Fragment) currentBoxesView)
+                        .commit();
             }
-            fragmentManager.beginTransaction().add(R.id.fragment_container, (Fragment)currentBoxesView).commit();
         }
 
         mGoogleApiClient = new FDepotGoogleApiClient(this, this);
@@ -118,22 +135,25 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     public void selectDrawerItem(MenuItem menuItem){
         switch(menuItem.getItemId()){
             case R.id.nav_switch_map_list:
-                isMapMode = !isMapMode;
-                Class fragmentClass = null;
-                if (isMapMode){
-                    fragmentClass = BoxesAsMapFragment.class;
-                } else {
-                    fragmentClass = BoxesAsListFragment.class;
-                }
-                BoxesFragmentInterface fragment = null;
+                BoxesFragmentInterface newFragment = null;
                 try {
-                    fragment = (BoxesFragmentInterface) fragmentClass.newInstance();
-                    currentBoxesView = fragment;
+                    if (isMapMode){
+                        newFragment = new BoxesAsListFragment();
+                        menuItem.setTitle(R.string.action_view_as_list);
+                    } else {
+                        newFragment = new BoxesAsMapFragment();
+                        menuItem.setTitle(R.string.action_view_as_map);
+                    }
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
                 }
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragment_container, (Fragment) fragment).commit();
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, (Fragment) newFragment)
+                        .addToBackStack(null)
+                        .commit();
+                isMapMode = !isMapMode;
                 break;
             case R.id.nav_open_box:
                 startActivity(new Intent(this, OpenBoxActivity.class));
