@@ -38,6 +38,9 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         mBoxesListAdapter = new BoxesListAdapter(boxes);
         mBoxesListRecyclerView.setAdapter(mBoxesListAdapter);
 
+        BoxActivityInterface activity = (BoxActivityInterface)getActivity();
+        activity.requestBoxListUpdate();
+
         return view;
     }
 

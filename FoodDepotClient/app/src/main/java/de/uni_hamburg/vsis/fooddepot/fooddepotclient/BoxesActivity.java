@@ -35,7 +35,7 @@ import rest.beans.Box;
 import rest.beans.User;
 
 
-public class BoxesActivity extends AppCompatActivity implements LocationListener {
+public class BoxesActivity extends AppCompatActivity implements LocationListener , BoxActivityInterface{
     private final static String TAG = "BoxesActivity";
 
     private FDepotGoogleApiClient mGoogleApiClient = null;
@@ -301,5 +301,10 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         && currentBoxesView != null){
             currentBoxesView.updateBoxList(boxList);
         }
+    }
+
+    @Override
+    public void requestBoxListUpdate() {
+        updateBoxList();
     }
 }
