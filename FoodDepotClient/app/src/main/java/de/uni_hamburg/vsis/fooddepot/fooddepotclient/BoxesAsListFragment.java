@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,20 +36,14 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         mBoxesListRecyclerView = (RecyclerView) view.findViewById(R.id.boxes_list_recycler_view);
         mBoxesListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //List<Box> boxes = getBoxes();
-        List<Box> boxes = new ArrayList<Box>(20); //TODO: replace placeholder
-        for(int i = 0; i < boxes.size(); i++){
-            Box box = new Box();
-            box.setId(UUID.randomUUID().toString());
-            box.setLatitude(ThreadLocalRandom.current().nextDouble(50.0, 60.0));
-            box.setLongitude(ThreadLocalRandom.current().nextDouble(9.0, 10.0));
-        }
+        BoxSingleton boxSingleton = BoxSingleton.get(getActivity());
+        List<Box> boxes = boxSingleton.getBoxes();
 
         mBoxesListAdapter = new BoxesListAdapter(boxes);
         mBoxesListRecyclerView.setAdapter(mBoxesListAdapter);
 
-        BoxActivityInterface activity = (BoxActivityInterface)getActivity();
-        activity.requestBoxListUpdate();
+//        BoxActivityInterface activity = (BoxActivityInterface)getActivity();
+//        activity.requestBoxListUpdate();
 
         return view;
     }
@@ -94,9 +90,6 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
     @Override
     public void updateBoxList(List<Box> boxList) {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        for (Box box : boxList) {
-        }
+        Log.d(TAG, "updateBoxList called");
     }
 }

@@ -5,13 +5,13 @@
         android:id="@+id/group_primary_items">
         <item
             android:id="@+id/nav_open_box"
-            android:icon="@drawable/ic_nfc_black_24"
+            android:icon="@drawable/ic_action_barcode_2"
             android:title="@string/action_open_box" />
         <!--android:icon="@drawable/ic_menu_camera"-->
 
         <item
         android:id="@+id/nav_switch_map_list"
-        android:icon="@drawable/ic_menu_camera"
+        android:icon="@drawable/ic_map_list"
         android:title="@string/action_view_as_list" />
     </group>
 
@@ -20,13 +20,13 @@
         android:checkableBehavior="single">
             <item
                 android:id="@+id/nav_toggle_sell"
-                android:icon="@drawable/ic_add_to_box_black_24"
+                android:icon="@drawable/ic_action_drop"
                 android:title="@string/action_fill_a_box" />
 
         <!--android:icon="@drawable/ic_add_shopping_cart_black_24dp"-->
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_account_circle_black_24px"
+            android:icon="@drawable/ic_face"
             android:title="@string/action_edit_profile" />
         <item
                 android:id="@+id/nav_manage"

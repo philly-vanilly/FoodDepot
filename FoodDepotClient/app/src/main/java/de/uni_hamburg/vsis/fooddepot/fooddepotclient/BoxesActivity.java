@@ -146,16 +146,14 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 try {
                     if (isMapMode){
                         newFragment = new BoxesAsListFragment();
-                        //menuItem.setTitle(R.string.action_view_as_list);
+                        menuItem.setTitle(R.string.action_view_as_list);
                         params.setMargins( 0, 0, 0, 0);
                         mAppBarLayout.setLayoutParams(params);
                     } else {
                         newFragment = new BoxesAsMapFragment();
                         params.setMargins( 30, 30, 30, 30);
                         mAppBarLayout.setLayoutParams(params);
-
-
-                        //menuItem.setTitle(R.string.action_view_as_map);
+                        menuItem.setTitle(R.string.action_view_as_map);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
@@ -282,10 +280,8 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                     String responseAsString = new String(responseBody);
                     Log.d(TAG, "search box success:" + responseAsString);
 
-
                     Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
-                    Response<List<Box>> boxResponse = gson.fromJson(responseAsString,collectionType );
-
+                    Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
 
                     updateBoxFragment(boxResponse.data);
 
