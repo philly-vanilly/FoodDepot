@@ -1,5 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,15 +14,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-
 import java.util.List;
-
-
 import rest.beans.Box;
 
 public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterface {
 
-    private final String TAG = "BoxesAsListFragment";
+    private static final String TAG = "BoxesAsListFragment";
     private RecyclerView mBoxesListRecyclerView;
     private BoxesListAdapter mBoxesListAdapter;
 
@@ -72,22 +70,28 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             mItemView = itemView;
 
             mImageViewFruit = (ImageView) itemView.findViewById(R.id.imageViewFruit);
-            //mRatingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
+            //mRatingBar = (RatingBar) itemView.findViewById(R.id.ratingBar); //NOTE: ratingbar takes too much space
             mTextViewBoxesName = (TextView) itemView.findViewById(R.id.textViewName);
             mTextViewPrice = (TextView) itemView.findViewById(R.id.textViewPrice);
             mTextViewDistance = (TextView) itemView.findViewById(R.id.textViewDistance);
             mImageButtonExpand = (ImageButton) itemView.findViewById(R.id.imageButtonExpand);
         }
 
-        public void bindBox(Box box){
+        public void bindBox(Box box, int position){
             BoxService boxService = new BoxService(box, mItemView);
             mImageViewFruit.setImageDrawable(boxService.getImageForBox());
             //mRatingBar.setRating(boxService.getRatingForBox());
             mTextViewBoxesName.setText(box.getName());
             mTextViewPrice.setText(boxService.getPriceForBox());
             mTextViewDistance.setText(boxService.getDistanceForBox(53.551086, 9.993682)); //TODO: replace dummy data with current location
-        }
 
+            //color rows differently based on whether the position is even or not
+            if(position % 2 == 0){
+                mItemView.setBackgroundColor(Color.parseColor("#02000000"));
+            } else {
+                mItemView.setBackgroundColor(Color.parseColor("white"));
+            }
+        }
     }
 
     // RecyclerView will communicate with this adapter when ViewHolder needs to be created or
@@ -111,7 +115,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         @Override
         public void onBindViewHolder(BoxesHolder holder, int position) {
             Box box = mBoxes.get(position);
-            holder.bindBox(box);
+            holder.bindBox(box, position);
         }
         
         @Override
