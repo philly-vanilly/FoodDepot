@@ -118,13 +118,13 @@ public class BoxesAsMapFragment
 
             {
                 mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(box.latitude, box.longitude))
-                                .title(box.name)
-                                .snippet(box.content)
+                                .position(new LatLng(box.getLatitude(), box.getLongitude()))
+                                .title(box.getName())
+                                .snippet(box.getContent())
 //                        .icon(bitmap)
 
                 );
-                builder.include(new LatLng(box.latitude, box.longitude));
+                builder.include(new LatLng(box.getLatitude(), box.getLongitude()));
             }
 
         }

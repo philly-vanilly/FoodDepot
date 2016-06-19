@@ -117,8 +117,8 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             TextView emailTextView = (TextView) findViewById(R.id.emailTextView);
             TextView usernameTextView = (TextView) findViewById(R.id.usernameTextView);
             if (emailTextView != null && usernameTextView != null) {
-                emailTextView.setText(user.email);
-                usernameTextView.setText(user.firstName + " " + user.lastName);
+                emailTextView.setText(user.getEmail());
+                usernameTextView.setText(user.getFirstName() + " " + user.getLastName());
             }//end if email and text view not null
         }//end if user not null
     }

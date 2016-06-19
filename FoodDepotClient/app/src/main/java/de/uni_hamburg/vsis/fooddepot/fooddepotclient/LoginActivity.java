@@ -121,8 +121,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
 
         if(user != null){
-            mEmailView.setText(user.email, true );
-            mPasswordView.setText(user.password );
+            mEmailView.setText(user.getEmail(), true );
+            mPasswordView.setText(user.getPassword() );
 
             attemptLogin();
         }

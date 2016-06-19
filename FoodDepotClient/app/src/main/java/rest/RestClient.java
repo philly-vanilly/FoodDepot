@@ -51,12 +51,12 @@ public class RestClient {
 
 
         User newUser = new User();
-        newUser.username = username;
-        newUser.password = password;
-        newUser.email = email;
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        newUser.setEmail(email);
 
-        newUser.firstName = "Paul";
-        newUser.lastName = "Test";
+        newUser.setFirstName("Paul");
+        newUser.setLastName("Test");
 
         FDepotApplication.getApplication().setCurrentUser(newUser);
 
@@ -85,12 +85,12 @@ public class RestClient {
 
         try {
             User newUser = new User();
-            newUser.username = username;
-            newUser.password = password;
-            newUser.email = username;
+            newUser.setUsername(username);
+            newUser.setPassword(password);
+            newUser.setEmail(username +  "@blabla.com");
 
-            newUser.firstName = "Paul";
-            newUser.lastName = "Test";
+            newUser.setFirstName("Paul");
+            newUser.setLastName("Test");
 
             FDepotApplication.getApplication().setCurrentUser(newUser);
             RequestParams params = new RequestParams();

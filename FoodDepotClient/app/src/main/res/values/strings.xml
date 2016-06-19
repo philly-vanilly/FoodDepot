@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">FoodDepot</string>
 
+    <!-- List View Strings -->
+    <string name="food_content_description">Box Content</string>
+    <string name="expand_list_details">Show Details</string>
+    <string name="dummy_price">0FD</string>
+    <string name="dummy_distance">0m</string>
+
+
+
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>

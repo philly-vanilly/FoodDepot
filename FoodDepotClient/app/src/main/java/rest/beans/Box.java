@@ -1,43 +1,63 @@
 package rest.beans;
 
+import android.graphics.drawable.Drawable;
+
 /**
  * Created by paul on 05.06.16.
  */
 public class Box {
-    public String id;
-    public String name;
-    public String content;
-    public double latitude;
-    public double longitude;
+    private String mId;
+    private String mName;
+    private String mContent;
+    private double mWeight; //in Kg
+    private double mLatitude;
+    private double mLongitude;
+    private Drawable mImage;
+    private double mRating;
+    private double mPrice;
+
+    public Box(){}
 
     public String getId() {
-        return id;
+        return mId;
     }
     public void setId(String id) {
-        this.id = id;
+        mId = id;
     }
     public String getName() {
-        return name;
+        return mName;
     }
     public void setName(String name) {
-        this.name = name;
+        mName = name;
     }
     public String getContent() {
-        return content;
+        return mContent;
     }
     public void setContent(String content) {
-        this.content = content;
+        mContent = content;
     }
+    public double getWeight() { return mWeight; }
+    public void setWeight(double weight) { mWeight = weight; }
     public double getLatitude() {
-        return latitude;
+        return mLatitude;
     }
     public void setLatitude(double latitude) {
-        this.latitude = latitude;
+        mLatitude = latitude;
     }
     public double getLongitude() {
-        return longitude;
+        return mLongitude;
     }
     public void setLongitude(double longitude) {
-        this.longitude = longitude;
+        mLongitude = longitude;
     }
+    public Drawable getImage() { return mImage; }
+    public void setImage(Drawable image) { mImage = image; }
+    public double getRating() {
+        return mRating;
+    }
+    public void setRating(double rating) {
+        mRating = rating;
+    }
+    public double getPrice() { return mPrice; }
+    public void setPrice(double price) { mPrice = price; }
 }

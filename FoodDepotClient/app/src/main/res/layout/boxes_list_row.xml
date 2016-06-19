@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="0dp"
+    android:layout_marginTop="0dp"
+    android:focusableInTouchMode="true">
+
+    <ImageView
+        android:id="@+id/imageViewFruit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/food_content_description" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageViewFruit"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/imageViewFruit"
+        android:focusableInTouchMode="true"
+        android:weightSum="2"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp" >
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="MyOwn_DummyFruit"/>
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:stepSize="0.5"
+            android:numStars="3"
+            android:rating="1.5"
+            android:isIndicator="false"
+            style="@style/foodRatingBar"
+            />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/imageButtonExpand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_keyboard_arrow_down"
+        android:contentDescription="@string/expand_list_details" />
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/imageButtonExpand"
+        android:layout_alignBottom="@+id/imageViewFruit"
+        android:layout_alignParentTop="true"
+        android:focusableInTouchMode="true"
+        android:weightSum="2"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0FD"
+            android:contentDescription="@string/dummy_price" />
+
+        <TextView
+            android:id="@+id/textViewDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0m"
+            android:contentDescription="@string/dummy_distance" />
+    </LinearLayout>
+</RelativeLayout>
