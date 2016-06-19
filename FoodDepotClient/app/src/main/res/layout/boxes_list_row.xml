@@ -18,38 +18,30 @@
         android:scaleType="centerCrop"
         android:contentDescription="@string/food_content_description" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+    <TextView
+        android:id="@+id/textViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageViewFruit"
-        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/imageViewFruit"
-        android:focusableInTouchMode="true"
-        android:weightSum="2"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp" >
+        android:text="@string/myown_dummyfruit"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:paddingTop="10dp" />
 
-        <TextView
-            android:id="@+id/textViewName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="MyOwn_DummyFruit"/>
 
-        <RatingBar
-            android:id="@+id/ratingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:stepSize="0.5"
-            android:numStars="3"
-            android:rating="1.5"
-            android:isIndicator="false"
-            style="@style/foodRatingBar"
-            />
-    </LinearLayout>
+    <!--<RatingBar-->
+        <!--android:id="@+id/ratingBar"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_toLeftOf="@+id/linearLayoutPriceDistance"-->
+        <!--android:stepSize="0.5"-->
+        <!--android:numStars="3"-->
+        <!--android:rating="1.5"-->
+        <!--android:isIndicator="false"-->
+        <!--style="@style/foodRatingBar"-->
+        <!--/>-->
 
     <ImageButton
         android:id="@+id/imageButtonExpand"
@@ -66,32 +58,31 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linearLayoutPriceDistance"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
         android:layout_toLeftOf="@+id/imageButtonExpand"
-        android:layout_alignBottom="@+id/imageViewFruit"
-        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
         android:focusableInTouchMode="true"
         android:weightSum="2"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="10dp">
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        >
 
         <TextView
             android:id="@+id/textViewPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="0FD"
-            android:contentDescription="@string/dummy_price" />
+            android:text="@string/dummy_price"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textViewDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="0m"
-            android:contentDescription="@string/dummy_distance" />
+            android:text="@string/dummy_distance" />
     </LinearLayout>
 </RelativeLayout>

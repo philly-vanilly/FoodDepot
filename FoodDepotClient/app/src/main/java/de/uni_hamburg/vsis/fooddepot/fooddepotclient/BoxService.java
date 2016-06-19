@@ -95,11 +95,11 @@ public class BoxService {
         fullRating = mBox.getRating();
 
         BigDecimal bd = null;
-        if (fullRating >= 0 && fullRating <= ((RatingBar) mItemView.findViewById(R.id.ratingBar)).getNumStars()){ //allowed rating range
+        if (fullRating >= 0 && fullRating <= 3){ //allowed rating range
             bd = new BigDecimal(fullRating);
-            bd.multiply(new BigDecimal(2));
+            bd = bd.multiply(new BigDecimal(2));
             bd = bd.setScale(2, RoundingMode.HALF_UP);
-            bd.divide(new BigDecimal(2.0f));
+            bd = bd.divide(new BigDecimal(2.0f));
         } else {
             Log.e(TAG, "Invalid Rating for Box " + mBox.getId() + ": rating  = " + fullRating);
             bd = new BigDecimal(0);
@@ -114,7 +114,7 @@ public class BoxService {
 
         BigDecimal bd = new BigDecimal(fullPrice);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
-        return String.valueOf(bd + "FD");
+        return String.valueOf(bd + " FD");
     }
 
     /**
@@ -138,13 +138,13 @@ public class BoxService {
         String result = "";
         if(distance >= 1000){
             BigDecimal bd = new BigDecimal(distance);
-            bd.divide(new BigDecimal(1000));
+            bd = bd.divide(new BigDecimal(1000));
             bd = bd.setScale(2, RoundingMode.HALF_UP);
-            result = String.valueOf(bd) + "km";
+            result = String.valueOf(bd) + " km";
         } else {
             BigDecimal bd = new BigDecimal(distance);
             bd = bd.setScale(0, RoundingMode.HALF_UP);
-            result = String.valueOf(bd) + "m";
+            result = String.valueOf(bd) + " m";
         }
         return result;
     }

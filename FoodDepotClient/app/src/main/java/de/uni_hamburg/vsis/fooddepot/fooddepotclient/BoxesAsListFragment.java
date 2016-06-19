@@ -72,7 +72,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             mItemView = itemView;
 
             mImageViewFruit = (ImageView) itemView.findViewById(R.id.imageViewFruit);
-            mRatingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
+            //mRatingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
             mTextViewBoxesName = (TextView) itemView.findViewById(R.id.textViewName);
             mTextViewPrice = (TextView) itemView.findViewById(R.id.textViewPrice);
             mTextViewDistance = (TextView) itemView.findViewById(R.id.textViewDistance);
@@ -82,7 +82,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         public void bindBox(Box box){
             BoxService boxService = new BoxService(box, mItemView);
             mImageViewFruit.setImageDrawable(boxService.getImageForBox());
-            mRatingBar.setRating(boxService.getRatingForBox());
+            //mRatingBar.setRating(boxService.getRatingForBox());
             mTextViewBoxesName.setText(box.getName());
             mTextViewPrice.setText(boxService.getPriceForBox());
             mTextViewDistance.setText(boxService.getDistanceForBox(53.551086, 9.993682)); //TODO: replace dummy data with current location
