@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,9 +27,7 @@ import java.util.concurrent.TimeUnit;
 import rest.beans.Box;
 
 public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterface {
-    //rotation etc support from honeycomb upwards
-    private final Locale CURRENT_LOCALE = getResources().getConfiguration().locale;
-    private static final boolean BELOW_HONEYCOMB = Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB;
+    private static final boolean BELOW_HONEYCOMB = Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB;    //rotation etc support from honeycomb upwards
     private static final float POINTING_UPWARDS = 0.0f;
     private static final float POINTING_DOWNWARDS = 180f;
 
@@ -81,6 +80,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         private TextView mTextViewRatingCount;
         private RatingBar mRatingBar;
         private TextView mTextViewTimeLeft;
+        private Button mDetailsButton;
 
         public BoxesHolder(View itemView) {
             super(itemView);
@@ -100,6 +100,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             mTextViewOwnerName = (TextView) itemView.findViewById((R.id.textViewOwnerName));
             mTextViewRatingCount = (TextView) itemView.findViewById((R.id.ratingCount));
             mTextViewTimeLeft = (TextView) itemView.findViewById(R.id.textViewTimeLeft);
+            mDetailsButton = (Button) itemView.findViewById(R.id.detailsButton);
         }
 
         public void bindBox(final Box box){
@@ -116,7 +117,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             mTextViewOwnerName.setText("Doedel_1995");
             mTextViewRatingCount.setText("(10)");
 
-            String targetDateString = "Tue Jul 15 00:00:00 CEST 2016"; //TODO: get target date as string from JSON > BEAN instead
+            String targetDateString = "Jul 16 00:00:00 2016"; //TODO: get target date as string from JSON > BEAN instead
             setRemainingTime(targetDateString);
 
             //listeners and general settings:
@@ -135,10 +136,17 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
                     updateDetailsVisibility(box, true);
                 }
             });
+
+            mDetailsButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    //TODO: open Details Activity/Fragment and pass box to it
+                }
+            });
         }
 
         private void setRemainingTime(String targetDateString) {
-            DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", CURRENT_LOCALE);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd HH:mm:ss yyyy", Locale.ENGLISH);
             Date targetDate = null;
             try {
                 targetDate = dateFormat.parse(targetDateString);
