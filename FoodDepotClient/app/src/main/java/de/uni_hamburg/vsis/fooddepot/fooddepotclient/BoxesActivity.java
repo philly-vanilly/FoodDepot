@@ -50,7 +50,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
-    private boolean isMapMode = true; // TODO: persist on pause, stop, ...
+    private boolean isMapMode = false; // TODO: persist on pause, stop, ...
 
 
 

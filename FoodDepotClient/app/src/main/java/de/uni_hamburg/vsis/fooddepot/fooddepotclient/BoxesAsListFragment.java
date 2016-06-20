@@ -1,6 +1,7 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -18,6 +20,10 @@ import java.util.List;
 import rest.beans.Box;
 
 public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterface {
+    //rotation etc support from honeycomb upwards
+    private static final boolean BELOW_HONEYCOMB = Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB;
+    private static final float POINTING_UPWARDS = 0.0f;
+    private static final float POINTING_DOWNWARDS = 180f;
 
     private static final String TAG = "BoxesAsListFragment";
     private RecyclerView mBoxesListRecyclerView;
@@ -33,8 +39,8 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         mBoxesListRecyclerView = (RecyclerView) view.findViewById(R.id.boxes_list_recycler_view);
         mBoxesListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        BoxSingleton boxSingleton = BoxSingleton.get(getActivity());
-        List<Box> boxes = boxSingleton.getBoxes();
+        BoxFactory boxFactory = BoxFactory.get(getActivity());
+        List<Box> boxes = boxFactory.getBoxes();
 
         mBoxesListAdapter = new BoxesListAdapter(boxes);
         mBoxesListRecyclerView.setAdapter(mBoxesListAdapter);
@@ -49,47 +55,93 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
      * Holder for one single list entry in a box list. Sets attributes for a specific box. Is
      * managed by RecyclerView.
      */
-    private class BoxesHolder extends RecyclerView.ViewHolder {
+    private class BoxesHolder extends RecyclerView.ViewHolder{
+        //logic member variables:
+        private View mItemView;
+
+        //UI variables:
+        //basic elements:
         private TextView mTextViewBoxesName;
-        //private TextView mTextViewBoxesContent;
+        private TextView mTextViewBoxesContent;
         private TextView mTextViewDistance;
         private TextView mTextViewPrice;
+        private ImageView mImageViewFruit;
+        private ImageButton mImageButtonExpand;
+
+        //expandable elements:
+        private LinearLayout mExpandableContent;
+        private TextView mOwnerName;
+//        private ImageButton mImageButtonShoppingCart;
+        private TextView mRatingCount;
+        private RatingBar mRatingBar;
+//        private ProgressBar mProgressBarExpiration;
 //        private TextView mTextViewDescription; //to make scrollable: http://stackoverflow.com/questions/1748977/making-textview-scrollable-in-android
 //        private TextView mTextViewSellerName;
 //        private TextView mTextViewExpiration;
-        private ImageView mImageViewFruit;
-        private ImageButton mImageButtonExpand;
-//        private ImageButton mImageButtonShoppingCart;
-        private RatingBar mRatingBar;
-//        private ProgressBar mProgressBarExpiration;
-
-        private View mItemView;
 
         public BoxesHolder(View itemView) {
             super(itemView);
             mItemView = itemView;
 
+            //basic content
             mImageViewFruit = (ImageView) itemView.findViewById(R.id.imageViewFruit);
-            //mRatingBar = (RatingBar) itemView.findViewById(R.id.ratingBar); //NOTE: ratingbar takes too much space
             mTextViewBoxesName = (TextView) itemView.findViewById(R.id.textViewName);
             mTextViewPrice = (TextView) itemView.findViewById(R.id.textViewPrice);
             mTextViewDistance = (TextView) itemView.findViewById(R.id.textViewDistance);
             mImageButtonExpand = (ImageButton) itemView.findViewById(R.id.imageButtonExpand);
+
+            //expandable content
+            mExpandableContent = (LinearLayout) itemView.findViewById(R.id.expandableContent);
+            mTextViewBoxesContent = (TextView) itemView.findViewById(R.id.textViewContent);
+            mRatingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
+            mOwnerName = (TextView) itemView.findViewById((R.id.ownerName));
+            mRatingCount = (TextView) itemView.findViewById((R.id.ratingCount));
         }
 
-        public void bindBox(Box box, int position){
+        public void bindBox(final Box box){
+            //basic content:
             BoxService boxService = new BoxService(box, mItemView);
             mImageViewFruit.setImageDrawable(boxService.getImageForBox());
-            //mRatingBar.setRating(boxService.getRatingForBox());
             mTextViewBoxesName.setText(box.getName());
             mTextViewPrice.setText(boxService.getPriceForBox());
             mTextViewDistance.setText(boxService.getDistanceForBox(53.551086, 9.993682)); //TODO: replace dummy data with current location
 
+            //expandable content
+            mTextViewBoxesContent.setText("(" + box.getContent() + ")");
+            mRatingBar.setRating(boxService.getRatingForBox());
+            mOwnerName.setText("Doedel_1995");
+            mRatingCount.setText("(10)");
+
+
+            //listeners and general settings:
             //color rows differently based on whether the position is even or not
-            if(position % 2 == 0){
+            if(box.getPosition() % 2 == 0){
                 mItemView.setBackgroundColor(Color.parseColor("#02000000"));
             } else {
                 mItemView.setBackgroundColor(Color.parseColor("white"));
+            }
+            updateDetailsVisibility(box, false);
+
+            mImageButtonExpand.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    box.setClicked(!box.isClicked());
+                    updateDetailsVisibility(box, true);
+                }
+            });
+        }
+        private void updateDetailsVisibility(Box box, boolean justClicked){ //if not just clicked, don't start animation
+            if (box.isClicked()){
+                mExpandableContent.setVisibility(View.VISIBLE);
+            } else {
+                mExpandableContent.setVisibility(View.GONE);
+            }
+            if (BELOW_HONEYCOMB || !justClicked){ //below honeycomb rotation not supported
+                return;
+            } else if (box.isClicked()){
+                mImageButtonExpand.setRotation(POINTING_DOWNWARDS);
+            } else {
+                mImageButtonExpand.setRotation(POINTING_UPWARDS);
             }
         }
     }
@@ -115,7 +167,8 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         @Override
         public void onBindViewHolder(BoxesHolder holder, int position) {
             Box box = mBoxes.get(position);
-            holder.bindBox(box, position);
+            box.setPosition(position);
+            holder.bindBox(box);
         }
         
         @Override

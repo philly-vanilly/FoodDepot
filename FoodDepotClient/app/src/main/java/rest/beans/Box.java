@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
  * Created by paul on 05.06.16.
  */
 public class Box {
+    //DAO attributes for serialization and REST-communication:
     private String mId;
     private String mName;
     private String mContent;
@@ -16,8 +17,13 @@ public class Box {
     private double mRating;
     private double mPrice;
 
+    //UI helper attributes:
+    private boolean mClicked;
+    private int mPosition;
+
     public Box(){}
 
+    //DAO getters/setters
     public String getId() {
         return mId;
     }
@@ -60,4 +66,14 @@ public class Box {
     }
     public double getPrice() { return mPrice; }
     public void setPrice(double price) { mPrice = price; }
+
+    //UI getters/setters:
+    public boolean isClicked() { return mClicked; }
+    public void setClicked(boolean clickedOrNot){ mClicked = clickedOrNot; }
+    public int getPosition() {
+        return mPosition;
+    }
+    public void setPosition(int position) {
+        mPosition = position;
+    }
 }
