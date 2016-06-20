@@ -16,11 +16,18 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 import rest.beans.Box;
 
 public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterface {
     //rotation etc support from honeycomb upwards
+    private final Locale CURRENT_LOCALE = getResources().getConfiguration().locale;
     private static final boolean BELOW_HONEYCOMB = Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB;
     private static final float POINTING_UPWARDS = 0.0f;
     private static final float POINTING_DOWNWARDS = 180f;
@@ -70,14 +77,10 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
         //expandable elements:
         private LinearLayout mExpandableContent;
-        private TextView mOwnerName;
-//        private ImageButton mImageButtonShoppingCart;
-        private TextView mRatingCount;
+        private TextView mTextViewOwnerName;
+        private TextView mTextViewRatingCount;
         private RatingBar mRatingBar;
-//        private ProgressBar mProgressBarExpiration;
-//        private TextView mTextViewDescription; //to make scrollable: http://stackoverflow.com/questions/1748977/making-textview-scrollable-in-android
-//        private TextView mTextViewSellerName;
-//        private TextView mTextViewExpiration;
+        private TextView mTextViewTimeLeft;
 
         public BoxesHolder(View itemView) {
             super(itemView);
@@ -94,8 +97,9 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             mExpandableContent = (LinearLayout) itemView.findViewById(R.id.expandableContent);
             mTextViewBoxesContent = (TextView) itemView.findViewById(R.id.textViewContent);
             mRatingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
-            mOwnerName = (TextView) itemView.findViewById((R.id.ownerName));
-            mRatingCount = (TextView) itemView.findViewById((R.id.ratingCount));
+            mTextViewOwnerName = (TextView) itemView.findViewById((R.id.textViewOwnerName));
+            mTextViewRatingCount = (TextView) itemView.findViewById((R.id.ratingCount));
+            mTextViewTimeLeft = (TextView) itemView.findViewById(R.id.textViewTimeLeft);
         }
 
         public void bindBox(final Box box){
@@ -109,9 +113,11 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             //expandable content
             mTextViewBoxesContent.setText("(" + box.getContent() + ")");
             mRatingBar.setRating(boxService.getRatingForBox());
-            mOwnerName.setText("Doedel_1995");
-            mRatingCount.setText("(10)");
+            mTextViewOwnerName.setText("Doedel_1995");
+            mTextViewRatingCount.setText("(10)");
 
+            String targetDateString = "Tue Jul 15 00:00:00 CEST 2016"; //TODO: get target date as string from JSON > BEAN instead
+            setRemainingTime(targetDateString);
 
             //listeners and general settings:
             //color rows differently based on whether the position is even or not
@@ -130,6 +136,39 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
                 }
             });
         }
+
+        private void setRemainingTime(String targetDateString) {
+            DateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", CURRENT_LOCALE);
+            Date targetDate = null;
+            try {
+                targetDate = dateFormat.parse(targetDateString);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+            Date nowDate = new Date();
+            if (targetDate != null) {
+                long msDiff = targetDate.getTime() - nowDate.getTime();
+                if (msDiff / 1000 / 60 / 60 / 24 > 1){
+                    long finalDiff = TimeUnit.DAYS.convert(msDiff, TimeUnit.MILLISECONDS);
+                    mTextViewTimeLeft.setText("Expires in: " + finalDiff + " days");
+                } else if (msDiff / 1000 / 60 / 60 > 1) {
+                    long finalDiff = TimeUnit.HOURS.convert(msDiff, TimeUnit.MILLISECONDS);
+                    mTextViewTimeLeft.setText("Expires in: " + finalDiff + " hours");
+                } else if (msDiff / 1000 / 60 > 1) {
+                    long finalDiff = TimeUnit.MINUTES.convert(msDiff, TimeUnit.MILLISECONDS);
+                    mTextViewTimeLeft.setText("Expires in: " + finalDiff + " minutes");
+                    mTextViewTimeLeft.setTextColor(Color.RED);
+                } else {
+                    long finalDiff = TimeUnit.SECONDS.convert(msDiff, TimeUnit.MILLISECONDS);
+                    mTextViewTimeLeft.setText("Expires in: " + finalDiff + " seconds");
+                    mTextViewTimeLeft.setTextColor(Color.RED);
+                }
+            } else {
+                mTextViewTimeLeft.setText("Expires in: [NO DATA]");
+                mTextViewTimeLeft.setTextColor(Color.RED);
+            }
+        }
+
         private void updateDetailsVisibility(Box box, boolean justClicked){ //if not just clicked, don't start animation
             if (box.isClicked()){
                 mExpandableContent.setVisibility(View.VISIBLE);

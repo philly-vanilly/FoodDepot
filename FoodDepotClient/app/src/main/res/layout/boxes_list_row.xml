@@ -53,6 +53,7 @@
             android:layout_toLeftOf="@+id/imageButtonExpand"
             android:layout_centerVertical="true"
             android:weightSum="2"
+            android:gravity="right"
             android:paddingLeft="5dp"
             android:paddingRight="5dp">
 
@@ -97,31 +98,9 @@
                 android:textColor="@android:color/secondary_text_dark"/>
 
             <TextView
-                android:id="@+id/ownerName"
-                android:layout_height="wrap_content"
+                android:id="@+id/textViewTimeLeft"
                 android:layout_width="wrap_content"
-                android:layout_toLeftOf="@+id/ratingBar"
-                android:layout_centerVertical="true"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"/>
-
-            <RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="81dp"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/ratingCount"
-                android:numStars="3"
-                android:rating="1.5"
-                android:isIndicator="false"
-                style="@style/foodRatingBar" />
-
-            <TextView
-                android:id="@+id/ratingCount"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 android:layout_toLeftOf="@+id/invisibleExpandButton1"
                 android:layout_centerVertical="true"
                 android:paddingRight="5dp"/>
@@ -137,7 +116,53 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_keyboard_arrow_down"
                 android:visibility="invisible" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/textViewOwnerName"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"/>
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="81dp"
+                android:layout_height="27dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/ratingCount"
+                android:numStars="3"
+                android:rating="1.5"
+                android:isIndicator="false"
+                style="@style/foodRatingBar" />
+
+            <TextView
+                android:id="@+id/ratingCount"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_toLeftOf="@+id/invisibleExpandButton2"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/invisibleExpandButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_keyboard_arrow_down"
+                android:visibility="invisible" />
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
