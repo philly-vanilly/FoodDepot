@@ -2,12 +2,16 @@ package rest.beans;
 
 import android.graphics.drawable.Drawable;
 
+import com.google.android.gms.plus.model.people.Person;
+
+import java.util.UUID;
+
 /**
  * Created by paul on 05.06.16.
  */
 public class Box {
     //DAO attributes for serialization and REST-communication:
-    private String mId;
+    private UUID mId;
     private String mName;
     private String mContent;
     private double mWeight; //in Kg
@@ -19,16 +23,15 @@ public class Box {
 
     //UI helper attributes:
     private boolean mClicked;
-    private int mPosition;
     private float mDistance;
 
     public Box(){}
 
     //DAO getters/setters
-    public String getId() {
+    public UUID getId() {
         return mId;
     }
-    public void setId(String id) {
+    public void setId(UUID id) {
         mId = id;
     }
     public String getName() {
@@ -71,12 +74,6 @@ public class Box {
     //UI getters/setters:
     public boolean isClicked() { return mClicked; }
     public void setClicked(boolean clickedOrNot){ mClicked = clickedOrNot; }
-    public int getPosition() {
-        return mPosition;
-    }
-    public void setPosition(int position) {
-        mPosition = position;
-    }
     public void setDistance(float distance) {
         mDistance = distance;
     }
@@ -84,4 +81,15 @@ public class Box {
         return mDistance;
     }
 
+    @Override
+    public int hashCode() {
+        return getId().hashCode() * 31;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Box))
+            return false;
+        return this.getId().equals(((Box) obj).getId());
+    }
 }

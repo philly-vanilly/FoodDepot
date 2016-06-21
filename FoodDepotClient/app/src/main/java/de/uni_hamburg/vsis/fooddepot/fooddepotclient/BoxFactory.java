@@ -15,10 +15,16 @@ import rest.beans.Box;
  */
 public class BoxFactory {
     private static BoxFactory sBoxFactory;
+    private static final String TAG = "BoxFactory";
+    private Context mContext;
 
+    //this boxes list is for persistence. as singleton class does not get destroyed
     private List<Box> mBoxes;
 
+    //private Singleton constructor, instantiated by getter instead
     private BoxFactory(Context context) {
+        mContext = context.getApplicationContext();
+
         //TODO: when creating boxes, read data from REST instead of making up own data
         mBoxes = new ArrayList<>();
         List<String> food = new ArrayList<>();
@@ -29,7 +35,7 @@ public class BoxFactory {
         Random random = new Random();
         for(int i = 0; i < 50; i++){
             Box box = new Box();
-            box.setId(UUID.randomUUID().toString());
+            box.setId(UUID.randomUUID());
             box.setLatitude(ThreadLocalRandom.current().nextDouble(50.0, 60.0));
             box.setLongitude(ThreadLocalRandom.current().nextDouble(9.0, 10.0));
             box.setContent(food.get(random.nextInt(food.size()-1)));
@@ -42,6 +48,7 @@ public class BoxFactory {
         }
     }
 
+    //Singleton getter = constructor for a single class in whole app:
     public static BoxFactory get(Context context) {
         if (sBoxFactory == null) {
             sBoxFactory = new BoxFactory(context);
@@ -52,10 +59,12 @@ public class BoxFactory {
     public List<Box> getBoxes() {
         return mBoxes;
     }
-
-    public Box getBox(String id) {
+    public Context getContext() {
+        return mContext;
+    }
+    public Box getBox(UUID id) {
         for (Box Box : mBoxes) {
-            if (Box.getId().equals(id)) {
+            if (Box.getId().equals(id)) { //equals returns true for String value, == returns true only for same object reference
                 return Box;
             }
         }

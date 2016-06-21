@@ -63,6 +63,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         //finding and setting up a toolbar to replace actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null);
         mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout) ;
 
         //finding drawer view and binding events to actionbartoggle
@@ -296,18 +297,18 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
-                if (responseBody != null) {
-                    String responseAsString = new String(responseBody);
-                    Log.d(TAG, "search box success:" + responseAsString);
+            if (responseBody != null) {
+                String responseAsString = new String(responseBody);
+                Log.d(TAG, "search box success:" + responseAsString);
 
-                    Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
-                    Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
+                Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
+                Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
 
-                    updateBoxFragment(boxResponse.data);
+                updateBoxFragment(boxResponse.data);
 
-                } else {
-                    Log.e(TAG, "search box success but resopnse body null");
-                }
+            } else {
+                Log.e(TAG, "search box success but resopnse body null");
+            }
             }
         });
     }

@@ -1,5 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         mBoxesListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         BoxFactory boxFactory = BoxFactory.get(getActivity());
+        //we do not create a new list (no new keyword). mBoxes is the same boxes list as in BoxFactory, memory-wise
         List<Box> boxes = boxFactory.getBoxes();
 
         mBoxesListAdapter = new BoxesListAdapter(boxes);
@@ -66,6 +68,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
     private class BoxesHolder extends RecyclerView.ViewHolder{
         //logic member variables:
         private View mItemView;
+        private List<Box> mBoxes;
 
         //UI variables:
         TabLayout mTabLayoutSortList;
@@ -88,6 +91,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         public BoxesHolder(View itemView) {
             super(itemView);
             mItemView = itemView;
+            mBoxes = BoxFactory.get(getContext()).getBoxes();
 
             //toolbar (from Activity's layout, not from the Fragments ListView layout!):
             mTabLayoutSortList = (TabLayout) getActivity().findViewById(R.id.tabLayoutSortList);
@@ -129,7 +133,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
             //listeners and general settings:
             //color rows differently based on whether the position is even or not
-            if(box.getPosition() % 2 == 0){
+            if(mBoxes.indexOf(box) % 2 == 0){
                 mItemView.setBackgroundColor(Color.parseColor("#02000000"));
             } else {
                 mItemView.setBackgroundColor(Color.parseColor("white"));
@@ -147,7 +151,8 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             mDetailsButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    //TODO: open Details Activity/Fragment and pass box to it
+                    Intent intent = BoxActivity.makeIntent(getActivity(), box.getId());
+                    startActivity(intent);
                 }
             });
 
@@ -220,7 +225,6 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
     // RecyclerView will communicate with this adapter when ViewHolder needs to be created or
     // connected with a Note object
     private class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
-
         private List<Box> mBoxes;
         private Comparator currentComparator;
 
@@ -241,7 +245,6 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         @Override
         public void onBindViewHolder(BoxesHolder holder, int boxPosition) {
             Box box = mBoxes.get(boxPosition);
-            box.setPosition(boxPosition);
             holder.bindBox(box);
         }
         

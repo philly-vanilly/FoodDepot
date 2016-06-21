@@ -101,7 +101,7 @@ public class BoxService {
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             bd = bd.divide(new BigDecimal(2.0f));
         } else {
-            Log.e(TAG, "Invalid Rating for Box " + mBox.getId() + ": rating  = " + fullRating);
+            Log.e(TAG, "Invalid Rating for Box " + mBox.getId().toString() + ": rating  = " + fullRating);
             bd = new BigDecimal(0);
         }
 
