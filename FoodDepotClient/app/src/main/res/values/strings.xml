@@ -39,8 +39,8 @@
 
     <string name="action_open_box">Open Box</string>
     <string name="action_switch_map_list">Switch: Map/List</string>
-    <string name="action_view_as_list">View as List</string>
-    <string name="action_view_as_map">View as Map</string>
+    <string name="currently_map_mode_set_to_list">Switch to List</string>
+    <string name="currently_list_mode_set_to_map">Switch to Map</string>
     <string name="action_settings">Settings</string>
     <string name="action_edit_settings">Settings</string>
     <string name="action_edit_profile">Profile</string>

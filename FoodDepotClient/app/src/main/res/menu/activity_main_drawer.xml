@@ -12,7 +12,7 @@
         <item
         android:id="@+id/nav_switch_map_list"
         android:icon="@drawable/ic_map_list"
-        android:title="@string/action_view_as_list" />
+        android:title="@string/currently_list_mode_set_to_map" />
     </group>
 
     <group

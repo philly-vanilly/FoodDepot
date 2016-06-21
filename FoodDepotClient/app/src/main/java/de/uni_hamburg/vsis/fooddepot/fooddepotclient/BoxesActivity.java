@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.location.LocationListener;
@@ -88,11 +89,22 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 // fragment could already be in the list after being recreated by the FragmentManager
                 // after allocating memory. But when it is null, create new. onStart() makes it visible,
                 // onResume() returns it to foreground
+                Log.e(TAG, "oncreate called");
                 try{
+                    CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)mAppBarLayout.getLayoutParams();
                     if (isMapMode) {
                         currentBoxesView = new BoxesAsMapFragment();
+                        ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(1).setTitle(R.string.currently_map_mode_set_to_list);
+                        findViewById(R.id.tabLayoutSortList).setVisibility(View.GONE);
+                        params.setMargins( 0, 0, 0, 0);
+                        //params.setMargins( 30, 30, 30, 30);
+                        mAppBarLayout.setLayoutParams(params);
                     } else {
                         currentBoxesView = new BoxesAsListFragment();
+                        ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(1).setTitle(R.string.currently_list_mode_set_to_map);
+                        findViewById(R.id.tabLayoutSortList).setVisibility(View.VISIBLE);
+                        params.setMargins( 0, 0, 0, 0);
+                        mAppBarLayout.setLayoutParams(params);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
@@ -142,29 +154,38 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             case R.id.nav_switch_map_list:
                 BoxesFragmentInterface newFragment = null;
                 CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)mAppBarLayout.getLayoutParams();
-
                 try {
-                    if (isMapMode){
+                    if (menuItem.getTitle() == getString(R.string.currently_list_mode_set_to_map)){
+                        newFragment = new BoxesAsMapFragment();
+                        menuItem.setTitle(R.string.currently_map_mode_set_to_list);
+                        findViewById(R.id.tabLayoutSortList).setVisibility(View.GONE);
+                        params.setMargins( 0, 0, 0, 0);
+                        //params.setMargins( 30, 30, 30, 30);
+                        mAppBarLayout.setLayoutParams(params);
+                        isMapMode = true;
+                    } else if (menuItem.getTitle() == getString(R.string.currently_map_mode_set_to_list)) {
                         newFragment = new BoxesAsListFragment();
-                        menuItem.setTitle(R.string.action_view_as_list);
+                        menuItem.setTitle(R.string.currently_list_mode_set_to_map);
+                        findViewById(R.id.tabLayoutSortList).setVisibility(View.VISIBLE);
                         params.setMargins( 0, 0, 0, 0);
                         mAppBarLayout.setLayoutParams(params);
-                    } else {
-                        newFragment = new BoxesAsMapFragment();
-                        params.setMargins( 30, 30, 30, 30);
-                        mAppBarLayout.setLayoutParams(params);
-                        menuItem.setTitle(R.string.action_view_as_map);
+                        isMapMode=false;
                     }
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
                 }
+
+                //stop showing menu title as toolbar title
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+                getSupportActionBar().setTitle(null);
+
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager
                         .beginTransaction()
                         .replace(R.id.fragment_container, (Fragment) newFragment)
                         .addToBackStack(null)
                         .commit();
-                isMapMode = !isMapMode;
                 break;
             case R.id.nav_open_box:
                 startActivity(new Intent(this, OpenBoxActivity.class));

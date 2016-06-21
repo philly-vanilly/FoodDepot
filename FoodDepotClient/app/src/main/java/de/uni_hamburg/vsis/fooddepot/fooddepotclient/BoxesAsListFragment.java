@@ -3,6 +3,7 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,6 +67,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         private View mItemView;
 
         //UI variables:
+        TabLayout mTabLayoutSortList;
         //basic elements:
         private TextView mTextViewBoxesName;
         private TextView mTextViewBoxesContent;
@@ -86,6 +88,9 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             super(itemView);
             mItemView = itemView;
 
+            //toolbar:
+            mTabLayoutSortList = (TabLayout) itemView.findViewById(R.id.tabLayoutSortList);
+
             //basic content
             mImageViewFruit = (ImageView) itemView.findViewById(R.id.imageViewFruit);
             mTextViewBoxesName = (TextView) itemView.findViewById(R.id.textViewName);
@@ -104,8 +109,12 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         }
 
         public void bindBox(final Box box){
-            //basic content:
             BoxService boxService = new BoxService(box, mItemView);
+//            TabLayout.Tab priceTab = mTabLayoutSortList.newTab();
+//            priceTab.setTag("Price");
+//            mTabLayoutSortList.addTab(priceTab);
+
+            //basic content:
             mImageViewFruit.setImageDrawable(boxService.getImageForBox());
             mTextViewBoxesName.setText(box.getName());
             mTextViewPrice.setText(boxService.getPriceForBox());
@@ -151,7 +160,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             try {
                 targetDate = dateFormat.parse(targetDateString);
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, Log.getStackTraceString(e));
             }
             Date nowDate = new Date();
             if (targetDate != null) {
