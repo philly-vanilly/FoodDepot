@@ -20,6 +20,7 @@ public class Box {
     //UI helper attributes:
     private boolean mClicked;
     private int mPosition;
+    private float mDistance;
 
     public Box(){}
 
@@ -76,4 +77,11 @@ public class Box {
     public void setPosition(int position) {
         mPosition = position;
     }
+    public void setDistance(float distance) {
+        mDistance = distance;
+    }
+    public float getDistance() {
+        return mDistance;
+    }
+
 }

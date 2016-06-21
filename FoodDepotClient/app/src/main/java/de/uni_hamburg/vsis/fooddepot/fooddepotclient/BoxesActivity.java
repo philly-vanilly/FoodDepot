@@ -89,7 +89,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 // fragment could already be in the list after being recreated by the FragmentManager
                 // after allocating memory. But when it is null, create new. onStart() makes it visible,
                 // onResume() returns it to foreground
-                Log.e(TAG, "oncreate called");
                 try{
                     CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)mAppBarLayout.getLayoutParams();
                     if (isMapMode) {

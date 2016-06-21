@@ -18,8 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -88,8 +89,8 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
             super(itemView);
             mItemView = itemView;
 
-            //toolbar:
-            mTabLayoutSortList = (TabLayout) itemView.findViewById(R.id.tabLayoutSortList);
+            //toolbar (from Activity's layout, not from the Fragments ListView layout!):
+            mTabLayoutSortList = (TabLayout) getActivity().findViewById(R.id.tabLayoutSortList);
 
             //basic content
             mImageViewFruit = (ImageView) itemView.findViewById(R.id.imageViewFruit);
@@ -110,15 +111,12 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
         public void bindBox(final Box box){
             BoxService boxService = new BoxService(box, mItemView);
-//            TabLayout.Tab priceTab = mTabLayoutSortList.newTab();
-//            priceTab.setTag("Price");
-//            mTabLayoutSortList.addTab(priceTab);
 
             //basic content:
             mImageViewFruit.setImageDrawable(boxService.getImageForBox());
             mTextViewBoxesName.setText(box.getName());
             mTextViewPrice.setText(boxService.getPriceForBox());
-            mTextViewDistance.setText(boxService.getDistanceForBox(53.551086, 9.993682)); //TODO: replace dummy data with current location
+            mTextViewDistance.setText(boxService.makeDistanceForBox(53.551086, 9.993682)); //TODO: replace dummy data with current location
 
             //expandable content
             mTextViewBoxesContent.setText("(" + box.getContent() + ")");
@@ -150,6 +148,23 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
                 @Override
                 public void onClick(View v) {
                     //TODO: open Details Activity/Fragment and pass box to it
+                }
+            });
+
+            mTabLayoutSortList.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    mBoxesListAdapter.sortByTabSelection(tab.getPosition());
+                    mBoxesListAdapter.notifyDataSetChanged(); //update whole list
+                }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    return;
+                }
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    mBoxesListAdapter.sortByTabSelection(tab.getPosition());
+                    mBoxesListAdapter.notifyDataSetChanged(); //update whole list
                 }
             });
         }
@@ -207,23 +222,26 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
     private class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
 
         private List<Box> mBoxes;
+        private Comparator currentComparator;
 
         public BoxesListAdapter(List<Box> boxes){
             mBoxes = boxes;
+            currentComparator = null;
+            sortByTabSelection(0);
         }
 
         @Override
         public BoxesHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.boxes_list_row, parent, false);
+            View view = layoutInflater.inflate(R.layout.fragment_list_row, parent, false);
             BoxesHolder boxesHolder = new BoxesHolder(view);
             return boxesHolder;
         }
 
         @Override
-        public void onBindViewHolder(BoxesHolder holder, int position) {
-            Box box = mBoxes.get(position);
-            box.setPosition(position);
+        public void onBindViewHolder(BoxesHolder holder, int boxPosition) {
+            Box box = mBoxes.get(boxPosition);
+            box.setPosition(boxPosition);
             holder.bindBox(box);
         }
         
@@ -231,6 +249,11 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         public int getItemCount() {
             return mBoxes.size();
         }
+
+        public void sortByTabSelection(int tabPosition) {
+            currentComparator = BoxService.sortByTabSelection(tabPosition, currentComparator, mBoxes);
+        }
+
     }
 
     @Override

@@ -8,7 +8,10 @@ import android.view.View;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 
 import rest.beans.Box;
@@ -120,7 +123,7 @@ public class BoxService {
      * @param lon1 User longitude
      * @return distance in km or m
      */
-    public String getDistanceForBox(double lat1, double lon1) {
+    public String makeDistanceForBox(double lat1, double lon1) {
         double lon2 = mBox.getLongitude();
         double lat2 = mBox.getLatitude();
 
@@ -131,6 +134,7 @@ public class BoxService {
         locationB.setLatitude(lat2);
         locationB.setLongitude(lon2);
         float distance = locationA.distanceTo(locationB); //distance in km
+        mBox.setDistance(distance);
 
         String result = "";
         if(distance >= 1000){
@@ -143,6 +147,121 @@ public class BoxService {
             bd = bd.setScale(0, RoundingMode.HALF_UP);
             result = String.valueOf(bd) + " m";
         }
+
         return result;
+    }
+
+    //Comparators for sorting boxes lists:
+    public static final Comparator<Box> sBoxNameAscendingComparator = new Comparator<Box>() {
+        public int compare(Box box1, Box box2) {
+            String boxVal1 = box1.getName().toUpperCase();
+            String boxVal2 = box2.getName().toUpperCase();
+            return boxVal2.compareTo(boxVal1);
+        }
+    };
+    public static final Comparator<Box> sBoxNameDescendingComparator = new Comparator<Box>() {
+        public int compare(Box box1, Box box2) {
+            String boxVal1 = box1.getName().toUpperCase();
+            String boxVal2 = box2.getName().toUpperCase();
+            return boxVal1.compareTo(boxVal2);
+        }
+    };
+    public static final Comparator<Box> sBoxPriceAscendingComparator = new Comparator<Box>() {
+        public int compare(Box box1, Box box2) {
+            Double boxVal1 = box1.getPrice();
+            Double boxVal2 = box2.getPrice();
+            return boxVal2.compareTo(boxVal1);
+        }
+    };
+    public static final Comparator<Box> sBoxPriceDescendingComparator = new Comparator<Box>() {
+        public int compare(Box box1, Box box2) {
+            Double boxVal1 = box1.getPrice();
+            Double boxVal2 = box2.getPrice();
+            return boxVal1.compareTo(boxVal2);
+        }
+    };
+    public static final Comparator<Box> sBoxDistanceAscendingComparator = new Comparator<Box>() {
+        public int compare(Box box1, Box box2) {
+            Float boxVal1 = box1.getDistance();
+            Float boxVal2 = box2.getDistance();
+            return boxVal2.compareTo(boxVal1);
+        }
+    };
+    public static final Comparator<Box> sBoxDistanceDescendingComparator = new Comparator<Box>() {
+        public int compare(Box box1, Box box2) {
+            Float boxVal1 = box1.getDistance();
+            Float boxVal2 = box2.getDistance();
+            return boxVal1.compareTo(boxVal2);
+        }
+    };
+    public static final Comparator<Box> sBoxRatingAscendingComparator = new Comparator<Box>() {
+        public int compare(Box box1, Box box2) {
+            Double boxVal1 = box1.getRating();
+            Double boxVal2 = box2.getRating();
+            return boxVal1.compareTo(boxVal2);
+        }
+    };
+    public static final Comparator<Box> sBoxRatingDescendingComparator = new Comparator<Box>() {
+        public int compare(Box box1, Box box2) {
+            Double boxVal1 = box1.getRating();
+            Double boxVal2 = box2.getRating();
+            return boxVal2.compareTo(boxVal1);
+        }
+    };
+
+    public static Comparator sortByTabSelection(int tabPosition, Comparator currentComparator, List<Box> boxes) throws RuntimeException {
+        switch(tabPosition){
+            case 0: //name
+                if (currentComparator == null || currentComparator == BoxService.sBoxNameAscendingComparator) {
+                    Collections.sort(boxes, BoxService.sBoxNameDescendingComparator);
+                    currentComparator = BoxService.sBoxNameDescendingComparator;
+                } else if (currentComparator == BoxService.sBoxNameDescendingComparator){
+                    Collections.sort(boxes, BoxService.sBoxNameAscendingComparator);
+                    currentComparator = BoxService.sBoxNameAscendingComparator;
+                }  else {
+                    Collections.sort(boxes, BoxService.sBoxNameDescendingComparator);
+                    currentComparator = BoxService.sBoxNameDescendingComparator;
+                }
+                break;
+            case 1: //price
+                if (currentComparator == null || currentComparator == BoxService.sBoxPriceAscendingComparator) {
+                    Collections.sort(boxes, BoxService.sBoxPriceDescendingComparator);
+                    currentComparator = BoxService.sBoxPriceDescendingComparator;
+                } else if (currentComparator == BoxService.sBoxPriceDescendingComparator){
+                    Collections.sort(boxes, BoxService.sBoxPriceAscendingComparator);
+                    currentComparator = BoxService.sBoxPriceAscendingComparator;
+                }  else {
+                    Collections.sort(boxes, BoxService.sBoxPriceDescendingComparator);
+                    currentComparator = BoxService.sBoxPriceDescendingComparator;
+                }
+                break;
+            case 2: //distance
+                if (currentComparator == null || currentComparator == BoxService.sBoxDistanceAscendingComparator) {
+                    Collections.sort(boxes, BoxService.sBoxDistanceDescendingComparator);
+                    currentComparator = BoxService.sBoxDistanceDescendingComparator;
+                } else if (currentComparator == BoxService.sBoxDistanceDescendingComparator){
+                    Collections.sort(boxes, BoxService.sBoxDistanceAscendingComparator);
+                    currentComparator = BoxService.sBoxDistanceAscendingComparator;
+                }  else {
+                    Collections.sort(boxes, BoxService.sBoxDistanceDescendingComparator);
+                    currentComparator = BoxService.sBoxDistanceDescendingComparator;
+                }
+                break;
+            case 3: //rating
+                if (currentComparator == null || currentComparator == BoxService.sBoxRatingAscendingComparator) {
+                    Collections.sort(boxes, BoxService.sBoxRatingDescendingComparator);
+                    currentComparator = BoxService.sBoxRatingDescendingComparator;
+                } else if (currentComparator == BoxService.sBoxRatingDescendingComparator){
+                    Collections.sort(boxes, BoxService.sBoxRatingAscendingComparator);
+                    currentComparator = BoxService.sBoxRatingAscendingComparator;
+                }  else {
+                    Collections.sort(boxes, BoxService.sBoxRatingDescendingComparator);
+                    currentComparator = BoxService.sBoxRatingDescendingComparator;
+                }
+                break;
+            default:
+                throw new RuntimeException("Invalid Toolbar Tab position");
+        }
+        return currentComparator;
     }
 }

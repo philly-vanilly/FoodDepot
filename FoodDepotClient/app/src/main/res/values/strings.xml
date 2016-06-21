@@ -10,6 +10,12 @@
     <string name="dummy_string">####</string>
     <string name="details">DETAILS</string>
 
+    <!-- TAB items:  -->
+    <string name="tab_name">Name</string>
+    <string name="tab_price">Price</string>
+    <string name="tab_distance">Distance</string>
+    <string name="tab_rating">Rating</string>
+
 
 
 
