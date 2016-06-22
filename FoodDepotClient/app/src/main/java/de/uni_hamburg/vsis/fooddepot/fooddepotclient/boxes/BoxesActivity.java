@@ -30,6 +30,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivityInterface;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.RestClient;
@@ -122,6 +123,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 //add fragment to Frame Layout called fragment_boxes_container
                 fragmentManager.beginTransaction()
                         .add(R.id.fragment_boxes_container, (Fragment) currentBoxesView)
+                        .addToBackStack(null) //to save and restore state of fragment when going back/forth with fragments
                         .commit();
             }
         }
@@ -255,25 +257,14 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search)
-                .getActionView();
-        if (null != searchView) {
-//            searchView.setSearchableInfo(searchManager
-//                    .getSearchableInfo(getComponentName()));
-
+        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        if (searchView != null) {
             View searchPlate = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 searchPlate.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark, getTheme()));
             } else {
                 searchPlate.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             }
-
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                searchView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark, getTheme()));
-//            }else {
-//                searchView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-//            }
-
             searchView.setIconifiedByDefault(true);
         }
 
@@ -285,10 +276,15 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             }
 
             public boolean onQueryTextSubmit(String query) {
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+
+                BoxFactory boxesFactory = BoxFactory.get(BoxesActivity.this);
+                getSupportActionBar().setTitle(boxesFactory.getBoxes().size() + " \"" + query + "\" found");
+                //show tooltip load more by scrolling to bottom or zooming out (isMapMode)
                 mCurrentSearchString = query;
                 updateBoxList();
                 return true;
-
             }
         };
         searchView.setOnQueryTextListener(queryTextListener);

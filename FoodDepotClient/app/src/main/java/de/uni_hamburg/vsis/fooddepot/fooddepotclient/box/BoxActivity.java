@@ -73,6 +73,7 @@ public class BoxActivity extends AppCompatActivity {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_box_container, (Fragment) currentBoxView)
+                    .addToBackStack(null) //to save and restore state of fragment when going back/forth with fragments
                     .commit();
         }
     }

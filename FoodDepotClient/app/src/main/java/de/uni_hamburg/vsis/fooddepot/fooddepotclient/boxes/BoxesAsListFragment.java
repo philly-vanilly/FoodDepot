@@ -55,7 +55,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
         public BoxesListAdapter(List<Box> boxes){
             mBoxes = boxes;
-            mBoxFactory.sortByTabSelection(0);
+            // mBoxFactory.sortByTabSelection(0);
         }
 
         @Override
