@@ -29,14 +29,14 @@
     <uses-permission android:name="com.example.permission.MAPS_RECEIVE" />
 
     <application
-        android:name=".FDepotApplication"
+        android:name=".helper.FDepotApplication"
         android:allowBackup="true"
         android:icon="@drawable/fooddepot_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
 
@@ -58,7 +58,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".BoxesActivity"
+            android:name=".boxes.BoxesActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,22 +66,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".BoxesActivity"
+            android:parentActivityName=".boxes.BoxesActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".BoxesActivity" />
+                android:value=".boxes.BoxesActivity" />
         </activity>
         <activity
-            android:name=".OpenBoxActivity"
+            android:name=".openbox.OpenBoxActivity"
             android:label="@string/title_activity_open_box"
-            android:parentActivityName=".BoxesActivity"
+            android:parentActivityName=".boxes.BoxesActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".BoxesActivity" />
+                android:value=".boxes.BoxesActivity" />
         </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
