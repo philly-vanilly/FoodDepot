@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageViewFruit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/food_content_description" />
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/imageViewFruit"
+            android:text="@+id/dummy"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <ImageButton
+            android:id="@+id/imageButtonExpand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_keyboard_arrow_down"
+            android:contentDescription="@string/expand_list_details" />
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/linearLayoutPriceDistance"
+            android:orientation="vertical"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/imageButtonExpand"
+            android:layout_centerVertical="true"
+            android:weightSum="2"
+            android:gravity="right"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <TextView
+                android:id="@+id/textViewPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/dummy_string"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/dummy_string" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!--FROM HERE STARTS EXPANDABLE DETAILS LAYOUT -->
+    <LinearLayout
+        android:id="@+id/expandableContent"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewContent"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/secondary_text_dark"/>
+
+            <TextView
+                android:id="@+id/textViewTimeLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/invisibleExpandButton1"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:gravity="right" />
+
+            <ImageButton
+                android:id="@+id/invisibleExpandButton1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_keyboard_arrow_down"
+                android:visibility="invisible" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewOwnerName"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="81dp"
+                android:layout_height="27dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/textViewOwnerName"
+                android:isIndicator="true"
+                android:numStars="3"
+                android:rating="1.5"
+                style="@style/foodRatingBar" />
+
+            <TextView
+                android:id="@+id/ratingCount"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/ratingBar"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/detailsButton"
+                android:layout_toLeftOf="@+id/invisibleExpandButton2"
+                android:text="@string/details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/invisibleExpandButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_keyboard_arrow_down"
+                android:visibility="invisible" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>
