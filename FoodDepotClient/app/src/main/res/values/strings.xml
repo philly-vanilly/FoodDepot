@@ -1,24 +1,6 @@
 <resources>
     <string name="app_name">FoodDepot</string>
 
-    <!-- List View Strings -->
-    <string name="food_content_description">Box Content</string>
-    <string name="expand_list_details">Show Details</string>
-    <string name="dummy_price">0FD</string>
-    <string name="dummy_distance">0m</string>
-    <string name="myown_dummyfruit">Dummy</string>
-    <string name="dummy_string">####</string>
-    <string name="details">DETAILS</string>
-
-    <!-- TAB items:  -->
-    <string name="tab_name">Name</string>
-    <string name="tab_price">Price</string>
-    <string name="tab_distance">Distance</string>
-    <string name="tab_rating">Rating</string>
-
-
-
-
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -134,5 +116,31 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_open_box">OpenBoxActivity</string>
+
+
+
+
+
+
+
+
+
+    <!-- List View Strings -->
+    <string name="food_content_description">Box Content</string>
+    <string name="expand_list_details">Show Details</string>
+    <string name="dummy_price">0FD</string>
+    <string name="dummy_distance">0m</string>
+    <string name="myown_dummyfruit">Dummy</string>
+    <string name="dummy_string">####</string>
+    <string name="details">DETAILS</string>
+
+    <!-- TAB items:  -->
+    <string name="tab_name">Name</string>
+    <string name="tab_price">Price</string>
+    <string name="tab_distance">Distance</string>
+    <string name="tab_rating">Rating</string>
+
+    <!-- Single Box Details Activity And Fragment Strings:-->
+    <string name="box_activity">Box Details</string>
 
 </resources>

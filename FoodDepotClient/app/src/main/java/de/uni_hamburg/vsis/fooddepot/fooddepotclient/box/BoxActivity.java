@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.UUID;
 
@@ -19,8 +21,9 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
  */
 public class BoxActivity extends AppCompatActivity {
     private static final String TAG = "BoxActivity";
-    //Serializable unique id:
-    private static final String EXTRA_BOX_ACTIVITY_ID = "de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxActivity_ID";
+
+    //Serializable unique id to reference in other classes:
+    public static final String EXTRA_BOX_ACTIVITY_ID = "de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxActivity_ID";
 
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
@@ -46,7 +49,9 @@ public class BoxActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar_box);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(null);
-        mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout) ;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout);
 
         if(findViewById(R.id.fragment_box_container) != null && savedInstanceState == null && currentBoxView == null) {
 
@@ -70,5 +75,26 @@ public class BoxActivity extends AppCompatActivity {
                     .add(R.id.fragment_box_container, (Fragment) currentBoxView)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        //Log.d("MENU_ITEM", item.getTitle().toString());
+        int id = item.getItemId();
+        switch(id){
+            default:
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        // getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
     }
 }

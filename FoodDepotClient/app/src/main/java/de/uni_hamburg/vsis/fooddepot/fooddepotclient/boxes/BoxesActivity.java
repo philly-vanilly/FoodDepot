@@ -3,6 +3,7 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -259,6 +260,20 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         if (null != searchView) {
 //            searchView.setSearchableInfo(searchManager
 //                    .getSearchableInfo(getComponentName()));
+
+            View searchPlate = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                searchPlate.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark, getTheme()));
+            } else {
+                searchPlate.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
+
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                searchView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark, getTheme()));
+//            }else {
+//                searchView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+//            }
+
             searchView.setIconifiedByDefault(true);
         }
 

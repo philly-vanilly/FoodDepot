@@ -21,6 +21,13 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
     private BoxesListAdapter mBoxesListAdapter;
     private BoxFactory mBoxFactory;
 
+    //doesn't get Intent/Extra, so no need for:
+//    @Override
+//    public void onCreate(Bundle savedInstanceState){
+//        super.onCreate(savedInstanceState);
+//        // code ...
+//    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,9 +44,6 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
         mBoxesListAdapter = new BoxesListAdapter(boxes);
         mBoxesListRecyclerView.setAdapter(mBoxesListAdapter);
-
-//        BoxActivityInterface activity = (BoxActivityInterface)getActivity();
-//        activity.requestBoxListUpdate();
 
         return view;
     }

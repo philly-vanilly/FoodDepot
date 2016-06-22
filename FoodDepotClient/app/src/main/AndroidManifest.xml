@@ -66,6 +66,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".box.BoxActivity"
+            android:label="@string/box_activity"
+            android:parentActivityName=".boxes.BoxesActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".boxes.BoxesActivity" />
+        </activity>
+        <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".boxes.BoxesActivity"
