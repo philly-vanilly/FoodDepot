@@ -33,7 +33,6 @@ public class BoxService {
         mItemView = itemView;
     }
 
-
     private static HashMap<String, Integer> initFoodNames(){ //looks better (nice icons) and faster than enum, leave it
         HashMap<String, Integer> result = new HashMap<>();
         result.put("apple", R.drawable.ic_fruit_apple);

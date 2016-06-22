@@ -3,6 +3,7 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -16,14 +17,17 @@ import rest.beans.Box;
 public class BoxFactory {
     private static BoxFactory sBoxFactory;
     private static final String TAG = "BoxFactory";
-    private Context mContext;
+    private Context mApplicationContext;
+    private Comparator mCurrentComparator;
+
 
     //this boxes list is for persistence. as singleton class does not get destroyed
     private List<Box> mBoxes;
 
     //private Singleton constructor, instantiated by getter instead
     private BoxFactory(Context context) {
-        mContext = context.getApplicationContext();
+        mApplicationContext = context.getApplicationContext();
+        mCurrentComparator = null;
 
         //TODO: when creating boxes, read data from REST instead of making up own data
         mBoxes = new ArrayList<>();
@@ -59,8 +63,8 @@ public class BoxFactory {
     public List<Box> getBoxes() {
         return mBoxes;
     }
-    public Context getContext() {
-        return mContext;
+    public Context getApplicationContext() {
+        return mApplicationContext;
     }
     public Box getBox(UUID id) {
         for (Box Box : mBoxes) {
@@ -69,5 +73,9 @@ public class BoxFactory {
             }
         }
         return null;
+    }
+
+    public void sortByTabSelection(int position) {
+        mCurrentComparator = BoxService.sortByTabSelection(position, mCurrentComparator, mBoxes);
     }
 }

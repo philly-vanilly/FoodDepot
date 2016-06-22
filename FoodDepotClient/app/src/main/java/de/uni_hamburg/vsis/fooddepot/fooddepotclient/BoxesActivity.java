@@ -48,7 +48,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
 
     private DrawerLayout mDrawer;
-    private Toolbar toolbar;
+    private Toolbar mToolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private boolean isMapMode = false; // TODO: persist on pause, stop, ...
@@ -58,17 +58,17 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_boxes);
 
         //finding and setting up a toolbar to replace actionbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(null);
         mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout) ;
 
         //finding drawer view and binding events to actionbartoggle
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawer.addDrawerListener(drawerToggle);
         // toggle.syncState(); //needed????
 
@@ -78,15 +78,11 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         // nvDrawer.setNavigationItemSelectedListener(this); //needed????
         setupDrawerContent(nvDrawer);
 
-        //activity should use the layout with an existing fragment_container
-        if(findViewById(R.id.fragment_container) != null) {
+        //activity should use the layout with an existing fragment_boxes_container
+        if(findViewById(R.id.fragment_boxes_container) != null) {
             //dont setup another fragment if restored from previous state or else you get
             // overlapping fragments
             if(savedInstanceState == null && currentBoxesView == null){
-                // manages fragments (adding them to activities) and also manages the backstack of
-                // saved fragment transactions
-                FragmentManager fragmentManager = getSupportFragmentManager();
-
                 // fragment could already be in the list after being recreated by the FragmentManager
                 // after allocating memory. But when it is null, create new. onStart() makes it visible,
                 // onResume() returns it to foreground
@@ -114,10 +110,12 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 // Intent, pass the Intent's extras to the fragment as arguments
                 ((Fragment) currentBoxesView).setArguments(getIntent().getExtras());
 
-                //add fragment to Frame Layout called fragment_container
-                fragmentManager
-                        .beginTransaction()
-                        .add(R.id.fragment_container, (Fragment) currentBoxesView)
+                // manages fragments (adding them to activities) and also manages the backstack of
+                // saved fragment transactions
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                //add fragment to Frame Layout called fragment_boxes_container
+                fragmentManager.beginTransaction()
+                        .add(R.id.fragment_boxes_container, (Fragment) currentBoxesView)
                         .commit();
             }
         }
@@ -183,7 +181,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager
                         .beginTransaction()
-                        .replace(R.id.fragment_container, (Fragment) newFragment)
+                        .replace(R.id.fragment_boxes_container, (Fragment) newFragment)
                         .addToBackStack(null)
                         .commit();
                 break;
