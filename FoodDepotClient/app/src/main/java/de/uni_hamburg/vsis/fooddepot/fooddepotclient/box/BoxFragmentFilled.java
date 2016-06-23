@@ -1,5 +1,7 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.box;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -33,6 +36,8 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     private TextView mTextViewDistance;
     private TextView mTextViewPrice;
     private TextView mTextViewTimeLeft;
+    private Button mButtonDirections;
+    private Button mButtonReserve;
 
 
 
@@ -63,7 +68,8 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         mTextViewDistance = (TextView) itemView.findViewById(R.id.textViewDistance);
         mTextViewPrice = (TextView) itemView.findViewById(R.id.textViewPrice);
         mTextViewTimeLeft = (TextView) itemView.findViewById(R.id.textViewTimeLeft);
-
+        mButtonDirections = (Button) itemView.findViewById((R.id.buttonDirections));
+        mButtonReserve = (Button) itemView.findViewById((R.id.buttonReserve));
 
         mTextViewBoxesContent.setText(mBox.getContent());
         mRatingBar.setRating(boxService.getRatingForBox());
@@ -75,6 +81,25 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
 
         String targetDateString = "Jul 16 00:00:00 2016"; //TODO: get target date as string from JSON > BEAN instead
         BoxService.setRemainingTime(targetDateString, mTextViewTimeLeft);
+
+        mButtonDirections.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Double startLatitude = 53.551086; //TODO: get from User Singleton (force update there)
+                Double startLongitude = 9.993682;
+                Double directionLatitude = mBox.getLatitude();
+                Double directionLongitude = mBox.getLongitude();
+
+                StringBuilder mapsUri = new StringBuilder("http://maps.google.com/maps?saddr=");
+                mapsUri.append(startLatitude).append(", ").append(startLongitude).append("&daddr=").append(directionLatitude).append(", ").append(directionLongitude);
+
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(mapsUri.toString()));
+                //open google maps directly, no map app chooser dialogue:
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                startActivity(intent);
+            }
+        });
+
 
         return itemView;
     }
