@@ -142,5 +142,11 @@
 
     <!-- Single Box Details Activity And Fragment Strings:-->
     <string name="box_activity">Box Details</string>
+    <string name="box_photo">Box Photo</string>
+    <string name="apfel_placeholder_text">Mittelgroßer, rotgelber Speiseapfel. Köstlicher, süß-säuerlicher, würziger Geschmack. Angenehmer Biss, aber auch zum Kochen gut geeignet. Es gibt noch weitere Sorten wie beispielsweise Jonagored, Rubinstar, Marnica, Jomured und viele andere.\n\n\nHerkunftsland: Deutschland, Italien, Südafrika\n\nHandelsklasse: 1\n\nSaison: ganzjährig</string>
+    <string name="owner">Owner:</string>
+    <string name="location">Location:</string>
+    <string name="directions">Directions</string>
+    <string name="reserve">Reserve</string>
 
 </resources>

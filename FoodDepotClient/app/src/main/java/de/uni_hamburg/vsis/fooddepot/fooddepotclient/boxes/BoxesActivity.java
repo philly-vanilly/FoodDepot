@@ -275,14 +275,17 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 return true;
             }
 
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(String searchString) {
+                mCurrentSearchString = searchString;
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
 
                 BoxFactory boxesFactory = BoxFactory.get(BoxesActivity.this);
-                getSupportActionBar().setTitle(boxesFactory.getBoxes().size() + " \"" + query + "\" found");
+
+                searchString = searchString.length() > 11? searchString.substring(0, 9)+"..." : searchString;
+
+                getSupportActionBar().setTitle(boxesFactory.getBoxes().size() + " \"" + searchString + "\" found");
                 //show tooltip load more by scrolling to bottom or zooming out (isMapMode)
-                mCurrentSearchString = query;
                 updateBoxList();
                 return true;
             }

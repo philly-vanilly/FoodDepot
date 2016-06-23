@@ -38,8 +38,8 @@ public class BoxFactory {
         for(int i = 0; i < 50; i++){
             Box box = new Box();
             box.setId(UUID.randomUUID());
-            box.setLatitude(ThreadLocalRandom.current().nextDouble(50.0, 60.0));
-            box.setLongitude(ThreadLocalRandom.current().nextDouble(9.0, 10.0));
+            box.setLatitude(ThreadLocalRandom.current().nextDouble(53.2, 53.6));
+            box.setLongitude(ThreadLocalRandom.current().nextDouble(9.99, 10.0));
             box.setContent(food.get(random.nextInt(food.size()-1)));
             box.setName(prefixes.get(random.nextInt(prefixes.size()-1)) + box.getContent() + "_" + random.nextInt(15));
             box.setRating(random.nextDouble()*3);
