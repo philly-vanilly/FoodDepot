@@ -1,3 +1,5 @@
+<!-- NEVER CHANGE VALUES IN values.xml DIRECTLY!!! DO IT HERE, OR ELSE BUILD FAILS! -->
+
 <resources>
     <string name="app_name">FoodDepot</string>
 
@@ -55,7 +57,7 @@
     <string name="pref_summary_notify_new">We will notify you about offers we didn\'t have before</string>
     <string name="pref_title_notify_new">New Items</string>
 
-    <string name="pref_category_delete_account">We would have to lose you but...</string>
+    <string name="pref_category_delete_account">We\'d miss you but…</string>
     <string name="pref_summary_delete_account">All of your data will be lost</string>
     <string name="pref_title_delete_account">Delete Account</string>
 
@@ -149,5 +151,12 @@
     <string name="directions">Directions</string>
     <string name="reserve">Reserve</string>
     <string name="dummy_depot_name">Tante Emma Laden</string>
+    <string name="dummy_weight">2.23 kg</string>
+    <string name="dummy_temp">24 °C</string>
+    <string name="no_smell">No smell</string>
+    <string name="category_colon">Category:</string>
+    <string name="price_colon">Price:</string>
+    <string name="share_depot">Share Depot</string>
+    <string name="bookmark_depot">Bookmark Depot</string>
 
 </resources>
