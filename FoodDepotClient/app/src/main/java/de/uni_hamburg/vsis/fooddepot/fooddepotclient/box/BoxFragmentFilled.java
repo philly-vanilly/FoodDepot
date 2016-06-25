@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Box;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxService;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.services.AnimationService;
 
 /**
  * Created by Phil on 22.06.2016.
@@ -32,7 +34,10 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxService;
 public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface {
     Box mBox;
 
-    private ImageView mBoxPhoto;
+    private ImageButton mBoxPhotoThumb;
+    private ImageView mBoxPhotoFull;
+    private View mScrollableFrameLayout;
+
     private TextView mTextViewBoxesContent;
     private TextView mTextViewOwnerName;
     private TextView mTextViewRatingCount;
@@ -44,8 +49,6 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     private Button mButtonDirections;
     private Button mButtonReserve;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -56,14 +59,17 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState){
-        View itemView = inflater.inflate(R.layout.fragment_box, parent, false);
+        final View itemView = inflater.inflate(R.layout.fragment_box, parent, false);
         BoxService boxService = new BoxService(mBox, itemView);
 
         //set title of toolbar/actionbar of parent activity:
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mBox.getName());
 
-        mBoxPhoto = (ImageView) itemView.findViewById(R.id.boxPhoto);
-        mBoxPhoto.setImageDrawable(getContext().getDrawable(R.drawable.fruitpaperbox));
+        mBoxPhotoThumb = (ImageButton) itemView.findViewById(R.id.boxPhotoThumb);
+        mBoxPhotoThumb.setImageDrawable(getContext().getDrawable(R.drawable.fruitpaperbox)); //TODO: get thumbnail from server instead
+        mBoxPhotoFull = (ImageView) itemView.findViewById(R.id.boxPhotoFull);
+        mScrollableFrameLayout = (View) itemView.findViewById(R.id.scrollableFrameLayout);
+
 
         mTextViewBoxesContent = (TextView) itemView.findViewById(R.id.textViewContent);
         mRatingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
@@ -86,6 +92,13 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
 
         String targetDateString = "Jul 16 00:00:00 2016"; //TODO: get target date as string from JSON > BEAN instead
         BoxService.setRemainingTime(targetDateString, mTextViewTimeLeft);
+
+        mBoxPhotoThumb.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                AnimationService.zoomImageFromThumb(mBoxPhotoThumb, mBoxPhotoFull, mScrollableFrameLayout, R.drawable.fruitpaperbox, itemView);
+            }
+        });
 
         mButtonReserve.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -146,8 +159,6 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
                 startActivity(mapIntent);
             }
         });
-
-
         return itemView;
     }
 }

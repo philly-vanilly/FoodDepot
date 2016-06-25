@@ -3,286 +3,311 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <!--Frame layout is here for two reasons:
+    1.You can expand image (button) thumbnail to full image [on top of other layouts without them expanding]
+    2.You can scroll to the end (ScrollView+LinearLayout cut a few dpi from the end)-->
+
+    <!--INSIDE FRAME LAYOUT THE VIEW COMING LAST GETS INTO FOREGROUND !!! -->
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:paddingBottom="10dp"
-        android:divider="?android:attr/dividerVertical"
-        android:dividerPadding="12dip"
-        android:showDividers="middle"
-        android:orientation="vertical" >
+        android:layout_height="match_parent"
+        android:id="@+id/scrollableFrameLayout">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp">
-
-            <!--scale type and adjustviewbound important for correct wrapping!!!!-->
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|left"
-                android:scaleType="fitXY"
-                android:adjustViewBounds="true"
-                android:id="@+id/boxPhoto"
-                android:contentDescription="@string/box_photo"
-                android:layout_weight="1"/>
+            android:layout_margin="10dp"
+            android:paddingBottom="10dp"
+            android:divider="?android:attr/dividerVertical"
+            android:dividerPadding="12dip"
+            android:showDividers="middle"
+            android:orientation="vertical" >
 
             <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_margin="15dp">
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <!--scale type and adjustviewbound important for correct wrapping!!!!-->
+                <ImageButton
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top|right">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dummy_weight"
-                        android:id="@+id/textViewDepotWeight"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dummy_temp"
-                        android:id="@+id/textViewDepotTemp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_smell"
-                        android:id="@+id/textViewDepotSmell"
-                        android:textStyle="bold" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/shareButton"
-                        android:src="@drawable/ic_share"
-                        android:contentDescription="@string/share_depot" />
-
-                    <ImageButton
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/button"
-                        android:src="@drawable/ic_bookmark_border"
-                        android:contentDescription="@string/bookmark_depot" />
-                </LinearLayout>
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:id="@+id/textViewDescription"
-            android:text="@string/apfel_placeholder_text"
-            android:singleLine="false"
-            android:textColor="@android:color/secondary_text_light" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp">
-
-            <TextView
-                android:id="@+id/textViewContentDescriptor"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:text="@string/category_colon"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textViewContent"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp">
-
-            <TextView
-                android:id="@+id/textViewOwner"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:text="@string/owner"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
-
-            <RelativeLayout
-                android:layout_alignParentEnd="true"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent">
-
-                <TextView
-                    android:id="@+id/textViewOwnerName"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/ratingCount"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorAccent"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@id/textViewOwnerName" />
-
-                <RatingBar
-                    android:id="@+id/ratingBar"
-                    android:layout_width="77dp"
-                    android:layout_height="27dp"
-                    android:paddingRight="5dp"
-                    android:layout_toLeftOf="@id/ratingCount"
-                    android:layout_below="@id/textViewOwnerName"
-                    android:isIndicator="true"
-                    android:numStars="3"
-                    android:rating="1.5"
-                    style="@style/foodRatingBar" />
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp">
-
-            <TextView
-                android:id="@+id/textViewLocationDescriptor"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:text="@string/location"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:gravity="right"
-                android:orientation="vertical"
-                android:weightSum="2">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dummy_depot_name"
-                    android:id="@+id/textViewDepotName"
-                    android:layout_weight="1"
-                    android:textStyle="italic" />
-
-                <TextView
-                    android:id="@+id/textViewLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/dummy_string"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top|left"
+                    android:background="@color/button_material_light"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/boxPhotoThumb"
+                    android:contentDescription="@string/box_photo"
                     android:layout_weight="1"/>
 
-                <TextView
-                    android:id="@+id/textViewDistance"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dummy_string"
-                    android:layout_weight="1"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:layout_weight="1">
 
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top|right">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dummy_weight"
+                            android:id="@+id/textViewDepotWeight"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dummy_temp"
+                            android:id="@+id/textViewDepotTemp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/no_smell"
+                            android:id="@+id/textViewDepotSmell"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/shareButton"
+                            android:src="@drawable/ic_share"
+                            android:contentDescription="@string/share_depot" />
+
+                        <ImageButton
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/button"
+                            android:src="@drawable/ic_bookmark_border"
+                            android:contentDescription="@string/bookmark_depot" />
+                    </LinearLayout>
+
+                </LinearLayout>
             </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp">
 
             <TextView
-                android:id="@+id/textViewPriceDescriptor"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/price_colon"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
+                android:layout_margin="15dp"
+                android:id="@+id/textViewDescription"
+                android:text="@string/apfel_placeholder_text"
+                android:singleLine="false"
+                android:textColor="@android:color/secondary_text_light" />
 
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:gravity="right"
-                android:orientation="vertical">
+                android:layout_margin="15dp">
 
                 <TextView
-                    android:id="@+id/textViewPrice"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textViewContentDescriptor"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/dummy_price"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/category_colon"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textViewTimeLeft"
+                    android:id="@+id/textViewContent"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
+
+                <TextView
+                    android:id="@+id/textViewOwner"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/owner"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_alignParentEnd="true"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent">
+
+                    <TextView
+                        android:id="@+id/textViewOwnerName"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/ratingCount"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorAccent"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/textViewOwnerName" />
+
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        android:layout_width="85dip"
+                        android:layout_height="22dip"
+                        android:paddingRight="5dp"
+                        android:paddingTop="2dp"
+                        android:layout_toLeftOf="@id/ratingCount"
+                        android:layout_below="@id/textViewOwnerName"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:rating="1.5"
+                        style="@style/foodRatingBar" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
+
+                <TextView
+                    android:id="@+id/textViewLocationDescriptor"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/location"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold" />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dummy_string"
-                    android:layout_weight="1" />
-            </LinearLayout>
-        </RelativeLayout>
+                    android:layout_alignParentEnd="true"
+                    android:gravity="right"
+                    android:orientation="vertical"
+                    android:weightSum="2">
 
-        <LinearLayout
-            android:orientation="horizontal"
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dummy_depot_name"
+                        android:id="@+id/textViewDepotName"
+                        android:layout_weight="1"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:id="@+id/textViewLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/dummy_string"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/textViewDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dummy_string"
+                        android:layout_weight="1"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
+
+                <TextView
+                    android:id="@+id/textViewPriceDescriptor"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/price_colon"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="right"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/dummy_price"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewTimeLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dummy_string"
+                        android:layout_weight="1" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/directions"
+                    android:id="@+id/buttonDirections"
+                    android:layout_weight="1"
+                    android:clickable="true" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reserve"
+                    android:id="@+id/buttonReserve"
+                    android:layout_weight="1"
+                    android:clickable="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:id="@+id/boxPhotoFull"
+            android:contentDescription="@string/box_photo"
+            android:background="@color/button_material_light" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/directions"
-                android:id="@+id/buttonDirections"
-                android:layout_weight="1"
-                android:clickable="true" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/reserve"
-                android:id="@+id/buttonReserve"
-                android:layout_weight="1"
-                android:clickable="true" />
-        </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>
 </ScrollView>

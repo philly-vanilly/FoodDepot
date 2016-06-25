@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_string"
+                android:text="@string/dummy_price"
                 android:textStyle="bold" />
 
             <TextView
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_string" />
+                android:text="@string/dummy_distance" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -133,14 +133,14 @@
 
             <RatingBar
                 android:id="@+id/ratingBar"
-                android:layout_width="81dp"
-                android:layout_height="27dp"
-                android:paddingLeft="5dp"
+                android:layout_width="85dip"
+                android:layout_height="22dip"
                 android:paddingRight="5dp"
-                android:layout_centerVertical="true"
+                android:paddingTop="2dp"
                 android:layout_toRightOf="@+id/textViewOwnerName"
+                android:layout_centerVertical="true"
                 android:isIndicator="true"
-                android:numStars="3"
+                android:numStars="5"
                 android:rating="1.5"
                 style="@style/foodRatingBar" />
 
