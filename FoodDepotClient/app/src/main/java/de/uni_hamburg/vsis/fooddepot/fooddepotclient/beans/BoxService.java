@@ -124,8 +124,8 @@ public class BoxService {
 
     /**
      * Distance calculator from user- and box- latitude/longitude
-     * @param lat1 User latitude
-     * @param lon1 User longitude
+     * @param lat1 Account latitude
+     * @param lon1 Account longitude
      * @return distance in km or m
      */
     public String makeDistanceForBox(double lat1, double lon1) {

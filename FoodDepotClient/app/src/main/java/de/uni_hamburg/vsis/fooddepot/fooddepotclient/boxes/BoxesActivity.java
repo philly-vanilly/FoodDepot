@@ -30,13 +30,13 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivityInterface;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.RestClient;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Box;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Response;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.User;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.openbox.OpenBoxActivity;
@@ -130,15 +130,15 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         mGoogleApiClient = new FDepotGoogleApiClient(this, this);
 
-        User user = FDepotApplication.getApplication().getCurrentUser();
-        if (user != null) {
+        Account account = FDepotApplication.getApplication().getCurrentAccount();
+        if (account != null) {
             TextView emailTextView = (TextView) findViewById(R.id.emailTextView);
             TextView usernameTextView = (TextView) findViewById(R.id.usernameTextView);
             if (emailTextView != null && usernameTextView != null) {
-                emailTextView.setText(user.getEmail());
-                usernameTextView.setText(user.getFirstName() + " " + user.getLastName());
+                emailTextView.setText(account.getEmail());
+                usernameTextView.setText(account.getFirstName() + " " + account.getLastName());
             }//end if email and text view not null
-        }//end if user not null
+        }//end if account not null
     }
 
     private void setupDrawerContent (NavigationView navigationView){

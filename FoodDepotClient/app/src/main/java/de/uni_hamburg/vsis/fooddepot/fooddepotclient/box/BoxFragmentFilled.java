@@ -1,5 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.box;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +14,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
@@ -82,21 +87,63 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         String targetDateString = "Jul 16 00:00:00 2016"; //TODO: get target date as string from JSON > BEAN instead
         BoxService.setRemainingTime(targetDateString, mTextViewTimeLeft);
 
+        mButtonReserve.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) { //TODO: see 1. and 2.
+                // 1. send reservation to server, check  if you can reserve a depot:
+                // you are registered, have enough money, no other depot reserved by you,
+                // this depot not reserved by someone else:
+
+                // 2. get response back:
+                if(true){
+                    // 3. set Button text:
+                    Calendar date = Calendar.getInstance();
+                    long currentTime= date.getTimeInMillis();
+                    Date currentTimePlusThirtyMinutes=new Date(currentTime + (600000));
+                    mButtonReserve.setText("Yours till " + new SimpleDateFormat("HH:mm").format(currentTimePlusThirtyMinutes));
+
+                    Context context = getContext();
+                    CharSequence text = "To cancel reservation click button again.";
+                    int duration = Toast.LENGTH_LONG;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+            }
+        });
+
         mButtonDirections.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Double startLatitude = 53.551086; //TODO: get from User Singleton (force update there)
+                Double startLatitude = 53.551086; //TODO: get from Account Singleton (force update there)
                 Double startLongitude = 9.993682;
                 Double directionLatitude = mBox.getLatitude();
                 Double directionLongitude = mBox.getLongitude();
 
+                /**
+                 * NOTE: To add Google API key:
+                 * 1. Go to Java JRE bin, shift+rightclick, start CMD from here,
+                 * 2. keytool -list -v -keystore "C:\Users\Phil\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
+                 * 3. copy SHA key
+                 * 4. log in into gmail account and go to https://console.developers.google.com/apis/credentials
+                 * 5. Create Android credentials
+                 * 6. paste SHA1 key and also package name (de.uni_hamburg.vsis.fooddepot.fooddepotclient) from manifest.xml, PRESS ENTER INSIDE TEXTFIELD!!!!
+                 * 7. In manifest.xml paste this at the end of (but inside) <application>: <meta-data android:name="com.google.android.geo.API_KEY" android:value="YOUR_API_KEY"/>
+                 */
+
                 StringBuilder mapsUri = new StringBuilder("http://maps.google.com/maps?saddr=");
                 mapsUri.append(startLatitude).append(", ").append(startLongitude).append("&daddr=").append(directionLatitude).append(", ").append(directionLongitude);
 
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(mapsUri.toString()));
-                //open google maps directly, no map app chooser dialogue:
-                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                startActivity(intent);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapsUri.toString()));
+                mapIntent.setPackage("com.google.android.apps.maps");
+
+                // open google maps directly, no map app chooser dialogue:
+                // mapIntent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+
+                if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+
+                startActivity(mapIntent);
             }
         });
 

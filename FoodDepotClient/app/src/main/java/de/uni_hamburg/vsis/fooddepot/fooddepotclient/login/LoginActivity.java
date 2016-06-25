@@ -37,13 +37,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.RestClient;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Response;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.User;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         FDepotApplication.getApplication().loadUser(this);
-        User user = FDepotApplication.getApplication().getCurrentUser();
+        Account account = FDepotApplication.getApplication().getCurrentAccount();
 
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
@@ -123,9 +123,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        if(user != null){
-            mEmailView.setText(user.getEmail(), true );
-            mPasswordView.setText(user.getPassword() );
+        if(account != null){
+            mEmailView.setText(account.getEmail(), true );
+            mPasswordView.setText(account.getPassword() );
 
             attemptLogin();
         }

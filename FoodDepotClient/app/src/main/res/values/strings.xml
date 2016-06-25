@@ -148,5 +148,6 @@
     <string name="location">Location:</string>
     <string name="directions">Directions</string>
     <string name="reserve">Reserve</string>
+    <string name="dummy_depot_name">Tante Emma Laden</string>
 
 </resources>
