@@ -2,11 +2,14 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.box;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +20,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
@@ -32,7 +38,10 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.services.AnimationService;
  * Created by Phil on 22.06.2016.
  */
 public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface {
-    Box mBox;
+
+    private static String TAG = "BoxFragmentFilled";
+
+    private Box mBox;
 
     private ImageButton mBoxPhotoThumb;
     private ImageView mBoxPhotoFull;
@@ -86,7 +95,26 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         mRatingBar.setRating(boxService.getRatingForBox());
         mTextViewOwnerName.setText("Doedel_1995");
         mTextViewRatingCount.setText("(10)");
-        mTextViewLocation.setText("Von-Sauer-Strasse 89a"); //TODO: use google maps API to determine address
+
+        String addressString = mBox.getAddress();
+        if(addressString == null){
+            try {
+                Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                List<Address> addresses = geocoder.getFromLocation(mBox.getLatitude(), mBox.getLongitude(), 1);
+
+                Log.d(TAG, "Following Address(es) identified:");
+                for(Address address : addresses){
+                    Log.d(TAG, address.getAddressLine(0) + "\n" + address.getPostalCode() + " " + address.getLocality() + "\n" + address.getAdminArea());
+                }
+                addressString = addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getPostalCode() + " " + addresses.get(0).getLocality() + "\n" + addresses.get(0).getCountryName();
+
+            } catch (Exception e) {
+                Log.e(TAG, Log.getStackTraceString(e));
+            }
+        }
+
+        //mTextViewLocation.setText("Von-Sauer-Strasse 89a");
+        mTextViewLocation.setText(addressString);
         mTextViewDistance.setText(boxService.makeDistanceForBox(53.551086, 9.993682) + " from here"); //TODO: replace dummy data with current location
         mTextViewPrice.setText(boxService.getPriceForBox());
 

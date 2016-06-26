@@ -100,13 +100,13 @@ public class BoxService {
         fullRating = mBox.getRating();
 
         BigDecimal bd = null;
-        if (fullRating >= 0 && fullRating <= 3){ //allowed rating range
+        if (fullRating >= 0 && fullRating <= 5){ //allowed rating range
             bd = new BigDecimal(fullRating);
             bd = bd.multiply(new BigDecimal(2));
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             bd = bd.divide(new BigDecimal(2.0f));
         } else {
-            Log.e(TAG, "Invalid Rating for Box " + mBox.getId().toString() + ": rating  = " + fullRating);
+            Log.e(TAG, "Box " + mBox.getId().toString() + " has invalid rating: " + fullRating);
             bd = new BigDecimal(0);
         }
 
@@ -124,13 +124,21 @@ public class BoxService {
 
     /**
      * Distance calculator from user- and box- latitude/longitude
-     * @param lat1 Account latitude
-     * @param lon1 Account longitude
+     * @param lat1 Device-User latitude
+     * @param lon1 Device-User longitude
      * @return distance in km or m
      */
     public String makeDistanceForBox(double lat1, double lon1) {
         double lon2 = mBox.getLongitude();
         double lat2 = mBox.getLatitude();
+
+        if (lat1 > 90 || lat1 < -90 || lon1 > 180 || lon1 < -180){
+            Log.e(TAG, "Device-User " + mBox.getId().toString() + " has invalid coordinates: " + lat1 + " and " + lon1);
+            return "###";
+        } else if (lat2 > 90 || lat2 < -90 || lon2 > 180 || lon2 < -180){
+            Log.e(TAG, "Box " + mBox.getId().toString() + " has invalid coordinates: " + lat2 + " and " + lon2);
+            return "###";
+        }
 
         Location locationA = new Location("User-Point");
         locationA.setLatitude(lat1);

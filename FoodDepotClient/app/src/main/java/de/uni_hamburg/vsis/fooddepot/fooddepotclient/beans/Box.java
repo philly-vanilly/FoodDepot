@@ -18,6 +18,7 @@ public class Box {
     private Drawable mImage;
     private double mRating;
     private double mPrice;
+    private String mAddress;
 
     //UI helper attributes:
     private boolean mClicked;
@@ -68,6 +69,12 @@ public class Box {
     }
     public double getPrice() { return mPrice; }
     public void setPrice(double price) { mPrice = price; }
+    public String getAddress() {
+        return mAddress;
+    }
+    public void setAddress(String address) {
+        mAddress = address;
+    }
 
     //UI getters/setters:
     public boolean isClicked() { return mClicked; }

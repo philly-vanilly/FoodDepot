@@ -46,6 +46,7 @@ public class BoxFactory {
             box.setPrice(random.nextDouble()*100);
             box.setImage(null);
             box.setClicked(false);
+            box.setAddress(null);
             mBoxes.add(box);
         }
     }
