@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
 
 public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterface {
     private static final String TAG = "BoxesAsListFragment";

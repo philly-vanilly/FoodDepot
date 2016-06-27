@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.List;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
 
 /**
  * Created by paul on 05.06.16.

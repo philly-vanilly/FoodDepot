@@ -1,4 +1,4 @@
-package de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans;
+package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 
 public class Account {
     private String firstName;

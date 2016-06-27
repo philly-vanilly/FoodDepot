@@ -37,13 +37,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Account;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.RestClient;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Response;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.Response;
 
 import static android.Manifest.permission.READ_CONTACTS;
 

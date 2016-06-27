@@ -183,6 +183,14 @@
                         android:numStars="5"
                         android:rating="1.5"
                         style="@style/foodRatingBar" />
+
+                    <Button
+                        android:id="@+id/showProfileButton"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_below="@id/ratingBar"
+                        android:text="@string/show_profile"
+                        android:layout_alignParentRight="true"></Button>
                 </RelativeLayout>
             </RelativeLayout>
 

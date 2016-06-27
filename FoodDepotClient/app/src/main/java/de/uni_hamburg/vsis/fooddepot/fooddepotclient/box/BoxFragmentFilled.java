@@ -2,6 +2,7 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.box;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -20,19 +21,19 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Box;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxService;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.services.AnimationService;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.AnimationService;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
 
 /**
  * Created by Phil on 22.06.2016.
@@ -69,7 +70,6 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState){
         final View itemView = inflater.inflate(R.layout.fragment_box, parent, false);
-        BoxService boxService = new BoxService(mBox, itemView);
 
         //set title of toolbar/actionbar of parent activity:
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mBox.getName());
@@ -92,9 +92,9 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         mButtonReserve = (Button) itemView.findViewById((R.id.buttonReserve));
 
         mTextViewBoxesContent.setText(mBox.getContent());
-        mRatingBar.setRating(boxService.getRatingForBox());
-        mTextViewOwnerName.setText("Doedel_1995");
-        mTextViewRatingCount.setText("(10)");
+        mRatingBar.setRating(mBox.getRoundedOverallRatingForBox());
+        mTextViewOwnerName.setText(mBox.getOwnerName());
+        mTextViewRatingCount.setText("(" + mBox.getOverallUserRating() + ")");
 
         String addressString = mBox.getAddress();
         if(addressString == null){
@@ -104,7 +104,7 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
 
                 Log.d(TAG, "Following Address(es) identified:");
                 for(Address address : addresses){
-                    Log.d(TAG, address.getAddressLine(0) + "\n" + address.getPostalCode() + " " + address.getLocality() + "\n" + address.getAdminArea());
+                    Log.d(TAG, address.getAddressLine(0) + "\n" + address.getPostalCode() + " " + address.getLocality() + "\n" + address.getCountryName());
                 }
                 addressString = addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getPostalCode() + " " + addresses.get(0).getLocality() + "\n" + addresses.get(0).getCountryName();
 
@@ -113,13 +113,14 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
             }
         }
 
-        //mTextViewLocation.setText("Von-Sauer-Strasse 89a");
         mTextViewLocation.setText(addressString);
-        mTextViewDistance.setText(boxService.makeDistanceForBox(53.551086, 9.993682) + " from here"); //TODO: replace dummy data with current location
-        mTextViewPrice.setText(boxService.getPriceForBox());
+
+        mTextViewDistance.setText(mBox.makeDistanceForBox(53.551086, 9.993682) + " from here"); //TODO: replace dummy data with current location
+        mTextViewPrice.setText(mBox.getPriceForBox());
 
         String targetDateString = "Jul 16 00:00:00 2016"; //TODO: get target date as string from JSON > BEAN instead
-        BoxService.setRemainingTime(targetDateString, mTextViewTimeLeft);
+        long remainingTime = mBox.makeReservation(targetDateString);
+        DisplayService.displayRemainingTime(remainingTime, mTextViewTimeLeft);
 
         mBoxPhotoThumb.setOnClickListener(new View.OnClickListener(){
             @Override

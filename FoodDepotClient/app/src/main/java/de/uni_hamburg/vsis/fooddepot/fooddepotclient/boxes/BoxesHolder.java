@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -14,17 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxService;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
 
 /**
  * Holder for one single list entry in a box list. Sets attributes for a specific box. Is
@@ -90,22 +85,21 @@ class BoxesHolder extends RecyclerView.ViewHolder{
     }
 
     public void bindBox(final Box box){
-        BoxService boxService = new BoxService(box, mItemView);
-
         //basic content:
-        mImageViewFruit.setImageDrawable(boxService.getImageForBox());
+        mImageViewFruit.setImageDrawable(DisplayService.getImageForBox(box, itemView));
         mTextViewBoxesName.setText(box.getName());
-        mTextViewPrice.setText(boxService.getPriceForBox());
-        mTextViewDistance.setText(boxService.makeDistanceForBox(53.551086, 9.993682)); //TODO: replace dummy data with current location
+        mTextViewPrice.setText(box.getPriceForBox());
+        mTextViewDistance.setText(box.makeDistanceForBox(53.551086, 9.993682)); //TODO: replace dummy data with current location
 
         //expandable content
         mTextViewBoxesContent.setText("(" + box.getContent() + ")");
-        mRatingBar.setRating(boxService.getRatingForBox());
+        mRatingBar.setRating(box.getRoundedOverallRatingForBox());
         mTextViewOwnerName.setText("Doedel_1995");
         mTextViewRatingCount.setText("(10)");
 
         String targetDateString = "Jul 16 00:00:00 2016"; //TODO: get target date as string from JSON > BEAN instead
-        BoxService.setRemainingTime(targetDateString, mTextViewTimeLeft);
+        long remainingTime = box.makeReservation(targetDateString);
+        DisplayService.displayRemainingTime(remainingTime, mTextViewTimeLeft);
 
         //listeners and general settings:
         //color rows differently based on whether the position is even or not

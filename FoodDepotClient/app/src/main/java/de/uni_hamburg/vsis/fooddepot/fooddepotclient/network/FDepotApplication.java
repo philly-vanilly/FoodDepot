@@ -10,9 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import org.json.JSONObject;
-
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Account;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Account;
 
 /**
  * Created by paul on 26.05.16.

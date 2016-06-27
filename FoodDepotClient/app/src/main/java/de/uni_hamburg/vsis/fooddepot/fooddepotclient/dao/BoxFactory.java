@@ -1,4 +1,4 @@
-package de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans;
+package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 
 import android.content.Context;
 
@@ -18,8 +18,6 @@ public class BoxFactory {
     private Context mApplicationContext;
     private Comparator mCurrentComparator;
 
-
-    //this boxes list is for persistence. as singleton class does not get destroyed
     private List<Box> mBoxes;
 
     //private Singleton constructor, instantiated by getter instead
@@ -27,7 +25,6 @@ public class BoxFactory {
         mApplicationContext = context.getApplicationContext();
         mCurrentComparator = null;
 
-        //TODO: when creating boxes, read data from REST instead of making up own data
         mBoxes = new ArrayList<>();
         List<String> food = new ArrayList<>();
         food.add("Apples"); food.add("Oranges"); food.add("Peas"); food.add("Kiwi"); food.add("Watermelons");
@@ -42,7 +39,9 @@ public class BoxFactory {
             box.setLongitude(ThreadLocalRandom.current().nextDouble(9.99, 10.0));
             box.setContent(food.get(random.nextInt(food.size()-1)));
             box.setName(prefixes.get(random.nextInt(prefixes.size()-1)) + box.getContent() + "_" + random.nextInt(15));
-            box.setRating(random.nextDouble()*5);
+            box.setOwnerName("doedel_95");
+            box.setOverallUserRating(random.nextDouble()*5);
+            box.setUserRatingCount(random.nextInt(85));
             box.setPrice(random.nextDouble()*100);
             box.setImage(null);
             box.setClicked(false);
@@ -65,6 +64,7 @@ public class BoxFactory {
     public Context getApplicationContext() {
         return mApplicationContext;
     }
+
     public Box getBox(UUID id) {
         for (Box Box : mBoxes) {
             if (Box.getId().equals(id)) { //equals returns true for String value, == returns true only for same object reference
@@ -75,6 +75,6 @@ public class BoxFactory {
     }
 
     public void sortByTabSelection(int position) {
-        mCurrentComparator = BoxService.sortByTabSelection(position, mCurrentComparator, mBoxes);
+        mCurrentComparator = SortingService.sortByTabSelection(position, mCurrentComparator, mBoxes);
     }
 }

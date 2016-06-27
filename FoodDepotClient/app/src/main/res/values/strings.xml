@@ -158,5 +158,6 @@
     <string name="price_colon">Price:</string>
     <string name="share_depot">Share Depot</string>
     <string name="bookmark_depot">Bookmark Depot</string>
+    <string name="show_profile">Show Profile</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package de.uni_hamburg.vsis.fooddepot.fooddepotclient.services;
+package de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -9,8 +9,6 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
-
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 
 /**
  * Created by Phil on 25.06.2016.

@@ -30,13 +30,13 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Account;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Account;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivityInterface;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.RestClient;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Box;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.beans.Response;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.Response;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.openbox.OpenBoxActivity;
