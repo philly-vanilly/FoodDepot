@@ -9,19 +9,21 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingService;
+
 /**
  * Created by Phil on 18.06.2016.
  */
-public class BoxFactory {
-    private static BoxFactory sBoxFactory;
-    private static final String TAG = "BoxFactory";
+public class BoxFactoryMock implements BoxFactoryInterface {
+    private static BoxFactoryMock sBoxFactoryMock;
+    private static final String TAG = "BoxFactoryMock";
     private Context mApplicationContext;
     private Comparator mCurrentComparator;
 
     private List<Box> mBoxes;
 
     //private Singleton constructor, instantiated by getter instead
-    private BoxFactory(Context context) {
+    private BoxFactoryMock(Context context) {
         mApplicationContext = context.getApplicationContext();
         mCurrentComparator = null;
 
@@ -51,20 +53,23 @@ public class BoxFactory {
     }
 
     //Singleton getter = constructor for a single class in whole app:
-    public static BoxFactory get(Context context) {
-        if (sBoxFactory == null) {
-            sBoxFactory = new BoxFactory(context);
+    public static BoxFactoryMock get(Context context) {
+        if (sBoxFactoryMock == null) {
+            sBoxFactoryMock = new BoxFactoryMock(context);
         }
-        return sBoxFactory;
+        return sBoxFactoryMock;
     }
 
+    @Override
     public List<Box> getBoxes() {
         return mBoxes;
     }
+    @Override
     public Context getApplicationContext() {
         return mApplicationContext;
     }
 
+    @Override
     public Box getBox(UUID id) {
         for (Box Box : mBoxes) {
             if (Box.getId().equals(id)) { //equals returns true for String value, == returns true only for same object reference
@@ -74,6 +79,7 @@ public class BoxFactory {
         return null;
     }
 
+    @Override
     public void sortByTabSelection(int position) {
         mCurrentComparator = SortingService.sortByTabSelection(position, mCurrentComparator, mBoxes);
     }

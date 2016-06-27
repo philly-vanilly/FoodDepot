@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
 
@@ -19,7 +19,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
     private static final String TAG = "BoxesAsListFragment";
     private RecyclerView mBoxesListRecyclerView;
     private BoxesListAdapter mBoxesListAdapter;
-    private BoxFactory mBoxFactory;
+    private BoxFactoryMock mBoxFactoryMock;
 
     //doesn't get Intent/Extra, so no need for:
 //    @Override
@@ -38,9 +38,9 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         mBoxesListRecyclerView = (RecyclerView) view.findViewById(R.id.boxes_list_recycler_view);
         mBoxesListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mBoxFactory = BoxFactory.get(getActivity());
-        //we do not create a new list (no new keyword). mBoxes is the same boxes list as in BoxFactory, memory-wise
-        List<Box> boxes = mBoxFactory.getBoxes();
+        mBoxFactoryMock = BoxFactoryMock.get(getActivity());
+        //we do not create a new list (no new keyword). mBoxes is the same boxes list as in BoxFactoryMock, memory-wise
+        List<Box> boxes = mBoxFactoryMock.getBoxes();
 
         mBoxesListAdapter = new BoxesListAdapter(boxes);
         mBoxesListRecyclerView.setAdapter(mBoxesListAdapter);
@@ -55,7 +55,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
         public BoxesListAdapter(List<Box> boxes){
             mBoxes = boxes;
-            // mBoxFactory.sortByTabSelection(0);
+            // mBoxFactoryMock.sortByTabSelection(0);
         }
 
         @Override

@@ -2,7 +2,6 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.box;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -27,11 +26,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryInterface;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.AnimationService;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
 
@@ -63,7 +62,7 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         UUID boxID = (UUID) getActivity().getIntent().getSerializableExtra(BoxActivity.EXTRA_BOX_ACTIVITY_ID);
-        BoxFactory boxFactory = BoxFactory.get(getActivity());
+        BoxFactoryInterface boxFactory = BoxFactoryMock.get(getActivity()); //TODO: replace with non-mock factory
         mBox = boxFactory.getBox(boxID);
     }
 

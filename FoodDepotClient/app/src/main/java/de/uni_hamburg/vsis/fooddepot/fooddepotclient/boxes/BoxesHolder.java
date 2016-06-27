@@ -16,7 +16,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryInterface;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
@@ -31,10 +32,10 @@ class BoxesHolder extends RecyclerView.ViewHolder{
     private static final float POINTING_DOWNWARDS = 180f;
 
     private static final String TAG = "BoxesHolder";
+    private BoxFactoryInterface mBoxFactory;
 
     //logic member variables:
     private View mItemView;
-    private List<Box> mBoxes;
     private RecyclerView.Adapter mBoxesListAdapter;
     private BoxesAsListFragment mBoxesAsListFragment;
 
@@ -62,7 +63,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         mBoxesAsListFragment = boxesAsListFragment;
         mBoxesListAdapter = adapter;
         mItemView = itemView;
-        mBoxes = BoxFactory.get(boxesAsListFragment.getContext()).getBoxes();
+        mBoxFactory = BoxFactoryMock.get(boxesAsListFragment.getContext());
 
         //toolbar (from Activity's layout, not from the Fragments ListView layout!):
         mTabLayoutSortList = (TabLayout) boxesAsListFragment.getActivity().findViewById(R.id.tabLayoutSortList);
@@ -103,7 +104,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
 
         //listeners and general settings:
         //color rows differently based on whether the position is even or not
-        if(mBoxes.indexOf(box) % 2 == 0){
+        if(mBoxFactory.getBoxes().indexOf(box) % 2 == 0){
             mItemView.setBackgroundColor(Color.parseColor("#02000000"));
         } else {
             mItemView.setBackgroundColor(Color.parseColor("white"));
@@ -127,11 +128,9 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         });
 
         mTabLayoutSortList.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
-            BoxFactory boxFactory = BoxFactory.get(mItemView.getContext());
-
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                boxFactory.sortByTabSelection(tab.getPosition());
+                mBoxFactory.sortByTabSelection(tab.getPosition());
                 mBoxesListAdapter.notifyDataSetChanged(); //update whole list
             }
             @Override
@@ -140,7 +139,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                boxFactory.sortByTabSelection(tab.getPosition());
+                mBoxFactory.sortByTabSelection(tab.getPosition());
                 mBoxesListAdapter.notifyDataSetChanged(); //update whole list
             }
         });

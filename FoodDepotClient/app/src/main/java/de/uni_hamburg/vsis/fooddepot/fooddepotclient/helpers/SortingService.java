@@ -1,8 +1,10 @@
-package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
+package de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
 
 /**
  * Created by Phil on 19.06.2016.

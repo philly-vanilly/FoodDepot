@@ -31,7 +31,7 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Account;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivityInterface;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.RestClient;
@@ -280,7 +280,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
 
-                BoxFactory boxesFactory = BoxFactory.get(BoxesActivity.this);
+                BoxFactoryMock boxesFactory = BoxFactoryMock.get(BoxesActivity.this);
 
                 searchString = searchString.length() > 11? searchString.substring(0, 9)+"..." : searchString;
 
