@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/fragment_boxes_container">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_boxes_container_2"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+</LinearLayout>
+
+<!--NOTE: To create a landscape layout you have to select project_manager>res>new>android_resource_directory -->
+<!--Then directoy name = layout, resource type = layout, source set = main-->
+<!--Then move Orientation to right (as chosen qualifier)-->
+<!--Then select UI mode and as chosen qualifier landscape-->
+<!--Now if you switch the project manager to "Packages mode" you can see that a new landscape dir-->
+<!--has been created. If you place an .xml with the same name as in main layout folder inside,-->
+<!--it will be used when landscape mode is detected-->
