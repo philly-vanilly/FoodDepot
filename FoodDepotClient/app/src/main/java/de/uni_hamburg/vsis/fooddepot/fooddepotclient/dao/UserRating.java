@@ -13,6 +13,7 @@ public class UserRating {
     private double mFittingDescriptionRating;
     private double mTasteRating;
     private double mCommunicationRating;
+    private double mPriceRating;
     private String mComment;
 
     public UserRating(){}
@@ -64,5 +65,11 @@ public class UserRating {
     }
     public void setCommunicationRating(double communicationRating) {
         mCommunicationRating = communicationRating;
+    }
+    public double getPriceRating() {
+        return mPriceRating;
+    }
+    public void setPriceRating(double priceRating) {
+        mPriceRating = priceRating;
     }
 }
