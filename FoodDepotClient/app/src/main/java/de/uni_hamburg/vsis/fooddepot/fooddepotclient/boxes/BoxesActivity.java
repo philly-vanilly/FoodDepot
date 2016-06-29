@@ -54,12 +54,14 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private BoxesFragmentInterface mSecondBoxesView = null;
     private AppBarLayout mAppBarLayout = null;
 
-    private DrawerLayout mDrawer;
+    private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
-    private NavigationView mNvDrawer;
+    private NavigationView mNavigationViewDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean mIsMapMode = false; // TODO: persist on pause, stop, ...
     private static final String IS_MAP_MODE = "IsMapMode";
+    private static final String LIST_FRAGMENT = "ListFragment";
+    private static final String MAP_FRAGMENT = "MapFragment";
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -80,9 +82,17 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mIsMapMode = savedInstanceState.getBoolean(IS_MAP_MODE);
+        }
 
         Log.d(TAG, "=========== onCreate called ===========");
+        int orientation = getResources().getConfiguration().orientation;
+        Log.d(TAG, "=========== IS LANDSCAPE: " + (orientation == Configuration.ORIENTATION_LANDSCAPE) );
+        Log.d(TAG, "=========== IS MAP MODE: " + (mIsMapMode) );
+        Log.d(TAG, "=========== savedInstanceState: " + savedInstanceState);
+
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_boxes);
 
@@ -93,14 +103,18 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout) ;
 
         //finding drawer view and binding events to actionbartoggle
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
-        mDrawer.addDrawerListener(mDrawerToggle);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         //finding and setting up side menu and its items
-        mNvDrawer = (NavigationView) findViewById(R.id.nav_view);
-        setupDrawerContent(mNvDrawer);
-
+        mNavigationViewDrawer = (NavigationView) findViewById(R.id.nav_view);
+        setupDrawerContent(mNavigationViewDrawer);
+        if (mIsMapMode){
+            mNavigationViewDrawer.getMenu().getItem(1).setTitle(R.string.currently_map_mode_set_to_list);   //getTitle() == getString(R.string.currently_list_mode_set_to_map)
+        } else {
+            mNavigationViewDrawer.getMenu().getItem(1).setTitle(R.string.currently_list_mode_set_to_map);
+        }
         setupToolbarLayout();
 
         // dont setup another fragment if restored from previous state or else you get
@@ -108,14 +122,23 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         // fragment could already be in the list after being recreated by the FragmentManager
         // after allocating memory. But when it is null, create new. onStart() makes it visible,
         // onResume() returns it to foreground
-        Log.d(TAG, "savedInstanceState: " + savedInstanceState);
 
+        String fragmentTag = null;
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             try {
                 if (mIsMapMode){
-                    mCurrentBoxesView = new BoxesAsMapFragment();
+                    mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
+                    if (mCurrentBoxesView == null) {
+                        mCurrentBoxesView = new BoxesAsMapFragment();
+                    }
+                    fragmentTag = MAP_FRAGMENT;
                 } else {
-                    mCurrentBoxesView = new BoxesAsListFragment();
+                    mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
+                    if (mCurrentBoxesView == null) {
+                        mCurrentBoxesView = new BoxesAsListFragment();
+                    }
+                    fragmentTag = LIST_FRAGMENT;
                 }
             } catch (Exception e) {
                 Log.e(TAG, Log.getStackTraceString(e));
@@ -126,32 +149,31 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle(null);
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_boxes_container, (Fragment) mCurrentBoxesView)
-                    //.addToBackStack(null)
+                    .replace(R.id.fragment_boxes_container, (Fragment) mCurrentBoxesView, fragmentTag)
+                    .addToBackStack(null)
                     .commit();
 
-            int orientation = getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_LANDSCAPE && findViewById(R.id.fragment_boxes_container_2) != null) {
                 if (!mIsMapMode){
-                    mSecondBoxesView = new BoxesAsMapFragment();
+                    mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
+                    if(mSecondBoxesView == null) {
+                        mSecondBoxesView = new BoxesAsMapFragment();
+                    }
+                    fragmentTag = MAP_FRAGMENT;
                 } else {
-                    mSecondBoxesView = new BoxesAsListFragment();
+                    mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
+                    if(mSecondBoxesView == null) {
+                        mSecondBoxesView = new BoxesAsListFragment();
+                    }
+                    fragmentTag = LIST_FRAGMENT;
                 }
                 fragmentManager
                         .beginTransaction()
-                        .replace(R.id.fragment_boxes_container_2, (Fragment) mSecondBoxesView)
-                        //.addToBackStack(null)
+                        .replace(R.id.fragment_boxes_container_2, (Fragment) mSecondBoxesView, fragmentTag)
+                        .addToBackStack(null)
                         .commit();
-            } else {
-                if(findViewById(R.id.fragment_boxes_container_2) != null) {
-                    fragmentManager
-                            .beginTransaction()
-                            .remove((Fragment) mSecondBoxesView)
-                            .commit();
-                }
             }
         }
 
@@ -176,9 +198,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         } else {
             findViewById(R.id.tabLayoutSortList).setVisibility(View.VISIBLE);
             Log.d(TAG, "=========== setting toolbar to tab mode ===========");
-            Log.d(TAG, "IS LANDSCAPE: " + (orientation == Configuration.ORIENTATION_LANDSCAPE) );
-            Log.d(TAG, "IS UNDEFINED: " + (orientation == Configuration.ORIENTATION_UNDEFINED) );
-            Log.d(TAG, "IS MAP MODE: " + (mIsMapMode) );
         }
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)mAppBarLayout.getLayoutParams();
         params.setMargins( 0, 0, 0, 0);
@@ -187,15 +206,25 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
     private void switchFragments(MenuItem menuItem){
         Log.d(TAG, "=========== switchFragments called ===========");
+        String fragmentTag = null;
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         try {
             if (menuItem.getTitle() == getString(R.string.currently_list_mode_set_to_map)){
-                mCurrentBoxesView = new BoxesAsMapFragment();
+                mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
+                if(mCurrentBoxesView == null) {
+                    mCurrentBoxesView = new BoxesAsMapFragment();
+                }
+                fragmentTag = MAP_FRAGMENT;
                 menuItem.setTitle(R.string.currently_map_mode_set_to_list);
                 mIsMapMode = true;
                 setupToolbarLayout();
             } else if (menuItem.getTitle() == getString(R.string.currently_map_mode_set_to_list)) {
-                mCurrentBoxesView = new BoxesAsListFragment();
+                mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
+                if(mCurrentBoxesView == null) {
+                    mCurrentBoxesView = new BoxesAsListFragment();
+                }
+                fragmentTag = LIST_FRAGMENT;
                 menuItem.setTitle(R.string.currently_list_mode_set_to_map);
                 mIsMapMode = false;
                 setupToolbarLayout();
@@ -209,26 +238,47 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment_boxes_container, (Fragment) mCurrentBoxesView)
-                //.addToBackStack(null)
+                .replace(R.id.fragment_boxes_container, (Fragment) mCurrentBoxesView, fragmentTag)
+                .addToBackStack(null)
                 .commit();
+
+        fragmentTag = (mIsMapMode? LIST_FRAGMENT : MAP_FRAGMENT);
 
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE && findViewById(R.id.fragment_boxes_container_2) != null) {
             if (menuItem.getTitle() == getString(R.string.currently_list_mode_set_to_map)){
-                mSecondBoxesView = new BoxesAsMapFragment();
+                mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
+                if(mSecondBoxesView == null) {
+                    mSecondBoxesView = new BoxesAsMapFragment();
+                }
             } else if (menuItem.getTitle() == getString(R.string.currently_map_mode_set_to_list)) {
-                mSecondBoxesView = new BoxesAsListFragment();
+                mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
+                if(mSecondBoxesView == null) {
+                    mSecondBoxesView = new BoxesAsListFragment();
+                }
             }
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_boxes_container_2, (Fragment) mSecondBoxesView)
-                    //.addToBackStack(null)
+                    .replace(R.id.fragment_boxes_container_2, (Fragment) mSecondBoxesView, fragmentTag)
+                    .addToBackStack(null)
                     .commit();
         }
+    }
+
+    private BoxesFragmentInterface recreateFragment(Fragment fragment, FragmentManager fragmentManager){
+        if (fragment != null) {
+            try {
+                Fragment.SavedState savedState = fragmentManager.saveFragmentInstanceState(fragment);
+                Fragment newInstance = fragment.getClass().newInstance();
+                newInstance.setInitialSavedState(savedState);
+                return (BoxesFragmentInterface) newInstance;
+            } catch (Exception e) {
+                Log.e(TAG, Log.getStackTraceString(e));
+            }
+        }
+        return null;
     }
 
     private void setupDrawerContent (NavigationView navigationView){
@@ -238,7 +288,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 public boolean onNavigationItemSelected(MenuItem menuItem){
                     //what to do when an item in the side menu is clicked
                     selectDrawerItem(menuItem);
-                    mDrawer.closeDrawer(GravityCompat.START);
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
                     return true;
                 }
             }
@@ -267,7 +317,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         }
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
-        mDrawer.closeDrawers();
+        mDrawerLayout.closeDrawers();
     }
 
     @Override
