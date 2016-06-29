@@ -85,13 +85,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         if (savedInstanceState != null) {
             mIsMapMode = savedInstanceState.getBoolean(IS_MAP_MODE);
         }
-
-        Log.d(TAG, "=========== onCreate called ===========");
-        int orientation = getResources().getConfiguration().orientation;
-        Log.d(TAG, "=========== IS LANDSCAPE: " + (orientation == Configuration.ORIENTATION_LANDSCAPE) );
-        Log.d(TAG, "=========== IS MAP MODE: " + (mIsMapMode) );
-        Log.d(TAG, "=========== savedInstanceState: " + savedInstanceState);
-
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_boxes);
@@ -116,65 +109,62 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             mNavigationViewDrawer.getMenu().getItem(1).setTitle(R.string.currently_list_mode_set_to_map);
         }
         setupToolbarLayout();
+        
+        //stop showing menu title as toolbar title //TODO: change to show search string
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null);
 
-        // dont setup another fragment if restored from previous state or else you get
-        // overlapping fragments.
-        // fragment could already be in the list after being recreated by the FragmentManager
-        // after allocating memory. But when it is null, create new. onStart() makes it visible,
-        // onResume() returns it to foreground
-
+        //========================================================
         String fragmentTag = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if (savedInstanceState == null) {
-            try {
-                if (mIsMapMode){
-                    mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
-                    if (mCurrentBoxesView == null) {
-                        mCurrentBoxesView = new BoxesAsMapFragment();
-                    }
-                    fragmentTag = MAP_FRAGMENT;
-                } else {
-                    mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
-                    if (mCurrentBoxesView == null) {
-                        mCurrentBoxesView = new BoxesAsListFragment();
-                    }
-                    fragmentTag = LIST_FRAGMENT;
-                }
-            } catch (Exception e) {
-                Log.e(TAG, Log.getStackTraceString(e));
+
+        Fragment oldMapFragment = fragmentManager.findFragmentByTag(MAP_FRAGMENT);
+        Fragment.SavedState oldMapFragmentState = null;
+        if (oldMapFragment != null) {
+            oldMapFragmentState = fragmentManager.saveFragmentInstanceState(oldMapFragment);
+            fragmentManager.beginTransaction().remove(oldMapFragment).commit();
+        }
+        Fragment newMapFragment = new BoxesAsMapFragment();
+        if (oldMapFragmentState != null){
+            newMapFragment.setInitialSavedState(oldMapFragmentState);
+        }
+
+        Fragment oldListFragment = fragmentManager.findFragmentByTag(LIST_FRAGMENT);
+        Fragment.SavedState oldListFragmentState = null;
+        if (oldListFragment != null) {
+            oldListFragmentState = fragmentManager.saveFragmentInstanceState(oldListFragment);
+            fragmentManager.beginTransaction().remove(oldListFragment).commit();
+        }
+        Fragment newListFragment = new BoxesAsListFragment();
+        if (oldListFragmentState != null){
+            newListFragment.setInitialSavedState(oldListFragmentState);
+        }
+
+        if (mIsMapMode){
+            fragmentTag = MAP_FRAGMENT;
+            mCurrentBoxesView = (BoxesAsMapFragment) newMapFragment;
+        } else {
+            fragmentTag = LIST_FRAGMENT;
+            mCurrentBoxesView = (BoxesAsListFragment) newListFragment;
+        }
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_boxes_container, (Fragment) mCurrentBoxesView, fragmentTag)
+                .commit();
+
+        if (findViewById(R.id.fragment_boxes_container_2) != null) {
+            if (!mIsMapMode){
+                fragmentTag = MAP_FRAGMENT;
+                mSecondBoxesView = (BoxesAsMapFragment) newMapFragment;
+            } else {
+                fragmentTag = LIST_FRAGMENT;
+                mSecondBoxesView = (BoxesAsListFragment) newListFragment;
             }
-
-            //stop showing menu title as toolbar title
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setTitle(null);
-
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_boxes_container, (Fragment) mCurrentBoxesView, fragmentTag)
-                    .addToBackStack(null)
+                    .replace(R.id.fragment_boxes_container_2, (Fragment) mSecondBoxesView, fragmentTag)
                     .commit();
-
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE && findViewById(R.id.fragment_boxes_container_2) != null) {
-                if (!mIsMapMode){
-                    mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
-                    if(mSecondBoxesView == null) {
-                        mSecondBoxesView = new BoxesAsMapFragment();
-                    }
-                    fragmentTag = MAP_FRAGMENT;
-                } else {
-                    mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
-                    if(mSecondBoxesView == null) {
-                        mSecondBoxesView = new BoxesAsListFragment();
-                    }
-                    fragmentTag = LIST_FRAGMENT;
-                }
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.fragment_boxes_container_2, (Fragment) mSecondBoxesView, fragmentTag)
-                        .addToBackStack(null)
-                        .commit();
-            }
         }
 
         mGoogleApiClient = new FDepotGoogleApiClient(this, this);
@@ -269,6 +259,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
     private BoxesFragmentInterface recreateFragment(Fragment fragment, FragmentManager fragmentManager){
         if (fragment != null) {
+            fragmentManager.beginTransaction().remove(fragment).commit();
             try {
                 Fragment.SavedState savedState = fragmentManager.saveFragmentInstanceState(fragment);
                 Fragment newInstance = fragment.getClass().newInstance();
