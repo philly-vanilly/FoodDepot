@@ -3,7 +3,6 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -14,19 +13,12 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingService;
 /**
  * Created by Phil on 18.06.2016.
  */
-public class BoxFactoryMock implements BoxFactoryInterface {
-    private static BoxFactoryMock sBoxFactoryMock;
+public class BoxFactoryMock extends AbstractBoxFactory {
     private static final String TAG = "BoxFactoryMock";
-    private Context mApplicationContext;
-    private Comparator mCurrentComparator;
-
-    private List<Box> mBoxes;
 
     //private Singleton constructor, instantiated by getter instead
-    private BoxFactoryMock(Context context) {
+    public BoxFactoryMock(Context context) {
         mApplicationContext = context.getApplicationContext();
-        mCurrentComparator = null;
-
         mBoxes = new ArrayList<>();
         List<String> food = new ArrayList<>();
         food.add("Apples"); food.add("Oranges"); food.add("Peas"); food.add("Kiwi"); food.add("Watermelons");
@@ -50,37 +42,8 @@ public class BoxFactoryMock implements BoxFactoryInterface {
             box.setAddress(null);
             mBoxes.add(box);
         }
-    }
 
-    //Singleton getter = constructor for a single class in whole app:
-    public static BoxFactoryMock get(Context context) {
-        if (sBoxFactoryMock == null) {
-            sBoxFactoryMock = new BoxFactoryMock(context);
-        }
-        return sBoxFactoryMock;
-    }
-
-    @Override
-    public List<Box> getBoxes() {
-        return mBoxes;
-    }
-    @Override
-    public Context getApplicationContext() {
-        return mApplicationContext;
-    }
-
-    @Override
-    public Box getBox(UUID id) {
-        for (Box Box : mBoxes) {
-            if (Box.getId().equals(id)) { //equals returns true for String value, == returns true only for same object reference
-                return Box;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void sortByTabSelection(int position) {
-        mCurrentComparator = SortingService.sortByTabSelection(position, mCurrentComparator, mBoxes);
+        //sort by distance:
+        SortingService.sortByTabSelection(2, mCurrentComparator, mBoxes);
     }
 }

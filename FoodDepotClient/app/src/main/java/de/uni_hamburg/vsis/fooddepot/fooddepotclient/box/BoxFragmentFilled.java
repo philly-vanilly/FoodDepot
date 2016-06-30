@@ -29,7 +29,7 @@ import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryInterface;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.AbstractBoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.AnimationService;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
@@ -62,7 +62,7 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         UUID boxID = (UUID) getActivity().getIntent().getSerializableExtra(BoxActivity.EXTRA_BOX_ACTIVITY_ID);
-        BoxFactoryInterface boxFactory = BoxFactoryMock.get(getActivity()); //TODO: replace with non-mock factory
+        AbstractBoxFactory boxFactory = AbstractBoxFactory.get(getActivity()); //TODO: replace with non-mock factory
         mBox = boxFactory.getBox(boxID);
     }
 

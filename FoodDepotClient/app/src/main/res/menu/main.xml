@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
+    <group
+        android:id="@+id/barButtons">
+        <item
+            android:id="@+id/barButtonName"
+            android:orderInCategory="1"
+            android:title="@string/tab_name"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/barButtonPrice"
+            android:orderInCategory="2"
+            android:title="@string/tab_price"
+            app:showAsAction="always"
+            ></item>
+        <item
+            android:id="@+id/barButtonDistance"
+            android:orderInCategory="3"
+            android:title="@string/tab_distance"
+            app:showAsAction="always"></item>
+        <item
+            android:id="@+id/barButtonRating"
+            android:orderInCategory="4"
+            android:title="@string/tab_rating"
+            app:showAsAction="always"></item>
+    </group>
     <item android:id="@+id/menu_search"
         android:title="@string/action_search"
         android:icon="@android:drawable/ic_menu_search"
+        android:orderInCategory="5"
+        android:imeOptions="flagNoExtractUi"
         app:showAsAction="always"
         app:actionViewClass="android.support.v7.widget.SearchView" />
-    <!--app:showAsAction="ifRoom|collapseActionView"-->
-
-    <!--<item-->
-        <!--android:id="@+id/action_toggle_list_view_mode"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="@string/action_switch_map_list"-->
-        <!--app:showAsAction="never" />-->
 </menu>

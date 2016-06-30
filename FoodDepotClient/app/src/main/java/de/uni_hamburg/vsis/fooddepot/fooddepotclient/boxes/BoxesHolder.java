@@ -13,10 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.util.List;
-
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryInterface;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.AbstractBoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
@@ -32,16 +30,12 @@ class BoxesHolder extends RecyclerView.ViewHolder{
     private static final float POINTING_DOWNWARDS = 180f;
 
     private static final String TAG = "BoxesHolder";
-    private BoxFactoryInterface mBoxFactory;
+    private AbstractBoxFactory mBoxFactory;
 
     //logic member variables:
     private View mItemView;
-    private RecyclerView.Adapter mBoxesListAdapter;
     private BoxesAsListFragment mBoxesAsListFragment;
 
-
-    //UI variables:
-    TabLayout mTabLayoutSortList;
     //basic elements:
     private TextView mTextViewBoxesName;
     private TextView mTextViewBoxesContent;
@@ -61,12 +55,8 @@ class BoxesHolder extends RecyclerView.ViewHolder{
     public BoxesHolder(BoxesAsListFragment boxesAsListFragment, View itemView, RecyclerView.Adapter adapter) {
         super(itemView);
         mBoxesAsListFragment = boxesAsListFragment;
-        mBoxesListAdapter = adapter;
         mItemView = itemView;
-        mBoxFactory = BoxFactoryMock.get(boxesAsListFragment.getContext());
-
-        //toolbar (from Activity's layout, not from the Fragments ListView layout!):
-        mTabLayoutSortList = (TabLayout) boxesAsListFragment.getActivity().findViewById(R.id.tabLayoutSortList);
+        mBoxFactory = AbstractBoxFactory.get(boxesAsListFragment.getContext());
 
         //basic content
         mImageViewFruit = (ImageView) itemView.findViewById(R.id.imageViewFruit);
@@ -124,23 +114,6 @@ class BoxesHolder extends RecyclerView.ViewHolder{
             public void onClick(View v) {
                 Intent intent = BoxActivity.makeIntent(mBoxesAsListFragment.getActivity(), box.getId());
                 mBoxesAsListFragment.startActivity(intent);
-            }
-        });
-
-        mTabLayoutSortList.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mBoxFactory.sortByTabSelection(tab.getPosition());
-                mBoxesListAdapter.notifyDataSetChanged(); //update whole list
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                return;
-            }
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                mBoxFactory.sortByTabSelection(tab.getPosition());
-                mBoxesListAdapter.notifyDataSetChanged(); //update whole list
             }
         });
     }

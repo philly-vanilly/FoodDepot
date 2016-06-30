@@ -26,7 +26,6 @@ public class BoxActivity extends AppCompatActivity {
     public static final String EXTRA_BOX_ACTIVITY_ID = "de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxActivity_ID";
 
     private Toolbar mToolbar;
-    private AppBarLayout mAppBarLayout;
     private BoxFragmentInterface currentBoxView = null;
 
 
@@ -51,11 +50,7 @@ public class BoxActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout);
-
         if(findViewById(R.id.fragment_box_container) != null && savedInstanceState == null && currentBoxView == null) {
-
-            FragmentManager fm = getSupportFragmentManager();
             try{
                 if(true) {
                     currentBoxView = new BoxFragmentFilled();

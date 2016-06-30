@@ -3,12 +3,4 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
 android:id="@+id/boxes_list_recycler_view"
 android:layout_width="match_parent"
-android:layout_height="match_parent"/>
-
-<!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--xmlns:tools="http://schemas.android.com/tools"-->
-<!--android:id="@+id/container_fragment_list"-->
-<!--android:name="de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesAsListFragment"-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent"-->
-<!--tools:context=".BoxesActivity" />-->
+android:layout_height="match_parent" />

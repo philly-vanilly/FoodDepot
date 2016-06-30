@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -31,6 +32,7 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Account;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.AbstractBoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivityInterface;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
@@ -52,7 +54,12 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
     private BoxesFragmentInterface mCurrentBoxesView = null;
     private BoxesFragmentInterface mSecondBoxesView = null;
+    private BoxesAsListFragment mBoxesAsListFragment = null;
+    private BoxesAsMapFragment mBoxesAsMapFragment = null;
     private AppBarLayout mAppBarLayout = null;
+    TabLayout mTabLayoutSortList;
+
+    private AbstractBoxFactory mBoxFactory;
 
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
@@ -89,6 +96,8 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         setContentView(R.layout.activity_boxes);
 
+        mBoxFactory = AbstractBoxFactory.get(this);
+
         //finding and setting up a toolbar to replace actionbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -108,12 +117,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         } else {
             mNavigationViewDrawer.getMenu().getItem(1).setTitle(R.string.currently_list_mode_set_to_map);
         }
-        setupToolbarLayout();
-        
-        //stop showing menu title as toolbar title //TODO: change to show search string
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(null);
+        setupAppBarLayout();
 
         //========================================================
         String fragmentTag = null;
@@ -143,10 +147,12 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         if (mIsMapMode){
             fragmentTag = MAP_FRAGMENT;
-            mCurrentBoxesView = (BoxesAsMapFragment) newMapFragment;
+            mCurrentBoxesView = (BoxesFragmentInterface) newMapFragment;
+            mBoxesAsMapFragment = (BoxesAsMapFragment) mCurrentBoxesView;
         } else {
             fragmentTag = LIST_FRAGMENT;
-            mCurrentBoxesView = (BoxesAsListFragment) newListFragment;
+            mCurrentBoxesView = (BoxesFragmentInterface) newListFragment;
+            mBoxesAsListFragment = (BoxesAsListFragment) mCurrentBoxesView;
         }
         fragmentManager
                 .beginTransaction()
@@ -178,20 +184,46 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 usernameTextView.setText(account.getFirstName() + " " + account.getLastName());
             }
         }
+
+        mTabLayoutSortList = (TabLayout) findViewById(R.id.tabLayoutSortList);
+
+        mTabLayoutSortList.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mBoxFactory.sortByTabSelection(tab.getPosition());
+                if (mBoxesAsListFragment != null) {
+                    mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                return;
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                mBoxFactory.sortByTabSelection(tab.getPosition());
+                if (mBoxesAsListFragment != null) {
+                    mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
+                }
+            }
+        });
     }
 
-    private void setupToolbarLayout(){
+    private void setupAppBarLayout(){
         int orientation = getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_PORTRAIT && mIsMapMode){
-            findViewById(R.id.tabLayoutSortList).setVisibility(View.GONE);
-            Log.d(TAG, "=========== setting toolbar to NO-tab mode ===========");
-        } else {
+        if(orientation == Configuration.ORIENTATION_PORTRAIT && !mIsMapMode){
             findViewById(R.id.tabLayoutSortList).setVisibility(View.VISIBLE);
-            Log.d(TAG, "=========== setting toolbar to tab mode ===========");
+        } else {
+            findViewById(R.id.tabLayoutSortList).setVisibility(View.GONE);
         }
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)mAppBarLayout.getLayoutParams();
         params.setMargins( 0, 0, 0, 0);
         mAppBarLayout.setLayoutParams(params);
+
+        //stop showing menu title as toolbar title //TODO: change to show search string
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null);
     }
 
     private void switchFragments(MenuItem menuItem){
@@ -204,20 +236,22 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
                 if(mCurrentBoxesView == null) {
                     mCurrentBoxesView = new BoxesAsMapFragment();
+                    mBoxesAsMapFragment = (BoxesAsMapFragment) mCurrentBoxesView;
                 }
                 fragmentTag = MAP_FRAGMENT;
                 menuItem.setTitle(R.string.currently_map_mode_set_to_list);
                 mIsMapMode = true;
-                setupToolbarLayout();
+                setupAppBarLayout();
             } else if (menuItem.getTitle() == getString(R.string.currently_map_mode_set_to_list)) {
                 mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
                 if(mCurrentBoxesView == null) {
                     mCurrentBoxesView = new BoxesAsListFragment();
+                    mBoxesAsListFragment = (BoxesAsListFragment) mCurrentBoxesView;
                 }
                 fragmentTag = LIST_FRAGMENT;
                 menuItem.setTitle(R.string.currently_list_mode_set_to_map);
                 mIsMapMode = false;
-                setupToolbarLayout();
+                setupAppBarLayout();
             }
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -242,11 +276,13 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
                 if(mSecondBoxesView == null) {
                     mSecondBoxesView = new BoxesAsMapFragment();
+                    mBoxesAsMapFragment = (BoxesAsMapFragment) mSecondBoxesView;
                 }
             } else if (menuItem.getTitle() == getString(R.string.currently_map_mode_set_to_list)) {
                 mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
                 if(mSecondBoxesView == null) {
                     mSecondBoxesView = new BoxesAsListFragment();
+                    mBoxesAsListFragment = (BoxesAsListFragment) mSecondBoxesView;
                 }
             }
             fragmentManager
@@ -312,10 +348,51 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_PORTRAIT){
+            menu.setGroupVisible(R.id.barButtons, false);
+        } else {
+            menu.setGroupVisible(R.id.barButtons, true);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (mDrawerToggle.onOptionsItemSelected(item)){
             return true;
+        } else {
+            switch (item.getItemId()) {
+                case R.id.barButtonName:
+                    mBoxFactory.sortByTabSelection(0);
+                    if (mBoxesAsListFragment != null) {
+                        mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
+                    }
+                    break;
+                case R.id.barButtonPrice:
+                    mBoxFactory.sortByTabSelection(1);
+                    if (mBoxesAsListFragment != null) {
+                        mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
+                    }
+                    break;
+                case R.id.barButtonDistance:
+                    mBoxFactory.sortByTabSelection(2);
+                    if (mBoxesAsListFragment != null) {
+                        mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
+                    }
+                    break;
+                case R.id.barButtonRating:
+                    mBoxFactory.sortByTabSelection(3);
+                    if (mBoxesAsListFragment != null) {
+                        mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
+                    }
+                    break;
+                default:
+            }
         }
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -345,7 +422,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         super.onStop();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -374,11 +450,11 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
 
-                BoxFactoryMock boxesFactory = BoxFactoryMock.get(BoxesActivity.this);
+                AbstractBoxFactory boxFactory = AbstractBoxFactory.get(BoxesActivity.this);
 
                 searchString = searchString.length() > 11? searchString.substring(0, 9)+"..." : searchString;
 
-                getSupportActionBar().setTitle(boxesFactory.getBoxes().size() + " \"" + searchString + "\" found");
+                getSupportActionBar().setTitle(boxFactory.getBoxes().size() + " \"" + searchString + "\" found");
                 //show tooltip load more by scrolling to bottom or zooming out (mIsMapMode)
                 updateBoxList();
                 return true;
