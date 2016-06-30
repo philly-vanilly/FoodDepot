@@ -33,14 +33,14 @@ public class BoxFactoryMock extends AbstractBoxFactory {
             box.setLongitude(ThreadLocalRandom.current().nextDouble(9.99, 10.0));
             box.setContent(food.get(random.nextInt(food.size()-1)));
             box.setName(prefixes.get(random.nextInt(prefixes.size()-1)) + box.getContent() + "_" + random.nextInt(15));
-            box.setOwnerName("doedel_95");
+            box.setOwnerName("doedmBoxes.add(box);el_95");
             box.setOverallUserRating(random.nextDouble()*5);
             box.setUserRatingCount(random.nextInt(85));
             box.setPrice(random.nextDouble()*100);
             box.setImage(null);
             box.setClicked(false);
             box.setAddress(null);
-            mBoxes.add(box);
+
         }
 
         //sort by distance:

@@ -6,10 +6,13 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.loopj.android.http.*;
 
+import java.util.List;
+
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Account;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
 
 /**
  * Created by paul on 24.04.16.
@@ -98,6 +101,11 @@ public class RestClient {
         get("searchBox", params, handler);
     }
 
+    public static List<Box> getClosestBoxes(int numberOfBoxes) {
+        List<Box> result = null;
 
 
+
+        return result;
+    }
 }
