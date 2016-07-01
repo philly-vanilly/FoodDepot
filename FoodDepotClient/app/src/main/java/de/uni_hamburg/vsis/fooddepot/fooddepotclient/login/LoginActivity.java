@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Account;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;

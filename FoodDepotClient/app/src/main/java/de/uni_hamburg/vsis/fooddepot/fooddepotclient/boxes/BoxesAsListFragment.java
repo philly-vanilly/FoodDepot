@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterface {
     private static final String TAG = "BoxesAsListFragment";

@@ -31,13 +31,13 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Account;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.AbstractBoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Account;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivityInterface;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.RestClient;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.Response;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
@@ -59,7 +59,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private AppBarLayout mAppBarLayout = null;
     TabLayout mTabLayoutSortList;
 
-    private AbstractBoxFactory mBoxFactory;
+    private BoxFactory mBoxFactory;
 
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
@@ -96,7 +96,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         setContentView(R.layout.activity_boxes);
 
-        mBoxFactory = AbstractBoxFactory.get(this);
+        mBoxFactory = BoxFactory.getFactory();
 
         //finding and setting up a toolbar to replace actionbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -190,7 +190,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         mTabLayoutSortList.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                mBoxFactory.sortByTabSelection(tab.getPosition());
+                sortBoxList(tab);
                 if (mBoxesAsListFragment != null) {
                     mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
                 }
@@ -201,9 +201,28 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                mBoxFactory.sortByTabSelection(tab.getPosition());
+                sortBoxList(tab);
                 if (mBoxesAsListFragment != null) {
                     mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
+                }
+            }
+
+            private void sortBoxList(TabLayout.Tab tab){
+                switch (tab.getPosition()){
+                    case 0:
+                        mBoxFactory.sortBySelection(SortingSelector.NAME);
+                        break;
+                    case 1:
+                        mBoxFactory.sortBySelection(SortingSelector.PRICE);
+                        break;
+                    case 2:
+                        mBoxFactory.sortBySelection(SortingSelector.DISTANCE);
+                        break;
+                    case 3:
+                        mBoxFactory.sortBySelection(SortingSelector.RATING);
+                        break;
+                    default:
+                        Log.e(TAG, "No Handler For Tab Position!");
                 }
             }
         });
@@ -365,25 +384,25 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         } else {
             switch (item.getItemId()) {
                 case R.id.barButtonName:
-                    mBoxFactory.sortByTabSelection(0);
+                    mBoxFactory.sortBySelection(SortingSelector.NAME);
                     if (mBoxesAsListFragment != null) {
                         mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
                     }
                     break;
                 case R.id.barButtonPrice:
-                    mBoxFactory.sortByTabSelection(1);
+                    mBoxFactory.sortBySelection(SortingSelector.PRICE);
                     if (mBoxesAsListFragment != null) {
                         mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
                     }
                     break;
                 case R.id.barButtonDistance:
-                    mBoxFactory.sortByTabSelection(2);
+                    mBoxFactory.sortBySelection(SortingSelector.DISTANCE);
                     if (mBoxesAsListFragment != null) {
                         mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
                     }
                     break;
                 case R.id.barButtonRating:
-                    mBoxFactory.sortByTabSelection(3);
+                    mBoxFactory.sortBySelection(SortingSelector.RATING);
                     if (mBoxesAsListFragment != null) {
                         mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
                     }
@@ -450,7 +469,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
 
-                AbstractBoxFactory boxFactory = AbstractBoxFactory.get(BoxesActivity.this);
+                BoxFactory boxFactory = BoxFactory.getFactory();
 
                 searchString = searchString.length() > 11? searchString.substring(0, 9)+"..." : searchString;
 

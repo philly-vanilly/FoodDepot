@@ -11,8 +11,8 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Account;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Account;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 /**
  * Created by paul on 24.04.16.
@@ -99,13 +99,5 @@ public class RestClient {
         params.add("longitude", ""+longitude);
 
         get("searchBox", params, handler);
-    }
-
-    public static List<Box> getClosestBoxes(int numberOfBoxes) {
-        List<Box> result = null;
-
-
-
-        return result;
     }
 }

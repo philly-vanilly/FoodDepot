@@ -1,4 +1,4 @@
-package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
+package de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects;
 
 import java.util.Date;
 

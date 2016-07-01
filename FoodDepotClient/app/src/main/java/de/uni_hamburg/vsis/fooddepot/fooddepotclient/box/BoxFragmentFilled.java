@@ -28,9 +28,9 @@ import java.util.Locale;
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.AbstractBoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.AnimationService;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
 
@@ -42,6 +42,8 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     private static String TAG = "BoxFragmentFilled";
 
     private Box mBox;
+    private BoxFactory mBoxFactory;
+    private BoxDao mBoxDao;
 
     private ImageButton mBoxPhotoThumb;
     private ImageView mBoxPhotoFull;
@@ -62,8 +64,9 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         UUID boxID = (UUID) getActivity().getIntent().getSerializableExtra(BoxActivity.EXTRA_BOX_ACTIVITY_ID);
-        AbstractBoxFactory boxFactory = AbstractBoxFactory.get(getActivity()); //TODO: replace with non-mock factory
-        mBox = boxFactory.getBox(boxID);
+        mBoxFactory = BoxFactory.getFactory();
+        mBox = mBoxFactory.getBox(boxID);
+        mBoxDao = mBoxFactory.getBoxDao();
     }
 
     @Nullable @Override
@@ -91,7 +94,7 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         mButtonReserve = (Button) itemView.findViewById((R.id.buttonReserve));
 
         mTextViewBoxesContent.setText(mBox.getContent());
-        mRatingBar.setRating(mBox.getRoundedOverallRatingForBox());
+        mRatingBar.setRating(mBoxDao.getRoundedOverallRatingForBox(mBox));
         mTextViewOwnerName.setText(mBox.getOwnerName());
         mTextViewRatingCount.setText("(" + mBox.getOverallUserRating() + ")");
 
@@ -114,11 +117,11 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
 
         mTextViewLocation.setText(addressString);
 
-        mTextViewDistance.setText(mBox.makeDistanceForBox(53.551086, 9.993682) + " from here"); //TODO: replace dummy data with current location
-        mTextViewPrice.setText(mBox.getPriceForBox());
+        mTextViewDistance.setText(mBoxDao.getTriangularDistanceForBox(mBox, 53.551086, 9.993682) + " from here"); //TODO: replace dummy data with current location
+        mTextViewPrice.setText(mBoxDao.getRoundedPriceForBox(mBox));
 
         String targetDateString = "Jul 16 00:00:00 2016"; //TODO: get target date as string from JSON > BEAN instead
-        long remainingTime = mBox.makeReservation(targetDateString);
+        long remainingTime = mBoxDao.makeReservation(mBox, targetDateString);
         DisplayService.displayRemainingTime(remainingTime, mTextViewTimeLeft);
 
         mBoxPhotoThumb.setOnClickListener(new View.OnClickListener(){

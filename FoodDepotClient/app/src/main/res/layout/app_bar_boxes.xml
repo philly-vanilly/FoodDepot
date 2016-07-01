@@ -34,21 +34,25 @@
             app:tabMode="scrollable">
 
             <android.support.design.widget.TabItem
+                android:id="@+id/tab_name"
                 android:text="@string/tab_name"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content" />
 
             <android.support.design.widget.TabItem
+                android:id="@+id/tab_price"
                 android:text="@string/tab_price"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content" />
 
             <android.support.design.widget.TabItem
+                android:id="@+id/tab_distance"
                 android:text="@string/tab_distance"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content" />
 
             <android.support.design.widget.TabItem
+                android:id="@+id/tab_rating"
                 android:text="@string/tab_rating"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content" />

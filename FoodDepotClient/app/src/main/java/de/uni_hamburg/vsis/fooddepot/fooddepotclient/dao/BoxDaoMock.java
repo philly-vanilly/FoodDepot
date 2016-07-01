@@ -1,6 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 
-import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,18 +8,18 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingService;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 /**
- * Created by Phil on 18.06.2016.
+ * Created by Phil on 01.07.2016.
  */
-public class BoxFactoryMock extends AbstractBoxFactory {
-    private static final String TAG = "BoxFactoryMock";
+public class BoxDaoMock extends BoxDao {
 
-    //private Singleton constructor, instantiated by getter instead
-    public BoxFactoryMock(Context context) {
-        mApplicationContext = context.getApplicationContext();
-        mBoxes = new ArrayList<>();
+
+    @Override
+    public List<Box> getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1) {
+        List<Box> result = new ArrayList<>();
+
         List<String> food = new ArrayList<>();
         food.add("Apples"); food.add("Oranges"); food.add("Peas"); food.add("Kiwi"); food.add("Watermelons");
         food.add("Melons"); food.add("Apricot"); food.add("Strawberries"); food.add("Pear"); food.add("Peach");
@@ -33,17 +33,30 @@ public class BoxFactoryMock extends AbstractBoxFactory {
             box.setLongitude(ThreadLocalRandom.current().nextDouble(9.99, 10.0));
             box.setContent(food.get(random.nextInt(food.size()-1)));
             box.setName(prefixes.get(random.nextInt(prefixes.size()-1)) + box.getContent() + "_" + random.nextInt(15));
-            box.setOwnerName("doedmBoxes.add(box);el_95");
+            box.setOwnerName("doedel_95");
             box.setOverallUserRating(random.nextDouble()*5);
             box.setUserRatingCount(random.nextInt(85));
             box.setPrice(random.nextDouble()*100);
             box.setImage(null);
             box.setClicked(false);
             box.setAddress(null);
-
+            result.add(box);
         }
+        return result;
+    }
 
-        //sort by distance:
-        SortingService.sortByTabSelection(2, mCurrentComparator, mBoxes);
+    @Override
+    public List<Box> getNumberOfEmptyBoxes(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1) {
+        return null;
+    }
+
+    @Override
+    public Drawable getPhotoForBox(UUID boxId) {
+        return null;
+    }
+
+    @Override
+    public Box getBoxById(UUID boxId) {
+        return null;
     }
 }

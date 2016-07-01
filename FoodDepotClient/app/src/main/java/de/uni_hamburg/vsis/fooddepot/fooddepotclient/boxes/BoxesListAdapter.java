@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.AbstractBoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 /**
  * Created by Phil on 30.06.2016.
@@ -21,7 +21,7 @@ public class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
     private BoxesAsListFragment mBoxesAsListFragment;
 
     public BoxesListAdapter(BoxesAsListFragment boxesAsListFragment){
-        mBoxes = AbstractBoxFactory.get(boxesAsListFragment.getContext()).getBoxes();
+        mBoxes = BoxFactory.getFactory().getBoxes();
         mBoxesAsListFragment = boxesAsListFragment;
     }
 

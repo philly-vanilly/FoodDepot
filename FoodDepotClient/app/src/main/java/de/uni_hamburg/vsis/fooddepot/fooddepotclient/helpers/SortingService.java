@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 /**
  * Created by Phil on 19.06.2016.
@@ -72,9 +72,9 @@ public class SortingService {
         }
     };
 
-    public static Comparator sortByTabSelection(int tabPosition, Comparator currentComparator, List<Box> boxes) throws RuntimeException {
-        switch(tabPosition){
-            case 0: //name
+    public static Comparator sortBySelection(SortingSelector selector, Comparator currentComparator, List<Box> boxes) throws RuntimeException {
+        switch(selector){
+            case NAME: //name
                 if (currentComparator == null || currentComparator == SortingService.sBoxNameAscendingComparator) {
                     Collections.sort(boxes, SortingService.sBoxNameDescendingComparator);
                     currentComparator = SortingService.sBoxNameDescendingComparator;
@@ -86,7 +86,7 @@ public class SortingService {
                     currentComparator = SortingService.sBoxNameDescendingComparator;
                 }
                 break;
-            case 1: //price
+            case PRICE: //price
                 if (currentComparator == null || currentComparator == SortingService.sBoxPriceAscendingComparator) {
                     Collections.sort(boxes, SortingService.sBoxPriceDescendingComparator);
                     currentComparator = SortingService.sBoxPriceDescendingComparator;
@@ -98,7 +98,7 @@ public class SortingService {
                     currentComparator = SortingService.sBoxPriceDescendingComparator;
                 }
                 break;
-            case 2: //distance
+            case DISTANCE: //distance
                 if (currentComparator == null || currentComparator == SortingService.sBoxDistanceAscendingComparator) {
                     Collections.sort(boxes, SortingService.sBoxDistanceDescendingComparator);
                     currentComparator = SortingService.sBoxDistanceDescendingComparator;
@@ -110,7 +110,7 @@ public class SortingService {
                     currentComparator = SortingService.sBoxDistanceDescendingComparator;
                 }
                 break;
-            case 3: //rating
+            case RATING: //rating
                 if (currentComparator == null || currentComparator == SortingService.sBoxRatingAscendingComparator) {
                     Collections.sort(boxes, SortingService.sBoxRatingDescendingComparator);
                     currentComparator = SortingService.sBoxRatingDescendingComparator;

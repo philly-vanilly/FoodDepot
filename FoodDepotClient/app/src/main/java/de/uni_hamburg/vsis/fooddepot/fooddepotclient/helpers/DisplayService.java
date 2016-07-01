@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 /**
  * This class handles complicated display logic (not just string formatting, which can be done in

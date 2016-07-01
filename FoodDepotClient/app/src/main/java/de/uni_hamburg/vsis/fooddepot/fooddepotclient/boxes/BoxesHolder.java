@@ -3,7 +3,6 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -14,10 +13,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.AbstractBoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxFactoryMock;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
 
 /**
@@ -30,7 +29,8 @@ class BoxesHolder extends RecyclerView.ViewHolder{
     private static final float POINTING_DOWNWARDS = 180f;
 
     private static final String TAG = "BoxesHolder";
-    private AbstractBoxFactory mBoxFactory;
+    private BoxFactory mBoxFactory;
+    private BoxDao mBoxDao;
 
     //logic member variables:
     private View mItemView;
@@ -56,7 +56,8 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         super(itemView);
         mBoxesAsListFragment = boxesAsListFragment;
         mItemView = itemView;
-        mBoxFactory = AbstractBoxFactory.get(boxesAsListFragment.getContext());
+        mBoxFactory = BoxFactory.getFactory();
+        mBoxDao = mBoxFactory.getBoxDao();
 
         //basic content
         mImageViewFruit = (ImageView) itemView.findViewById(R.id.imageViewFruit);
@@ -79,17 +80,17 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         //basic content:
         mImageViewFruit.setImageDrawable(DisplayService.getImageForBox(box, itemView));
         mTextViewBoxesName.setText(box.getName());
-        mTextViewPrice.setText(box.getPriceForBox());
-        mTextViewDistance.setText(box.makeDistanceForBox(53.551086, 9.993682)); //TODO: replace dummy data with current location
+        mTextViewPrice.setText(mBoxDao.getRoundedPriceForBox(box));
+        mTextViewDistance.setText(mBoxDao.getTriangularDistanceForBox(box, 53.551086, 9.993682)); //TODO: replace dummy data with current location
 
         //expandable content
         mTextViewBoxesContent.setText("(" + box.getContent() + ")");
-        mRatingBar.setRating(box.getRoundedOverallRatingForBox());
+        mRatingBar.setRating(mBoxDao.getRoundedOverallRatingForBox(box));
         mTextViewOwnerName.setText("Doedel_1995");
         mTextViewRatingCount.setText("(10)");
 
         String targetDateString = "Jul 16 00:00:00 2016"; //TODO: get target date as string from JSON > BEAN instead
-        long remainingTime = box.makeReservation(targetDateString);
+        long remainingTime = mBoxDao.makeReservation(box, targetDateString);
         DisplayService.displayRemainingTime(remainingTime, mTextViewTimeLeft);
 
         //listeners and general settings:
