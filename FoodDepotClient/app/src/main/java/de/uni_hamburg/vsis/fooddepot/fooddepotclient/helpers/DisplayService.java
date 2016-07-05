@@ -52,8 +52,7 @@ public class DisplayService {
      * @return Image as Drawable
      */
     public static Drawable getImageForBox(Box box, View itemView) {
-        Drawable drawable = null;
-        drawable = (Drawable) box.getImage();
+        Drawable drawable = box.getImage();
         if(drawable == null) { //TODO: perhaps some test to check if valid drawable
             String str = box.getContent();
             char lastChar = str.charAt(str.length() - 1);
@@ -61,8 +60,7 @@ public class DisplayService {
                 str = str.substring(0, str.length() - 1);
             }
             str = str.toLowerCase();
-            Integer resourceId = null;
-            resourceId = mFoodNamesOfSupportedIcons.get(str);
+            Integer resourceId = mFoodNamesOfSupportedIcons.get(str);
             if (resourceId != null) { //resource found
                 drawable = ResourcesCompat.getDrawable(itemView.getResources(), resourceId, null);
             } else { //dummy image
@@ -70,6 +68,29 @@ public class DisplayService {
             }
         }
         return drawable;
+    }
+
+    /**
+     * Image to display as thumbnail for a food-box. Either transmitted value from server or icon
+     * based on content type or (if content not found) dummy content icon
+     * @return Image as Drawable
+     */
+    public static int getImageIdForBox(Box box, View itemView) {
+        Integer resourceId = 0;
+        Drawable drawable = box.getImage();
+        if(drawable == null) { //TODO: perhaps some test to check if valid drawable
+            String str = box.getContent();
+            char lastChar = str.charAt(str.length() - 1);
+            if (str != null && str.length() > 0 && (lastChar == 's' || lastChar == 'n')) { //german or english plural
+                str = str.substring(0, str.length() - 1);
+            }
+            str = str.toLowerCase();
+            resourceId = mFoodNamesOfSupportedIcons.get(str);
+            if (resourceId == null) { //resource found
+                resourceId = R.drawable.ic_fruit_dummy;
+            }
+        }
+        return resourceId;
     }
 
     public static long MILLISECONDS_IN_DAYS = 1000 * 60 * 60 * 24;

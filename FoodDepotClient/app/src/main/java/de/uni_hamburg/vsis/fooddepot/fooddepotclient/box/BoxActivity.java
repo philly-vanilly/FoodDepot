@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 /**
  * Details View for one Box and its content
@@ -48,7 +50,7 @@ public class BoxActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar_box);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(null);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); //navigating "Up" in the hierarchy
 
         if(findViewById(R.id.fragment_box_container) != null && savedInstanceState == null && currentBoxView == null) {
             try{
@@ -92,5 +94,16 @@ public class BoxActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         // getMenuInflater().inflate(R.menu.menu_settings, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        UUID boxId = null;
+        if (currentBoxView != null){
+            Box box = currentBoxView.getBox();
+            boxId = box.getId();
+        }
+        Intent boxesActivityIntent = BoxesActivity.makeIntent(this, boxId);
+        startActivity(boxesActivityIntent);
     }
 }

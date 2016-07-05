@@ -61,6 +61,11 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     private Button mButtonReserve;
 
     @Override
+    public Box getBox() {
+        return mBox;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         UUID boxID = (UUID) getActivity().getIntent().getSerializableExtra(BoxActivity.EXTRA_BOX_ACTIVITY_ID);
@@ -96,7 +101,7 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         mTextViewBoxesContent.setText(mBox.getContent());
         mRatingBar.setRating(mBoxDao.getRoundedOverallRatingForBox(mBox));
         mTextViewOwnerName.setText(mBox.getOwnerName());
-        mTextViewRatingCount.setText("(" + mBox.getOverallUserRating() + ")");
+        mTextViewRatingCount.setText("(" + mBox.getUserRatingCount() + ")");
 
         String addressString = mBox.getAddress();
         if(addressString == null){

@@ -2,8 +2,12 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -12,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,7 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
@@ -123,18 +130,25 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
     public void updateBoxList() {
         List<Box> boxList = BoxFactory.getFactory().getBoxes();
         mMapMarkers = new ArrayList<>();
-
         Log.d(TAG, "============= UPDATE BOX LIST CALLED ================");
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (Box box : boxList) {
-            BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.box_location_marker);
+        for (final Box box : boxList) {
             //TODO: Custom Marker
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(box.getLatitude(), box.getLongitude()))
                     .title(box.getName())
                     .snippet(box.getContent())
-                    //.icon(bitmap)
+                    .icon(BitmapDescriptorFactory.fromResource(DisplayService.getImageIdForBox(box, getView())))
             );
+
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent intent = BoxActivity.makeIntent(getContext(), box.getId());
+                    startActivity(intent);
+                }
+            });
+
             mMapMarkers.add(marker);
             builder.include(new LatLng(box.getLatitude(), box.getLongitude()));
         }

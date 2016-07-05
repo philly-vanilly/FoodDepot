@@ -1,5 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -24,6 +25,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.location.LocationListener;
+
+import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Account;
@@ -59,6 +62,14 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private static final String IS_MAP_MODE = "IsMapMode";
     private static final String LIST_FRAGMENT = "ListFragment";
     private static final String MAP_FRAGMENT = "MapFragment";
+    //Serializable unique id to reference in other classes:
+    public static final String EXTRA_BOXES_ACTIVITY_ID = "de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxesActivity_ID";
+
+    public static Intent makeIntent(Context context, UUID boxID) {
+        Intent intent = new Intent(context, BoxesActivity.class);
+        intent.putExtra(EXTRA_BOXES_ACTIVITY_ID, boxID);
+        return intent;
+    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

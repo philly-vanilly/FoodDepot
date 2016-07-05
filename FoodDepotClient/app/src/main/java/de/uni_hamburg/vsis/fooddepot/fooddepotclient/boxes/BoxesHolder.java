@@ -113,7 +113,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         mDetailsButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = BoxActivity.makeIntent(mBoxesAsListFragment.getActivity(), box.getId());
+                Intent intent = BoxActivity.makeIntent(mBoxesAsListFragment.getContext(), box.getId());
                 mBoxesAsListFragment.startActivity(intent);
             }
         });
