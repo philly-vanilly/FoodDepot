@@ -107,6 +107,8 @@ class BoxesHolder extends RecyclerView.ViewHolder{
             public void onClick(View v) {
                 box.setClicked(!box.isClicked());
                 updateDetailsVisibility(box, true);
+                BoxesActivity boxesActivity = (BoxesActivity) mBoxesAsListFragment.getActivity();
+                boxesActivity.onBoxSelected(box.getId(), mBoxesAsListFragment.TAG);
             }
         });
 

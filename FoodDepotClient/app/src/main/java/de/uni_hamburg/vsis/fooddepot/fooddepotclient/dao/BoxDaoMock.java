@@ -26,7 +26,7 @@ public class BoxDaoMock extends BoxDao {
         List<String> prefixes = new ArrayList<>();
         prefixes.add("Mark's_"); prefixes.add("Tasty"); prefixes.add("Star"); prefixes.add("Frank's_"); prefixes.add("Homegrown");
         Random random = new Random();
-        for(int i = 0; i < 50; i++){
+        for(int i = 0; i < 30; i++){
             Box box = new Box();
             box.setId(UUID.randomUUID());
             box.setLatitude(ThreadLocalRandom.current().nextDouble(53.2, 53.6));

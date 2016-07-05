@@ -30,7 +30,6 @@ public class BoxActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private BoxFragmentInterface currentBoxView = null;
 
-
     /**
      * Custom intent maker based on UUID which is the value Boxes are checked for uniqueness with, inside equals()
      * NOTE: an intent extra passes values from a calling to a called activity

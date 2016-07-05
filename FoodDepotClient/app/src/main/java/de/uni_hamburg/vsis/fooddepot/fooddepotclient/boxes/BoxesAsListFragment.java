@@ -10,14 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
+import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.LinearLayoutManagerWithSmoothScroller;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterface {
-    private static final String TAG = "BoxesAsListFragment";
+    public static final String TAG = "BoxesAsListFragment";
     private RecyclerView mBoxesListRecyclerView;
+    private LinearLayoutManagerWithSmoothScroller mLinearLayoutManager;
 
     @Nullable
     public BoxesListAdapter getBoxesListAdapter() {
@@ -41,7 +44,8 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
         // RecyclerView recycles views and positions them on the screen by using a
         // LayoutManager. LayoutManager defines positioning and Scrolling behavior.
         mBoxesListRecyclerView = (RecyclerView) view.findViewById(R.id.boxes_list_recycler_view);
-        mBoxesListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mLinearLayoutManager = new LinearLayoutManagerWithSmoothScroller(getActivity());
+        mBoxesListRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         mBoxesListAdapter = new BoxesListAdapter(this);
         mBoxesListRecyclerView.setAdapter(mBoxesListAdapter);
@@ -53,5 +57,13 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
     public void updateBoxList() {
         Log.d(TAG, "updateBoxList called");
         mBoxesListAdapter.updateBoxesInList();
+    }
+
+    @Override
+    public void centerOnSelectedBox(UUID boxUUID) {
+        Integer position = BoxFactory.getFactory().getPosition(boxUUID);
+        if (position != null ) {
+            mBoxesListRecyclerView.smoothScrollToPosition(position);
+        }
     }
 }

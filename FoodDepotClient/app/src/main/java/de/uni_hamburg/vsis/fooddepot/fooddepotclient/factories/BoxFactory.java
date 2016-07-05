@@ -38,6 +38,15 @@ public class BoxFactory {
         return null;
     }
 
+    public Integer getPosition(UUID id) {
+        Integer result = null;
+        Box box = getBox(id);
+        if (box != null) {
+            result = mBoxes.indexOf(box);
+        }
+        return result;
+    }
+
     public BoxDao getBoxDao(){
         return mBoxDao;
     }

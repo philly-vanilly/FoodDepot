@@ -53,6 +53,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     TabLayout mTabLayoutSortList;
 
     private BoxFactory mBoxFactory;
+    private UUID mIdOfCurrentlySelectedBox;
 
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
@@ -60,8 +61,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean mIsMapMode = false; // TODO: persist on pause, stop, ...
     private static final String IS_MAP_MODE = "IsMapMode";
-    private static final String LIST_FRAGMENT = "ListFragment";
-    private static final String MAP_FRAGMENT = "MapFragment";
     //Serializable unique id to reference in other classes:
     public static final String EXTRA_BOXES_ACTIVITY_ID = "de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxesActivity_ID";
 
@@ -69,6 +68,18 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         Intent intent = new Intent(context, BoxesActivity.class);
         intent.putExtra(EXTRA_BOXES_ACTIVITY_ID, boxID);
         return intent;
+    }
+
+    public void onBoxSelected(UUID boxUUID, String senderFragmentTag){
+        Log.d(TAG, "============== onBoxSelected called ===============");
+        mIdOfCurrentlySelectedBox = boxUUID;
+        if (findViewById(R.id.fragment_boxes_container_2) != null) {
+            if (senderFragmentTag == BoxesAsListFragment.TAG && mBoxesAsMapFragment != null){
+                mBoxesAsMapFragment.centerOnSelectedBox(boxUUID);
+            } else if (senderFragmentTag == BoxesAsMapFragment.TAG && mBoxesAsListFragment != null){
+                mBoxesAsListFragment.centerOnSelectedBox(boxUUID);
+            }
+        }
     }
 
     @Override
@@ -125,7 +136,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         String fragmentTag;
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        Fragment oldMapFragment = fragmentManager.findFragmentByTag(MAP_FRAGMENT);
+        Fragment oldMapFragment = fragmentManager.findFragmentByTag(BoxesAsMapFragment.TAG);
         Fragment.SavedState oldMapFragmentState = null;
         if (oldMapFragment != null) {
             oldMapFragmentState = fragmentManager.saveFragmentInstanceState(oldMapFragment);
@@ -136,7 +147,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             newMapFragment.setInitialSavedState(oldMapFragmentState);
         }
 
-        Fragment oldListFragment = fragmentManager.findFragmentByTag(LIST_FRAGMENT);
+        Fragment oldListFragment = fragmentManager.findFragmentByTag(BoxesAsListFragment.TAG);
         Fragment.SavedState oldListFragmentState = null;
         if (oldListFragment != null) {
             oldListFragmentState = fragmentManager.saveFragmentInstanceState(oldListFragment);
@@ -148,11 +159,11 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         }
 
         if (mIsMapMode){
-            fragmentTag = MAP_FRAGMENT;
+            fragmentTag = BoxesAsMapFragment.TAG;
             mCurrentBoxesView = (BoxesFragmentInterface) newMapFragment;
             mBoxesAsMapFragment = (BoxesAsMapFragment) mCurrentBoxesView;
         } else {
-            fragmentTag = LIST_FRAGMENT;
+            fragmentTag = BoxesAsListFragment.TAG;
             mCurrentBoxesView = (BoxesFragmentInterface) newListFragment;
             mBoxesAsListFragment = (BoxesAsListFragment) mCurrentBoxesView;
         }
@@ -163,11 +174,13 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         if (findViewById(R.id.fragment_boxes_container_2) != null) {
             if (!mIsMapMode){
-                fragmentTag = MAP_FRAGMENT;
+                fragmentTag = BoxesAsMapFragment.TAG;
                 mSecondBoxesView = (BoxesAsMapFragment) newMapFragment;
+                mBoxesAsMapFragment = (BoxesAsMapFragment) mSecondBoxesView;
             } else {
-                fragmentTag = LIST_FRAGMENT;
+                fragmentTag = BoxesAsListFragment.TAG;
                 mSecondBoxesView = (BoxesAsListFragment) newListFragment;
+                mBoxesAsListFragment = (BoxesAsListFragment) mSecondBoxesView;
             }
             fragmentManager
                     .beginTransaction()
@@ -254,22 +267,22 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         try {
             if (menuItem.getTitle() == getString(R.string.currently_list_mode_set_to_map)){
-                mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
+                mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(BoxesAsMapFragment.TAG), fragmentManager);
                 if(mCurrentBoxesView == null) {
                     mCurrentBoxesView = new BoxesAsMapFragment();
                     mBoxesAsMapFragment = (BoxesAsMapFragment) mCurrentBoxesView;
                 }
-                fragmentTag = MAP_FRAGMENT;
+                fragmentTag = BoxesAsMapFragment.TAG;
                 menuItem.setTitle(R.string.currently_map_mode_set_to_list);
                 mIsMapMode = true;
                 setupAppBarLayout();
             } else if (menuItem.getTitle() == getString(R.string.currently_map_mode_set_to_list)) {
-                mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
+                mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(BoxesAsListFragment.TAG), fragmentManager);
                 if(mCurrentBoxesView == null) {
                     mCurrentBoxesView = new BoxesAsListFragment();
                     mBoxesAsListFragment = (BoxesAsListFragment) mCurrentBoxesView;
                 }
-                fragmentTag = LIST_FRAGMENT;
+                fragmentTag = BoxesAsListFragment.TAG;
                 menuItem.setTitle(R.string.currently_list_mode_set_to_map);
                 mIsMapMode = false;
                 setupAppBarLayout();
@@ -289,18 +302,18 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 .addToBackStack(null)
                 .commit();
 
-        fragmentTag = (mIsMapMode? LIST_FRAGMENT : MAP_FRAGMENT);
+        fragmentTag = (mIsMapMode? BoxesAsListFragment.TAG : BoxesAsMapFragment.TAG);
 
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE && findViewById(R.id.fragment_boxes_container_2) != null) {
             if (menuItem.getTitle() == getString(R.string.currently_list_mode_set_to_map)){
-                mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(MAP_FRAGMENT), fragmentManager);
+                mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(BoxesAsMapFragment.TAG), fragmentManager);
                 if(mSecondBoxesView == null) {
                     mSecondBoxesView = new BoxesAsMapFragment();
                     mBoxesAsMapFragment = (BoxesAsMapFragment) mSecondBoxesView;
                 }
             } else if (menuItem.getTitle() == getString(R.string.currently_map_mode_set_to_list)) {
-                mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(LIST_FRAGMENT), fragmentManager);
+                mSecondBoxesView = recreateFragment(fragmentManager.findFragmentByTag(BoxesAsListFragment.TAG), fragmentManager);
                 if(mSecondBoxesView == null) {
                     mSecondBoxesView = new BoxesAsListFragment();
                     mBoxesAsListFragment = (BoxesAsListFragment) mSecondBoxesView;
