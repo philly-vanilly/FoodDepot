@@ -24,28 +24,18 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.location.LocationListener;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivityInterface;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.RestClient;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.Response;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.openbox.OpenBoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.settings.SettingsActivity;
 
 
-public class BoxesActivity extends AppCompatActivity implements LocationListener , BoxActivityInterface {
+public class BoxesActivity extends AppCompatActivity implements LocationListener {
     private final static String TAG = "BoxesActivity";
 
     private FDepotGoogleApiClient mGoogleApiClient = null;
@@ -89,10 +79,11 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         if (savedInstanceState != null) {
             mIsMapMode = savedInstanceState.getBoolean(IS_MAP_MODE);
         }
-        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_boxes);
 
@@ -120,7 +111,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         setupAppBarLayout();
 
         //========================================================
-        String fragmentTag = null;
+        String fragmentTag;
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         Fragment oldMapFragment = fragmentManager.findFragmentByTag(MAP_FRAGMENT);
@@ -460,7 +451,8 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
                 mCurrentSearchString = newText;
-                updateBoxList();
+                //TODO: call update in BoxDao
+                updateBoxesInFragments();
                 return true;
             }
 
@@ -469,13 +461,12 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
 
-                BoxFactory boxFactory = BoxFactory.getFactory();
-
                 searchString = searchString.length() > 11? searchString.substring(0, 9)+"..." : searchString;
 
-                getSupportActionBar().setTitle(boxFactory.getBoxes().size() + " \"" + searchString + "\" found");
+                getSupportActionBar().setTitle(mBoxFactory.getBoxes().size() + " \"" + searchString + "\" found");
                 //show tooltip load more by scrolling to bottom or zooming out (mIsMapMode)
-                updateBoxList();
+                //TODO: call update in BoxDao
+                updateBoxesInFragments();
                 return true;
             }
         };
@@ -483,51 +474,20 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         return true;
     }
 
-
-
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "new location received");
         mLastLocation = location;
-        updateBoxList();
+        //TODO: call update in BoxDao
+        updateBoxesInFragments();
     }
 
-    private void updateBoxList(){
-        if(mLastLocation != null) {
-            updateBoxList(mLastLocation.getLatitude(), mLastLocation.getLongitude(), mCurrentSearchString);
+    private void updateBoxesInFragments() {
+        if( mCurrentBoxesView != null) {
+            mCurrentBoxesView.updateBoxList();
         }
-    }
-
-    private void updateBoxList(double latitude, double longitude, String keys) {
-        RestClient.search(keys, latitude, longitude, new BaseResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-            if (responseBody != null) {
-                String responseAsString = new String(responseBody);
-                Log.d(TAG, "search box success:" + responseAsString);
-
-                Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
-                Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
-
-                updateBoxFragment(boxResponse.data);
-
-            } else {
-                Log.e(TAG, "search box success but response body null");
-            }
-            }
-        });
-    }
-
-    private void updateBoxFragment(List<Box> boxList) {
-        if(boxList != null
-        && mCurrentBoxesView != null){
-            mCurrentBoxesView.updateBoxList(boxList);
+        if (mSecondBoxesView != null) {
+            mSecondBoxesView.updateBoxList();
         }
-    }
-
-    @Override
-    public void requestBoxListUpdate() {
-        updateBoxList();
     }
 }

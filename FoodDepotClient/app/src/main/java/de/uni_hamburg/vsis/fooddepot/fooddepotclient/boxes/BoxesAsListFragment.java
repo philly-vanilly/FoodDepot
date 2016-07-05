@@ -50,7 +50,8 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
     }
 
     @Override
-    public void updateBoxList(List<Box> boxList) {
+    public void updateBoxList() {
         Log.d(TAG, "updateBoxList called");
+        mBoxesListAdapter.updateBoxesInList();
     }
 }

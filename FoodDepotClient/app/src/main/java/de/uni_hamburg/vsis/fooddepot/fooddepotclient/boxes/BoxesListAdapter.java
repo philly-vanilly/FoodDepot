@@ -25,6 +25,11 @@ public class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
         mBoxesAsListFragment = boxesAsListFragment;
     }
 
+    public void updateBoxesInList(){
+        mBoxes = BoxFactory.getFactory().getBoxes();
+        notifyDataSetChanged();
+    }
+
     @Override
     public BoxesHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(mBoxesAsListFragment.getActivity());

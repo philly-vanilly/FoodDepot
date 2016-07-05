@@ -7,7 +7,9 @@ import android.animation.ObjectAnimator;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
 /**
@@ -18,22 +20,24 @@ public class AnimationService {
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
-    private static Animator mCurrentAnimator;
+    private static Animator sCurrentAnimator;
 
     // The system "short" animation time duration, in milliseconds. This
     // duration is ideal for subtle animations or animations that occur
     // very frequently.
-    private static int mShortAnimationDuration;
+    private static int sShortAnimationDuration;
+
+    public static RotateAnimation sRotateAnimation = new RotateAnimation(30, 360, Animation.RELATIVE_TO_SELF, 0.5f,  Animation.RELATIVE_TO_SELF, 0.5f);
 
     public static Animator zoomImageFromThumb(final View thumbView, final ImageView expandedImageView, View scrollableFrameLayout, int imageResId, View itemView) {
 
-        mShortAnimationDuration = itemView.getResources().getInteger(
+        sShortAnimationDuration = itemView.getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
 
         // If there's an animation in progress, cancel it
         // immediately and proceed with this one.
-        if (mCurrentAnimator != null) {
-            mCurrentAnimator.cancel();
+        if (sCurrentAnimator != null) {
+            sCurrentAnimator.cancel();
         }
 
         // Load the high-resolution "zoomed-in" image.
@@ -100,21 +104,21 @@ public class AnimationService {
                 .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_X,
                         startScale, 1f)).with(ObjectAnimator.ofFloat(expandedImageView,
                 View.SCALE_Y, startScale, 1f));
-        set.setDuration(mShortAnimationDuration);
+        set.setDuration(sShortAnimationDuration);
         set.setInterpolator(new DecelerateInterpolator());
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mCurrentAnimator = null;
+                sCurrentAnimator = null;
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
-                mCurrentAnimator = null;
+                sCurrentAnimator = null;
             }
         });
         set.start();
-        mCurrentAnimator = set;
+        sCurrentAnimator = set;
 
         // Upon clicking the zoomed-in image, it should zoom back down
         // to the original bounds and show the thumbnail instead of
@@ -123,8 +127,8 @@ public class AnimationService {
         expandedImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mCurrentAnimator != null) {
-                    mCurrentAnimator.cancel();
+                if (sCurrentAnimator != null) {
+                    sCurrentAnimator.cancel();
                 }
 
                 // Animate the four positioning/sizing properties in parallel,
@@ -141,27 +145,27 @@ public class AnimationService {
                         .with(ObjectAnimator
                                 .ofFloat(expandedImageView,
                                         View.SCALE_Y, startScaleFinal));
-                set.setDuration(mShortAnimationDuration);
+                set.setDuration(sShortAnimationDuration);
                 set.setInterpolator(new DecelerateInterpolator());
                 set.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         thumbView.setAlpha(1f);
                         expandedImageView.setVisibility(View.GONE);
-                        mCurrentAnimator = null;
+                        sCurrentAnimator = null;
                     }
 
                     @Override
                     public void onAnimationCancel(Animator animation) {
                         thumbView.setAlpha(1f);
                         expandedImageView.setVisibility(View.GONE);
-                        mCurrentAnimator = null;
+                        sCurrentAnimator = null;
                     }
                 });
                 set.start();
-                mCurrentAnimator = set;
+                sCurrentAnimator = set;
             }
         });
-        return mCurrentAnimator;
+        return sCurrentAnimator;
     }
 }

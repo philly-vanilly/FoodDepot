@@ -103,7 +103,11 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="google_maps_key_phil"/>
+            android:value="AIzaSyDxAtujYy3RU-O87ZWmcuxlq8z0xXogwc8"/>
+
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="google_maps_key_phil"/>-->
 
         <!--<meta-data-->
         <!--android:name="com.google.android.geo.API_KEY"-->

@@ -28,46 +28,36 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 /**
  * Created by paul on 05.06.16.
  */
-public class FDepotGoogleApiClient
-        implements                ActivityCompat.OnRequestPermissionsResultCallback,
-            GoogleApiClient.ConnectionCallbacks,
-                            GoogleApiClient.OnConnectionFailedListener {
+public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermissionsResultCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     LocationRequest mLocationRequest = null;
     Location mLastLocation = null;
 
     private final String TAG = "FDepotGoogleApiClient";
     private static final int REQUEST_CHECK_SETTINGS = 123;
-    private static final int LOCATION_PERMISSION = 34;
+    public static final int LOCATION_PERMISSION = 34;
 
     private GoogleApiClient mGoogleApiClient = null;
-    private Activity activity;
-    private LocationListener locationListener;
+    private Activity mParentActivity;
+    private LocationListener mLocationListener;
 
 
     public FDepotGoogleApiClient(FragmentActivity context, LocationListener locationListener){
-        activity = context;
-        this. locationListener = locationListener;
+        mParentActivity = context;
+        mLocationListener = locationListener;
         mGoogleApiClient = new GoogleApiClient.Builder(context)
-                .enableAutoManage(context /* FragmentActivity */,
-                        this /* OnConnectionFailedListener */)
+                .enableAutoManage(context, this)
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
-
     }
-
-
-
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         // An unresolvable error has occurred and a connection to Google APIs
         // could not be established. Display an error message, or handle
         // the failure silently
-
         // ...
-
         Log.e(TAG, "couldn't connect to googleApiClient");
     }
 
@@ -89,7 +79,7 @@ public class FDepotGoogleApiClient
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
-            locationListener.onLocationChanged(mLastLocation);
+            mLocationListener.onLocationChanged(mLastLocation);
             //updateBoxList(mLastLocation.getLatitude(), mLastLocation.getLongitude(), mCurrentSearchString);
 
         }
@@ -100,19 +90,14 @@ public class FDepotGoogleApiClient
         Log.e(TAG, "temporally disconnected from googleApiClient");
     }
 
-
-
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,
-                        builder.build());
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
 
         result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
             //@Override
@@ -124,20 +109,15 @@ public class FDepotGoogleApiClient
                         // All location settings are satisfied. The client can
                         // initialize location requests here.
                         Log.d(TAG, "location settings satisfied");
-
-
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied, but this can be fixed
                         // by showing the user a dialog.
                         Log.d(TAG, "location not settings satisfied");
                         try {
-
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
-                            status.startResolutionForResult(activity
-                                    ,
-                                    REQUEST_CHECK_SETTINGS);
+                            status.startResolutionForResult(mParentActivity, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
                             // Ignore the error.
                         }
@@ -145,7 +125,6 @@ public class FDepotGoogleApiClient
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                         // Location settings are not satisfied. However, we have no way
                         // to fix the settings so we won't show the dialog.
-
                         break;
                 }
             }
@@ -153,36 +132,25 @@ public class FDepotGoogleApiClient
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         Log.i(TAG, "permission request received");
         switch (requestCode) {
-            case LOCATION_PERMISSION: {
+            case LOCATION_PERMISSION:
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "we have location permission");
                     FDepotGoogleApiClient.this.startLocationUpdates();
-
-
                 } else {
                     Log.d(TAG, "we don't have location permission");
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
-
-
-            }
-            break;
+                break;
             default:
                 Log.d(TAG, "we have unknown permission");
                 break;
-
-
-            // other 'case' lines to check for other
-            // permissions this app might request
+                // other 'case' lines to check for other
+                // permissions this app might request
         }
     }
 
@@ -190,8 +158,7 @@ public class FDepotGoogleApiClient
         try {
             if (mLocationRequest != null) {
                 Log.d(TAG, "requesting location updates");
-                LocationServices.FusedLocationApi.requestLocationUpdates(
-                        mGoogleApiClient, mLocationRequest, locationListener);
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationListener);
             } else {
                 Log.d(TAG, "can't request location updates, request == null");
             }
@@ -200,7 +167,6 @@ public class FDepotGoogleApiClient
         }
     }
 
-
     public void connect(){
         mGoogleApiClient.connect();
     }
@@ -208,10 +174,4 @@ public class FDepotGoogleApiClient
     public void disconnect(){
         mGoogleApiClient.disconnect();
     }
-
-
-
-
-
-
 }
