@@ -3,7 +3,10 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 /**
@@ -73,59 +76,58 @@ public class SortingService {
         }
     };
 
-    public static Comparator sortBySelection(SortingSelector selector, List<Box> boxes) throws RuntimeException {
+    public static void sortBySelection(SortingSelector selector, List<Box> boxes) throws RuntimeException {
         switch(selector){
             case NAME:
-                if (currentComparator == null || currentComparator == SortingService.sBoxNameAscendingComparator) {
-                    Collections.sort(boxes, SortingService.sBoxNameDescendingComparator);
-                    currentComparator = SortingService.sBoxNameDescendingComparator;
-                } else if (currentComparator == SortingService.sBoxNameDescendingComparator){
-                    Collections.sort(boxes, SortingService.sBoxNameAscendingComparator);
-                    currentComparator = SortingService.sBoxNameAscendingComparator;
+                if (currentComparator == null || currentComparator == sBoxNameAscendingComparator) {
+                    Collections.sort(boxes, sBoxNameDescendingComparator);
+                    currentComparator = sBoxNameDescendingComparator;
+                } else if (currentComparator == sBoxNameDescendingComparator){
+                    Collections.sort(boxes, sBoxNameAscendingComparator);
+                    currentComparator = sBoxNameAscendingComparator;
                 }  else {
-                    Collections.sort(boxes, SortingService.sBoxNameDescendingComparator);
-                    currentComparator = SortingService.sBoxNameDescendingComparator;
+                    Collections.sort(boxes, sBoxNameDescendingComparator);
+                    currentComparator = sBoxNameDescendingComparator;
                 }
                 break;
             case PRICE:
-                if (currentComparator == null || currentComparator == SortingService.sBoxPriceAscendingComparator) {
-                    Collections.sort(boxes, SortingService.sBoxPriceDescendingComparator);
-                    currentComparator = SortingService.sBoxPriceDescendingComparator;
-                } else if (currentComparator == SortingService.sBoxPriceDescendingComparator){
-                    Collections.sort(boxes, SortingService.sBoxPriceAscendingComparator);
-                    currentComparator = SortingService.sBoxPriceAscendingComparator;
+                if (currentComparator == null || currentComparator == sBoxPriceAscendingComparator) {
+                    Collections.sort(boxes, sBoxPriceDescendingComparator);
+                    currentComparator = sBoxPriceDescendingComparator;
+                } else if (currentComparator == sBoxPriceDescendingComparator){
+                    Collections.sort(boxes, sBoxPriceAscendingComparator);
+                    currentComparator = sBoxPriceAscendingComparator;
                 }  else {
-                    Collections.sort(boxes, SortingService.sBoxPriceDescendingComparator);
-                    currentComparator = SortingService.sBoxPriceDescendingComparator;
+                    Collections.sort(boxes, sBoxPriceDescendingComparator);
+                    currentComparator = sBoxPriceDescendingComparator;
                 }
                 break;
             case DISTANCE:
-                if (currentComparator == null || currentComparator == SortingService.sBoxDistanceAscendingComparator) {
-                    Collections.sort(boxes, SortingService.sBoxDistanceDescendingComparator);
-                    currentComparator = SortingService.sBoxDistanceDescendingComparator;
-                } else if (currentComparator == SortingService.sBoxDistanceDescendingComparator){
-                    Collections.sort(boxes, SortingService.sBoxDistanceAscendingComparator);
-                    currentComparator = SortingService.sBoxDistanceAscendingComparator;
+                if (currentComparator == null || currentComparator == sBoxDistanceAscendingComparator) {
+                    Collections.sort(boxes, sBoxDistanceDescendingComparator);
+                    currentComparator = sBoxDistanceDescendingComparator;
+                } else if (currentComparator == sBoxDistanceDescendingComparator){
+                    Collections.sort(boxes, sBoxDistanceAscendingComparator);
+                    currentComparator = sBoxDistanceAscendingComparator;
                 }  else {
-                    Collections.sort(boxes, SortingService.sBoxDistanceDescendingComparator);
-                    currentComparator = SortingService.sBoxDistanceDescendingComparator;
+                    Collections.sort(boxes, sBoxDistanceDescendingComparator);
+                    currentComparator = sBoxDistanceDescendingComparator;
                 }
                 break;
             case RATING:
-                if (currentComparator == null || currentComparator == SortingService.sBoxRatingAscendingComparator) {
-                    Collections.sort(boxes, SortingService.sBoxRatingDescendingComparator);
-                    currentComparator = SortingService.sBoxRatingDescendingComparator;
-                } else if (currentComparator == SortingService.sBoxRatingDescendingComparator){
-                    Collections.sort(boxes, SortingService.sBoxRatingAscendingComparator);
-                    currentComparator = SortingService.sBoxRatingAscendingComparator;
+                if (currentComparator == null || currentComparator == sBoxRatingAscendingComparator) {
+                    Collections.sort(boxes, sBoxRatingDescendingComparator);
+                    currentComparator = sBoxRatingDescendingComparator;
+                } else if (currentComparator == sBoxRatingDescendingComparator){
+                    Collections.sort(boxes, sBoxRatingAscendingComparator);
+                    currentComparator = sBoxRatingAscendingComparator;
                 }  else {
-                    Collections.sort(boxes, SortingService.sBoxRatingDescendingComparator);
-                    currentComparator = SortingService.sBoxRatingDescendingComparator;
+                    Collections.sort(boxes, sBoxRatingDescendingComparator);
+                    currentComparator = sBoxRatingDescendingComparator;
                 }
                 break;
             default:
                 throw new RuntimeException("Invalid Toolbar Tab position");
         }
-        return currentComparator;
     }
 }

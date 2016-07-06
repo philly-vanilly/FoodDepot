@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.util.UUID;
+
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
@@ -105,21 +107,13 @@ class BoxesHolder extends RecyclerView.ViewHolder{
             mItemView.setBackgroundColor(Color.parseColor("white"));
             //mItemView.setBackgroundColor(ContextCompat.getColor(mBoxesAsListFragment.getActivity(), R.color.listRowTwo));
         }
-        updateDetailsVisibility(box, false);
+        updateDetailsVisibility(box);
 
         mWholeRow.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 box.setClicked(!box.isClicked());
-                updateDetailsVisibility(box, true);
-
-//                for (Box boxIter : BoxFactory.getFactory().getBoxes()){
-//                    if(!boxIter.equals(box) && boxIter.isClicked() == true){
-//                        boxIter.setClicked(false);
-//                        updateDetailsVisibility(boxIter, true);
-//                    }
-//                }
-//                mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged();
+                updateDetailsVisibility(box);
 
                 if (box.isClicked() == true) {//dont zoom in on closing a card
                     BoxesActivity boxesActivity = (BoxesActivity) mBoxesAsListFragment.getActivity();
@@ -137,18 +131,21 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         });
     }
 
-    private void updateDetailsVisibility(Box box, boolean justClicked){ //if not just clicked, don't start animation
+    private void updateDetailsVisibility(Box box){
         if (box.isClicked()){
+            //1. expanding clicked
             mExpandableContent.setVisibility(View.VISIBLE);
+            //2. collapsing all others:
+            mBoxesAsListFragment.getBoxesListAdapter().collapseNonClickedRows(box);
         } else {
             mExpandableContent.setVisibility(View.GONE);
         }
-        if (BELOW_HONEYCOMB || !justClicked){ //below honeycomb rotation not supported
-            return;
-        } else if (box.isClicked()){
-            mImageButtonExpand.setRotation(POINTING_DOWNWARDS);
-        } else {
-            mImageButtonExpand.setRotation(POINTING_UPWARDS);
+        if (!BELOW_HONEYCOMB){
+            if (box.isClicked()){
+                mImageButtonExpand.setRotation(POINTING_DOWNWARDS);
+            } else {
+                mImageButtonExpand.setRotation(POINTING_UPWARDS);
+            }
         }
     }
 }

@@ -56,6 +56,7 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
                 .target(markerLatLng)
                 .zoom(14)
                 .build();
+        marker.showInfoWindow();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
         mMap.animateCamera(cameraUpdate);
     }

@@ -28,15 +28,11 @@ public class BoxFactory {
     private static final String TAG = "BoxFactory";
 
     private List<Box> mBoxes;
-    private HashMap<UUID, Integer> mBoxPosition;
     private BoxesActivity mContext;
     private BoxDao mBoxDao;
 
     public List<Box> getBoxes() {
         return mBoxes;
-    }
-    public HashMap<UUID, Integer> getBoxPosition() {
-        return mBoxPosition;
     }
     public BoxDao getBoxDao(){
         return mBoxDao;
@@ -60,8 +56,7 @@ public class BoxFactory {
             Log.e(TAG, "Wrong context!\n" + Log.getStackTraceString(e));
         }
         mBoxes = new ArrayList<>();
-        mBoxPosition = new HashMap<>();
-        mBoxDao = new BoxDaoMock(mContext, mBoxes, mBoxPosition);
+        mBoxDao = new BoxDaoMock(mContext, mBoxes);
 
         mBoxDao.getNumberOfBoxesMatchingString(null, 0, 20, UUID.randomUUID(), 53.4, 9.999);
     }

@@ -1,6 +1,5 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.util.Log;
@@ -8,7 +7,6 @@ import android.util.Log;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingService;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
@@ -29,12 +26,10 @@ public abstract class BoxDao {
     private static final String TAG = "BoxDao";
     protected BoxesActivity mContext;
     protected List<Box> mBoxes;
-    protected Map<UUID, Integer> mBoxPosition;
 
-    public BoxDao(BoxesActivity context, List<Box> boxes, HashMap<UUID, Integer> boxPosition) {
+    public BoxDao(BoxesActivity context, List<Box> boxes) {
         mContext = context;
         mBoxes = boxes;
-        mBoxPosition = boxPosition;
     }
 
     public abstract void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1);
@@ -48,10 +43,9 @@ public abstract class BoxDao {
 
     public void addBoxes(List<Box> boxes){
         for (Box box : boxes) {
-            Integer positionInList = mBoxPosition.get(box.getId());
+            Integer positionInList = getPosition(box.getId());
             if (positionInList == null) {
                 mBoxes.add(box);
-                mBoxPosition.put(box.getId(), mBoxes.size()-1);
             } else {
                 mBoxes.set(positionInList, box);
             }

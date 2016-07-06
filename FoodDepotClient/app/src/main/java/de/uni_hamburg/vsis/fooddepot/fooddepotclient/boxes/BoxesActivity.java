@@ -36,20 +36,21 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.openbox.OpenBoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.settings.SettingsActivity;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 
 public class BoxesActivity extends AppCompatActivity implements LocationListener {
     private final static String TAG = "BoxesActivity";
 
-    private FDepotGoogleApiClient mGoogleApiClient = null;
-    private Location mLastLocation = null;
+    private FDepotGoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
     private String mCurrentSearchString = "";
 
-    private BoxesFragmentInterface mCurrentBoxesView = null;
-    private BoxesFragmentInterface mSecondBoxesView = null;
-    private BoxesAsListFragment mBoxesAsListFragment = null;
-    private BoxesAsMapFragment mBoxesAsMapFragment = null;
-    private AppBarLayout mAppBarLayout = null;
+    private BoxesFragmentInterface mCurrentBoxesView;
+    private BoxesFragmentInterface mSecondBoxesView;
+    private BoxesAsListFragment mBoxesAsListFragment;
+    private BoxesAsMapFragment mBoxesAsMapFragment;
+    private AppBarLayout mAppBarLayout;
     TabLayout mTabLayoutSortList;
 
     private BoxFactory mBoxFactory;
@@ -78,6 +79,12 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 mBoxesAsMapFragment.centerOnSelectedBox(boxUUID);
             } else if (senderFragmentTag == BoxesAsMapFragment.TAG && mBoxesAsListFragment != null){
                 mBoxesAsListFragment.centerOnSelectedBox(boxUUID);
+
+                Box clickedBox = mBoxFactory.getBoxDao().getBox(boxUUID);
+                clickedBox.setClicked(true);
+                int boxPosInList = mBoxFactory.getBoxDao().getPosition(boxUUID);
+                mBoxesAsListFragment.getBoxesListAdapter().notifyItemChanged(boxPosInList);
+                mBoxesAsListFragment.getBoxesListAdapter().collapseNonClickedRows(clickedBox);
             }
         }
     }
@@ -463,14 +470,15 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             public boolean onQueryTextChange(String newText) {
-                mCurrentSearchString = newText;
-                //TODO: call update in BoxDao
-                updateBoxesInFragments();
-                return true;
+                return false; //false = default behavior (showing autocomplete suggestions etc)
             }
 
             public boolean onQueryTextSubmit(String searchString) {
                 mCurrentSearchString = searchString;
+
+                
+
+
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
 
@@ -483,6 +491,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 return true;
             }
         };
+
         searchView.setOnQueryTextListener(queryTextListener);
         return true;
     }

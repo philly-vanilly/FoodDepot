@@ -18,8 +18,8 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
  */
 public class BoxDaoMock extends BoxDao {
 
-    public BoxDaoMock(BoxesActivity context, List<Box> boxes, HashMap<UUID, Integer> boxPosition) {
-        super(context, boxes, boxPosition);
+    public BoxDaoMock(BoxesActivity context, List<Box> boxes) {
+        super(context, boxes);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class BoxDaoMock extends BoxDao {
         List<String> prefixes = new ArrayList<>();
         prefixes.add("Mark's_"); prefixes.add("Tasty"); prefixes.add("Star"); prefixes.add("Frank's_"); prefixes.add("Homegrown");
         Random random = new Random();
-        for(int i = 0; i < 30; i++){
+        for(int i = 0; i < numberOfBoxes; i++){
             Box box = new Box();
             box.setId(UUID.randomUUID());
             box.setLatitude(ThreadLocalRandom.current().nextDouble(53.2, 53.6));

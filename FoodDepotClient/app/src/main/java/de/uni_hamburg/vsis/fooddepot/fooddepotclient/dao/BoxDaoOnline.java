@@ -24,8 +24,8 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 public class BoxDaoOnline extends BoxDao {
     private static final String TAG = "BoxDaoOnline";
 
-    public BoxDaoOnline(BoxesActivity context, List<Box> boxes, HashMap<UUID, Integer> boxPosition) {
-        super(context, boxes, boxPosition);
+    public BoxDaoOnline(BoxesActivity context, List<Box> boxes) {
+        super(context, boxes);
     }
 
     @Override
@@ -33,15 +33,15 @@ public class BoxDaoOnline extends BoxDao {
         RestClient.search(searchString, latitude, longitude, new BaseResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if (responseBody != null) {
-                    String responseAsString = new String(responseBody);
-                    Log.d(TAG, "search box success:" + responseAsString);
+            if (responseBody != null) {
+                String responseAsString = new String(responseBody);
+                Log.d(TAG, "search box success:" + responseAsString);
 
-                    Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
-                    Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
+                Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
+                Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
 
-                    addBoxes(boxResponse.data);
-                }
+                addBoxes(boxResponse.data);
+            }
             }
         });
     }
