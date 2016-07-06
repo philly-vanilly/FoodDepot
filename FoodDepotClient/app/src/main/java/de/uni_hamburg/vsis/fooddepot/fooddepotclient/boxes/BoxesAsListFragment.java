@@ -61,7 +61,7 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
     @Override
     public void centerOnSelectedBox(UUID boxUUID) {
-        Integer position = BoxFactory.getFactory().getPosition(boxUUID);
+        Integer position = BoxFactory.getFactory(getActivity()).getBoxDao().getPosition(boxUUID);
         if (position != null ) {
             mBoxesListRecyclerView.smoothScrollToPosition(position);
         }

@@ -109,7 +109,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         setContentView(R.layout.activity_boxes);
 
-        mBoxFactory = BoxFactory.getFactory();
+        mBoxFactory = BoxFactory.getFactory(this);
 
         //finding and setting up a toolbar to replace actionbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -225,16 +225,16 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             private void sortBoxList(TabLayout.Tab tab){
                 switch (tab.getPosition()){
                     case 0:
-                        mBoxFactory.sortBySelection(SortingSelector.NAME);
+                        mBoxFactory.getBoxDao().sortBySelection(SortingSelector.NAME);
                         break;
                     case 1:
-                        mBoxFactory.sortBySelection(SortingSelector.PRICE);
+                        mBoxFactory.getBoxDao().sortBySelection(SortingSelector.PRICE);
                         break;
                     case 2:
-                        mBoxFactory.sortBySelection(SortingSelector.DISTANCE);
+                        mBoxFactory.getBoxDao().sortBySelection(SortingSelector.DISTANCE);
                         break;
                     case 3:
-                        mBoxFactory.sortBySelection(SortingSelector.RATING);
+                        mBoxFactory.getBoxDao().sortBySelection(SortingSelector.RATING);
                         break;
                     default:
                         Log.e(TAG, "No Handler For Tab Position!");
@@ -399,34 +399,23 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         } else {
             switch (item.getItemId()) {
                 case R.id.barButtonName:
-                    mBoxFactory.sortBySelection(SortingSelector.NAME);
-                    if (mBoxesAsListFragment != null) {
-                        mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
-                    }
+                    mBoxFactory.getBoxDao().sortBySelection(SortingSelector.NAME);
                     break;
                 case R.id.barButtonPrice:
-                    mBoxFactory.sortBySelection(SortingSelector.PRICE);
-                    if (mBoxesAsListFragment != null) {
-                        mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
-                    }
+                    mBoxFactory.getBoxDao().sortBySelection(SortingSelector.PRICE);
                     break;
                 case R.id.barButtonDistance:
-                    mBoxFactory.sortBySelection(SortingSelector.DISTANCE);
-                    if (mBoxesAsListFragment != null) {
-                        mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
-                    }
+                    mBoxFactory.getBoxDao().sortBySelection(SortingSelector.DISTANCE);
                     break;
                 case R.id.barButtonRating:
-                    mBoxFactory.sortBySelection(SortingSelector.RATING);
-                    if (mBoxesAsListFragment != null) {
-                        mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list
-                    }
+                    mBoxFactory.getBoxDao().sortBySelection(SortingSelector.RATING);
                     break;
-                default:
+                default: Log.e(TAG, "No Handler For MenuItem Position!");
+            }
+            if (mBoxesAsListFragment != null) {
+                mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged(); //update whole list in Adapter
             }
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -502,11 +491,11 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     public void onLocationChanged(Location location) {
         Log.d(TAG, "new location received");
         mLastLocation = location;
-        //TODO: call update in BoxDao
+        mBoxFactory.getBoxDao().updateDistance(mLastLocation);
         updateBoxesInFragments();
     }
 
-    private void updateBoxesInFragments() {
+    public void updateBoxesInFragments() {
         if( mCurrentBoxesView != null) {
             mCurrentBoxesView.updateBoxList();
         }

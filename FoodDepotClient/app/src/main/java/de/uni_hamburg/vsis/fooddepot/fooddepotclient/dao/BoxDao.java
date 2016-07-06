@@ -1,5 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.util.Log;
@@ -7,11 +8,18 @@ import android.util.Log;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingService;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 /**
@@ -19,21 +27,80 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
  */
 public abstract class BoxDao {
     private static final String TAG = "BoxDao";
+    protected BoxesActivity mContext;
+    protected List<Box> mBoxes;
+    protected Map<UUID, Integer> mBoxPosition;
 
-    public abstract List<Box> getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1);
+    public BoxDao(BoxesActivity context, List<Box> boxes, HashMap<UUID, Integer> boxPosition) {
+        mContext = context;
+        mBoxes = boxes;
+        mBoxPosition = boxPosition;
+    }
+
+    public abstract void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1);
     public abstract List<Box> getNumberOfEmptyBoxes(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1);
     public abstract Drawable getPhotoForBox(UUID boxId);
     public abstract Box getBoxById (UUID boxId);
 
-//    public Box getBoxById(UUID boxId) {
-//        //TODO:
-//        for (Box Box : BoxFactory.getFactory().getBoxes()) {
-//            if (Box.getId().equals(boxId)) { //equals returns true for String value, == returns true only for same object reference
-//                return Box;
-//            }
-//        }
-//        return null;
-//    }
+    public void sortBySelection(SortingSelector selector) {
+        SortingService.sortBySelection(selector, mBoxes);
+    }
+
+    public void addBoxes(List<Box> boxes){
+        for (Box box : boxes) {
+            Integer positionInList = mBoxPosition.get(box.getId());
+            if (positionInList == null) {
+                mBoxes.add(box);
+                mBoxPosition.put(box.getId(), mBoxes.size()-1);
+            } else {
+                mBoxes.set(positionInList, box);
+            }
+        }
+        SortingService.sortBySelection(SortingSelector.NAME, mBoxes);
+    }
+
+    public Integer getPosition(UUID id) {
+        Integer result = null;
+        Box box = getBox(id);
+        if (box != null) {
+            result = mBoxes.indexOf(box);
+        }
+        return result;
+    }
+
+    public Box getBox(UUID id) {
+        for (Box Box : mBoxes) {
+            if (Box.getId().equals(id)) { //equals returns true for String value, == returns true only for same object reference
+                return Box;
+            }
+        }
+        return null;
+    }
+
+    public void updateDistance(Location lastLocation){
+        double lon1 = lastLocation.getLongitude();
+        double lat1 = lastLocation.getLatitude();
+
+        for (Box box : mBoxes) {
+            double lon2 = box.getLongitude();
+            double lat2 = box.getLatitude();
+
+            if (lat1 > 90 || lat1 < -90 || lon1 > 180 || lon1 < -180){
+                Log.e(TAG, "Device-User " + box.getId().toString() + " has invalid coordinates: " + lat1 + " and " + lon1);
+            } else if (lat2 > 90 || lat2 < -90 || lon2 > 180 || lon2 < -180){
+                Log.e(TAG, "Box " + box.getId().toString() + " has invalid coordinates: " + lat2 + " and " + lon2);
+            }
+
+            Location locationA = new Location("User-Point");
+            locationA.setLatitude(lat1);
+            locationA.setLongitude(lon1);
+            Location locationB = new Location("Box-Point");
+            locationB.setLatitude(lat2);
+            locationB.setLongitude(lon2);
+            float distance = locationA.distanceTo(locationB); //distance in km
+            box.setDistance(distance);
+        }
+    }
 
     //TODO: target date doesnt make any sense
     public long makeReservation(Box box, String targetDateString) {
@@ -86,35 +153,10 @@ public abstract class BoxDao {
         return bd.floatValue();
     }
 
-    /**
-     * Distance calculator from user- and box- latitude/longitude. It sets the distance based on
-     * trigonometry with passed geolocation arguments and then returns the distance as a String.
-     * @param lat1 Device-User latitude
-     * @param lon1 Device-User longitude
-     * @return distance in km or m
-     */
-    public String getTriangularDistanceForBox(Box box, double lat1, double lon1) {
-        double lon2 = box.getLongitude();
-        double lat2 = box.getLatitude();
-
-        if (lat1 > 90 || lat1 < -90 || lon1 > 180 || lon1 < -180){
-            Log.e(TAG, "Device-User " + box.getId().toString() + " has invalid coordinates: " + lat1 + " and " + lon1);
-            return "###";
-        } else if (lat2 > 90 || lat2 < -90 || lon2 > 180 || lon2 < -180){
-            Log.e(TAG, "Box " + box.getId().toString() + " has invalid coordinates: " + lat2 + " and " + lon2);
-            return "###";
-        }
-
-        Location locationA = new Location("User-Point");
-        locationA.setLatitude(lat1);
-        locationA.setLongitude(lon1);
-        Location locationB = new Location("Box-Point");
-        locationB.setLatitude(lat2);
-        locationB.setLongitude(lon2);
-        float distance = locationA.distanceTo(locationB); //distance in km
-
-        String result = "";
-        if(distance >= 1000){
+    public String getFormattedDistanceForBox(Box box) {
+        String result;
+        float distance = box.getDistance();
+        if (distance >= 1000) {
             BigDecimal bd = new BigDecimal(distance);
             bd = bd.divide(new BigDecimal(1000));
             bd = bd.setScale(2, RoundingMode.HALF_UP);

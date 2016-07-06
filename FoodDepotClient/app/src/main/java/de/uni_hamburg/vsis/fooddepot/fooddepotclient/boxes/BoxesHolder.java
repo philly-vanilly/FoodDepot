@@ -3,6 +3,7 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
     private BoxesAsListFragment mBoxesAsListFragment;
 
     //basic elements:
+    private LinearLayout mWholeRow;
     private TextView mTextViewBoxesName;
     private TextView mTextViewBoxesContent;
     private TextView mTextViewDistance;
@@ -56,10 +58,11 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         super(itemView);
         mBoxesAsListFragment = boxesAsListFragment;
         mItemView = itemView;
-        mBoxFactory = BoxFactory.getFactory();
+        mBoxFactory = BoxFactory.getFactory(boxesAsListFragment.getActivity());
         mBoxDao = mBoxFactory.getBoxDao();
 
         //basic content
+        mWholeRow = (LinearLayout) itemView.findViewById(R.id.wholeRow);
         mImageViewFruit = (ImageView) itemView.findViewById(R.id.imageViewFruit);
         mTextViewBoxesName = (TextView) itemView.findViewById(R.id.textViewName);
         mTextViewPrice = (TextView) itemView.findViewById(R.id.textViewPrice);
@@ -81,7 +84,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         mImageViewFruit.setImageDrawable(DisplayService.getImageForBox(box, itemView));
         mTextViewBoxesName.setText(box.getName());
         mTextViewPrice.setText(mBoxDao.getRoundedPriceForBox(box));
-        mTextViewDistance.setText(mBoxDao.getTriangularDistanceForBox(box, 53.551086, 9.993682)); //TODO: replace dummy data with current location
+        mTextViewDistance.setText(mBoxDao.getFormattedDistanceForBox(box));
 
         //expandable content
         mTextViewBoxesContent.setText("(" + box.getContent() + ")");
@@ -97,18 +100,31 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         //color rows differently based on whether the position is even or not
         if(mBoxFactory.getBoxes().indexOf(box) % 2 == 0){
             mItemView.setBackgroundColor(Color.parseColor("#02000000"));
+            //mItemView.setBackgroundColor(ContextCompat.getColor(mBoxesAsListFragment.getActivity(), R.color.listRowOne));
         } else {
             mItemView.setBackgroundColor(Color.parseColor("white"));
+            //mItemView.setBackgroundColor(ContextCompat.getColor(mBoxesAsListFragment.getActivity(), R.color.listRowTwo));
         }
         updateDetailsVisibility(box, false);
 
-        mImageButtonExpand.setOnClickListener(new View.OnClickListener(){
+        mWholeRow.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 box.setClicked(!box.isClicked());
                 updateDetailsVisibility(box, true);
-                BoxesActivity boxesActivity = (BoxesActivity) mBoxesAsListFragment.getActivity();
-                boxesActivity.onBoxSelected(box.getId(), mBoxesAsListFragment.TAG);
+
+//                for (Box boxIter : BoxFactory.getFactory().getBoxes()){
+//                    if(!boxIter.equals(box) && boxIter.isClicked() == true){
+//                        boxIter.setClicked(false);
+//                        updateDetailsVisibility(boxIter, true);
+//                    }
+//                }
+//                mBoxesAsListFragment.getBoxesListAdapter().notifyDataSetChanged();
+
+                if (box.isClicked() == true) {//dont zoom in on closing a card
+                    BoxesActivity boxesActivity = (BoxesActivity) mBoxesAsListFragment.getActivity();
+                    boxesActivity.onBoxSelected(box.getId(), mBoxesAsListFragment.TAG);
+                }
             }
         });
 

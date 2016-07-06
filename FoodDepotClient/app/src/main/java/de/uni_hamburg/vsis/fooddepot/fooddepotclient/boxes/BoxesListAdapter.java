@@ -21,12 +21,12 @@ public class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
     private BoxesAsListFragment mBoxesAsListFragment;
 
     public BoxesListAdapter(BoxesAsListFragment boxesAsListFragment){
-        mBoxes = BoxFactory.getFactory().getBoxes();
         mBoxesAsListFragment = boxesAsListFragment;
+        mBoxes = BoxFactory.getFactory(mBoxesAsListFragment.getActivity()).getBoxes();
     }
 
     public void updateBoxesInList(){
-        mBoxes = BoxFactory.getFactory().getBoxes();
+        mBoxes = BoxFactory.getFactory(mBoxesAsListFragment.getActivity()).getBoxes();
         notifyDataSetChanged();
     }
 

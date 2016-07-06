@@ -69,8 +69,8 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         UUID boxID = (UUID) getActivity().getIntent().getSerializableExtra(BoxActivity.EXTRA_BOX_ACTIVITY_ID);
-        mBoxFactory = BoxFactory.getFactory();
-        mBox = mBoxFactory.getBox(boxID);
+        mBoxFactory = BoxFactory.getFactory(getActivity());
+        mBox = mBoxFactory.getBoxDao().getBox(boxID);
         mBoxDao = mBoxFactory.getBoxDao();
     }
 
@@ -122,7 +122,7 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
 
         mTextViewLocation.setText(addressString);
 
-        mTextViewDistance.setText(mBoxDao.getTriangularDistanceForBox(mBox, 53.551086, 9.993682) + " from here"); //TODO: replace dummy data with current location
+        mTextViewDistance.setText(mBoxDao.getFormattedDistanceForBox(mBox) + " from here");
         mTextViewPrice.setText(mBoxDao.getRoundedPriceForBox(mBox));
 
         String targetDateString = "Jul 16 00:00:00 2016"; //TODO: get target date as string from JSON > BEAN instead

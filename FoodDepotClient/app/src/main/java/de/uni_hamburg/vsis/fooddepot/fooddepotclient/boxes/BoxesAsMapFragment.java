@@ -145,7 +145,7 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
 
     @Override
     public void updateBoxList() {
-        List<Box> boxList = BoxFactory.getFactory().getBoxes();
+        List<Box> boxList = BoxFactory.getFactory(getActivity()).getBoxes();
         mMapMarkers = new HashMap<>();
         Log.d(TAG, "============= UPDATE BOX LIST CALLED ================");
         for (final Box box : boxList) {

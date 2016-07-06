@@ -1,13 +1,16 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 /**
@@ -15,9 +18,12 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
  */
 public class BoxDaoMock extends BoxDao {
 
+    public BoxDaoMock(BoxesActivity context, List<Box> boxes, HashMap<UUID, Integer> boxPosition) {
+        super(context, boxes, boxPosition);
+    }
 
     @Override
-    public List<Box> getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1) {
+    public void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1) {
         List<Box> result = new ArrayList<>();
 
         List<String> food = new ArrayList<>();
@@ -42,7 +48,8 @@ public class BoxDaoMock extends BoxDao {
             box.setAddress(null);
             result.add(box);
         }
-        return result;
+        addBoxes(result);
+        mContext.updateBoxesInFragments();
     }
 
     @Override

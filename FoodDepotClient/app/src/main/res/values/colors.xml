@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3f51b5</color>
-    <color name="colorPrimaryDark">#303f9f</color>
-    <color name="colorAccent">#6b6164</color>
+    <color name="colorPrimary">#1a9145</color>
+    <color name="colorPrimaryDark">#1B792E</color>
+    <color name="colorAccent">#93ed2b</color>
 
     <color name="pastelBlueText">#7fb6b4</color>
     <color name="pastelBlueBack">#e0f2f1</color>
@@ -12,14 +12,16 @@
     <color name="pastelBrownBorder">#faebcc</color>
     <color name="pastelBrownBack">#fcf8e3</color>
 
-    <color name="pastelGreenText">#3c763d</color>
-    <color name="pastelGreenBorder">#d6e9c6</color>
-    <color name="pastelGreenBack">#dff0d8</color>
+    <color name="pastelGreenText">#9DFFD0</color>
+    <color name="pastelGreenBorder">#7DCCA6</color>
+    <color name="pastelGreenBack">#287F56</color>
 
     <color name="pastelBlueLink">#337aba</color>
 
     <color name="grayText">#333333</color>
-    <color name="grayBorder">#cccccc</color>
-    <color name="grayBack">#f5f5f5</color>
+    <color name="listRowTwo">#7DCCA6</color>
+    <color name="listRowOne">#9DFFD0</color>
+
+
 
 </resources>

@@ -123,7 +123,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:text="@string/category_colon"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold" />
 
                 <TextView
@@ -146,7 +146,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:text="@string/owner"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold" />
 
                 <RelativeLayout
@@ -159,7 +159,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@android:color/black"
                         android:textStyle="bold" />
 
                     <TextView
@@ -167,7 +167,7 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:textStyle="bold"
-                        android:textColor="@color/colorAccent"
+                        android:textColor="@android:color/black"
                         android:layout_alignParentRight="true"
                         android:layout_below="@id/textViewOwnerName" />
 
@@ -189,6 +189,11 @@
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_below="@id/ratingBar"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="10dp"
+                        android:textColor="@android:color/white"
+                        android:background="@color/colorPrimaryDark"
                         android:text="@string/show_profile"
                         android:layout_alignParentRight="true"></Button>
                 </RelativeLayout>
@@ -206,7 +211,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:text="@string/location"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -255,7 +260,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text="@string/price_colon"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold" />
 
 
@@ -294,6 +299,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/directions"
                     android:id="@+id/buttonDirections"
+                    android:layout_margin="5dp"
+                    android:background="@color/pastelBlueAccent"
                     android:layout_weight="1"
                     android:clickable="true" />
 
@@ -302,6 +309,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/reserve"
                     android:id="@+id/buttonReserve"
+                    android:layout_margin="5dp"
+                    android:background="@color/colorAccent"
                     android:layout_weight="1"
                     android:clickable="true" />
             </LinearLayout>
