@@ -530,7 +530,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                     searchView.setIconified(true);
                 }
                 //TODO: replace dummy auth tokem
-                mBoxFactory.getBoxDao().getNumberOfBoxesMatchingString(searchString, 0, 20, "DUMMY_AUTH_TOKEN", mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                mBoxFactory.getBoxDao().getNumberOfBoxesMatchingString(searchString, 0, 20, "DUMMY_AUTH_TOKEN", getLastLocation().getLatitude(), getLastLocation().getLongitude());
                 return true; //true = query was handled, false = query not handled; perform default action
             }
         };

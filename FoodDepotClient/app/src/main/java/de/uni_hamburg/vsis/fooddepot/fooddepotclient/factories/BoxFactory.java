@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDaoMock;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDaoOnline;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingService;
@@ -56,7 +57,7 @@ public class BoxFactory {
             Log.e(TAG, "Wrong context!\n" + Log.getStackTraceString(e));
         }
         mBoxes = new ArrayList<>();
-        mBoxDao = new BoxDaoMock(mContext, mBoxes);
+        mBoxDao = new BoxDaoOnline(mContext, mBoxes);
 
         // mBoxDao.getNumberOfBoxesMatchingString(null, 0, 20, "AUTH_TOKEN", 53.4, 9.999);
     }

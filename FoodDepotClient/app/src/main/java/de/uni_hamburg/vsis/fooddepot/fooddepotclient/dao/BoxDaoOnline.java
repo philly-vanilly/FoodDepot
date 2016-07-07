@@ -3,6 +3,8 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -31,15 +33,21 @@ public class BoxDaoOnline extends BoxDao {
         RestClient.search(searchString, latitude, longitude, new BaseResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            if (responseBody != null) {
-                String responseAsString = new String(responseBody);
-                Log.d(TAG, "search box success:" + responseAsString);
+                if (responseBody != null) {
+                    String responseAsString = new String(responseBody);
+                    Log.d(TAG, "search box success:" + responseAsString);
 
-                Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
-                Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
+                    Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
+                    Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
 
-                addBoxes(boxResponse.data);
-            }
+                    // Java Object to pretty String:
+                    Gson prettyPrintGson = new GsonBuilder().setPrettyPrinting().create();
+                    //method name says toJson but is actually toString:
+                    Log.d(TAG, "Received following Box List data from server:\n" + prettyPrintGson.toJson(boxResponse));
+
+                    //addBoxes(boxResponse.data);
+
+                }
             }
         });
     }
