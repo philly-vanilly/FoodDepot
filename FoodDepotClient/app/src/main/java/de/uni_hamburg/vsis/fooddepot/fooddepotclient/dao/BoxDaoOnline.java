@@ -1,13 +1,11 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +27,7 @@ public class BoxDaoOnline extends BoxDao {
     }
 
     @Override
-    public void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double latitude, double longitude) {
+    public void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, String authToken, double latitude, double longitude) {
         RestClient.search(searchString, latitude, longitude, new BaseResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

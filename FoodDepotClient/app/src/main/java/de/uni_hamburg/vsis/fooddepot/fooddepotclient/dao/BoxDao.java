@@ -32,7 +32,7 @@ public abstract class BoxDao {
         mBoxes = boxes;
     }
 
-    public abstract void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1);
+    public abstract void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, String authToken, double lat1, double lon1);
     public abstract List<Box> getNumberOfEmptyBoxes(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1);
     public abstract Drawable getPhotoForBox(UUID boxId);
     public abstract Box getBoxById (UUID boxId);
@@ -71,7 +71,7 @@ public abstract class BoxDao {
         return null;
     }
 
-    public void updateDistance(Location lastLocation){
+    public void updateDistanceForAllBoxes(Location lastLocation){
         double lon1 = lastLocation.getLongitude();
         double lat1 = lastLocation.getLatitude();
 
@@ -91,7 +91,7 @@ public abstract class BoxDao {
             Location locationB = new Location("Box-Point");
             locationB.setLatitude(lat2);
             locationB.setLongitude(lon2);
-            float distance = locationA.distanceTo(locationB); //distance in km
+            float distance = locationA.distanceTo(locationB); //distance in m
             box.setDistance(distance);
         }
     }

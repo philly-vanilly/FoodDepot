@@ -80,8 +80,6 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
                 mGoogleApiClient);
         if (mLastLocation != null) {
             mLocationListener.onLocationChanged(mLastLocation);
-            //updateBoxList(mLastLocation.getLatitude(), mLastLocation.getLongitude(), mCurrentSearchString);
-
         }
     }
 

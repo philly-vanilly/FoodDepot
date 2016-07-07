@@ -9,7 +9,7 @@
     tools:context=".boxes.BoxesActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
+        android:id="@+id/boxesActivityAppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -18,7 +18,7 @@
         <android.support.v7.widget.Toolbar
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/toolbar"
+            android:id="@+id/boxesActivityToolbar"
             android:minHeight="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,6 +58,14 @@
                 android:layout_width="wrap_content" />
 
         </android.support.design.widget.TabLayout>
+
+        <ProgressBar
+            android:id="@+id/boxesActivityProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"/>
 
     </android.support.design.widget.AppBarLayout>
 

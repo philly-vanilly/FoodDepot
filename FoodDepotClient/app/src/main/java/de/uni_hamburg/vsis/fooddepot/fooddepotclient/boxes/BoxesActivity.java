@@ -1,17 +1,23 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,7 +28,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
 
@@ -43,6 +51,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private final static String TAG = "BoxesActivity";
 
     private FDepotGoogleApiClient mGoogleApiClient;
+
     private Location mLastLocation;
     private String mCurrentSearchString = "";
 
@@ -52,6 +61,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private BoxesAsMapFragment mBoxesAsMapFragment;
     private AppBarLayout mAppBarLayout;
     TabLayout mTabLayoutSortList;
+    private Menu mOptionsMenu;
 
     private BoxFactory mBoxFactory;
     private UUID mIdOfCurrentlySelectedBox;
@@ -71,13 +81,13 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         return intent;
     }
 
-    public void onBoxSelected(UUID boxUUID, String senderFragmentTag){
+    public void onBoxSelected(UUID boxUUID, String senderFragmentTag) {
         Log.d(TAG, "============== onBoxSelected called ===============");
         mIdOfCurrentlySelectedBox = boxUUID;
         if (findViewById(R.id.fragment_boxes_container_2) != null) {
-            if (senderFragmentTag == BoxesAsListFragment.TAG && mBoxesAsMapFragment != null){
+            if (senderFragmentTag == BoxesAsListFragment.TAG && mBoxesAsMapFragment != null) {
                 mBoxesAsMapFragment.centerOnSelectedBox(boxUUID);
-            } else if (senderFragmentTag == BoxesAsMapFragment.TAG && mBoxesAsListFragment != null){
+            } else if (senderFragmentTag == BoxesAsMapFragment.TAG && mBoxesAsListFragment != null) {
                 mBoxesAsListFragment.centerOnSelectedBox(boxUUID);
 
                 Box clickedBox = mBoxFactory.getBoxDao().getBox(boxUUID);
@@ -87,6 +97,36 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 mBoxesAsListFragment.getBoxesListAdapter().collapseNonClickedRows(clickedBox);
             }
         }
+    }
+
+    public Location getLastLocation() {
+        // Get LocationManager object from System Service LOCATION_SERVICE
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Create a criteria object to retrieve provider
+        Criteria criteria = new Criteria();
+        // Get the name of the best provider
+        String provider = locationManager.getBestProvider(criteria, true);
+        // Get Current Location
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                Log.d(TAG, "need to show rationale");
+            } else {
+                Log.d(TAG, " no need to show rationale");
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FDepotGoogleApiClient.LOCATION_PERMISSION);
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+        mLastLocation = locationManager.getLastKnownLocation(provider);
+
+        return mLastLocation;
     }
 
     @Override
@@ -119,10 +159,10 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         mBoxFactory = BoxFactory.getFactory(this);
 
         //finding and setting up a toolbar to replace actionbar
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.boxesActivityToolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(null);
-        mAppBarLayout = (AppBarLayout)findViewById(R.id.app_bar_layout) ;
+        setActionBarTitleBasedOnQuery();
+        mAppBarLayout = (AppBarLayout)findViewById(R.id.boxesActivityAppBarLayout) ;
 
         //finding drawer view and binding events to actionbartoggle
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -262,9 +302,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         mAppBarLayout.setLayoutParams(params);
 
         //stop showing menu title as toolbar title //TODO: change to show search string
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(null);
+        setActionBarTitleBasedOnQuery();
     }
 
     private void switchFragments(MenuItem menuItem){
@@ -299,9 +337,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         }
 
         //stop showing menu title as toolbar title
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(null);
+        setActionBarTitleBasedOnQuery();
 
         fragmentManager
                 .beginTransaction()
@@ -392,9 +428,9 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     public boolean onPrepareOptionsMenu(Menu menu){
         int orientation = getResources().getConfiguration().orientation;
         if(orientation == Configuration.ORIENTATION_PORTRAIT){
-            menu.setGroupVisible(R.id.barButtons, false);
+            menu.setGroupVisible(R.id.boxesActivityBarButtons, false);
         } else {
-            menu.setGroupVisible(R.id.barButtons, true);
+            menu.setGroupVisible(R.id.boxesActivityBarButtons, true);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -453,7 +489,8 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        mOptionsMenu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
@@ -476,40 +513,79 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             public boolean onQueryTextSubmit(String searchString) {
                 mCurrentSearchString = searchString;
 
-                
+                String displayedString = searchString.length() > 11? searchString.substring(0, 9)+ "..." : searchString;
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setTitle("Searching for: \"" + displayedString + "\"");
 
+                TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutSortList);
+                tabLayout.setVisibility(View.GONE);
+                mOptionsMenu.setGroupVisible(R.id.boxesActivityBarButtons, false);
 
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                setSupportActionBar(toolbar);
+                ProgressBar progressBar = (ProgressBar) findViewById(R.id.boxesActivityProgressBar);
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setIndeterminate(true);
 
-                searchString = searchString.length() > 11? searchString.substring(0, 9)+"..." : searchString;
-
-                getSupportActionBar().setTitle(mBoxFactory.getBoxes().size() + " \"" + searchString + "\" found");
-                //show tooltip load more by scrolling to bottom or zooming out (mIsMapMode)
-                //TODO: call update in BoxDao
-                updateBoxesInFragments();
-                return true;
+                SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+                if (!searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                //TODO: replace dummy auth tokem
+                mBoxFactory.getBoxDao().getNumberOfBoxesMatchingString(searchString, 0, 20, "DUMMY_AUTH_TOKEN", mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                return true; //true = query was handled, false = query not handled; perform default action
             }
         };
 
         searchView.setOnQueryTextListener(queryTextListener);
-        return true;
+        return true; //true = menu is shown, false = menu is not shown anymore
     }
 
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "new location received");
         mLastLocation = location;
-        mBoxFactory.getBoxDao().updateDistance(mLastLocation);
+        mBoxFactory.getBoxDao().updateDistanceForAllBoxes(mLastLocation);
         updateBoxesInFragments();
     }
 
     public void updateBoxesInFragments() {
+        setActionBarTitleBasedOnQuery();
+
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.boxesActivityProgressBar);
+        progressBar.setVisibility(View.GONE);
+
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mOptionsMenu.setGroupVisible(R.id.boxesActivityBarButtons, true);
+        }
+        if(orientation == Configuration.ORIENTATION_PORTRAIT && !mIsMapMode){
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutSortList);
+            tabLayout.setVisibility(View.VISIBLE);
+        }
+
         if( mCurrentBoxesView != null) {
             mCurrentBoxesView.updateBoxList();
         }
         if (mSecondBoxesView != null) {
             mSecondBoxesView.updateBoxList();
+        }
+    }
+
+    private void setActionBarTitleBasedOnQuery() {
+        setSupportActionBar(mToolbar);
+        if (mCurrentSearchString != null && mCurrentSearchString != "") {
+            getSupportActionBar().setTitle(mBoxFactory.getBoxes().size() + " \"" + mCurrentSearchString + "\" found");
+        } else {
+            getSupportActionBar().setTitle(null);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        SearchView searchView = (SearchView) mOptionsMenu.findItem(R.id.menu_search).getActionView();
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+        } else {
+            super.onBackPressed();
         }
     }
 }

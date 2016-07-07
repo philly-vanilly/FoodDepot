@@ -73,24 +73,6 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "============= ON MAP READY CALLED ================");
         mMap = googleMap;
-
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                Log.d(TAG, "need to show rationale");
-            } else {
-                Log.d(TAG, " no need to show rationale");
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FDepotGoogleApiClient.LOCATION_PERMISSION);
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
         updateBoxList();
     }
 
@@ -99,14 +81,9 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
         try {
             // Enable MyLocation Layer of Google Map
             mMap.setMyLocationEnabled(true);
-            // Get LocationManager object from System Service LOCATION_SERVICE
-            LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-            // Create a criteria object to retrieve provider
-            Criteria criteria = new Criteria();
-            // Get the name of the best provider
-            String provider = locationManager.getBestProvider(criteria, true);
-            // Get Current Location
-            Location myLocation = locationManager.getLastKnownLocation(provider);
+
+            Location myLocation = ((BoxesActivity) getActivity()).getLastLocation();
+
             // set map type
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             // Get latitude of the current location

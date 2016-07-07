@@ -58,6 +58,6 @@ public class BoxFactory {
         mBoxes = new ArrayList<>();
         mBoxDao = new BoxDaoMock(mContext, mBoxes);
 
-        mBoxDao.getNumberOfBoxesMatchingString(null, 0, 20, UUID.randomUUID(), 53.4, 9.999);
+        // mBoxDao.getNumberOfBoxesMatchingString(null, 0, 20, "AUTH_TOKEN", 53.4, 9.999);
     }
 }

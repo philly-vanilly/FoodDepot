@@ -1,10 +1,10 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -23,7 +23,7 @@ public class BoxDaoMock extends BoxDao {
     }
 
     @Override
-    public void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1) {
+    public void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, String authToken, double lat1, double lon1) {
         List<Box> result = new ArrayList<>();
 
         List<String> food = new ArrayList<>();
@@ -48,8 +48,25 @@ public class BoxDaoMock extends BoxDao {
             box.setAddress(null);
             result.add(box);
         }
+
+        if(searchString != null && searchString != "") {
+            Iterator<Box> iterator = result.iterator();
+            String searchLower = searchString.toLowerCase();
+            while (iterator.hasNext()) {
+                Box box = iterator.next();
+                if (!box.getName().toLowerCase().contains(searchLower) && !box.getContent().toLowerCase().contains(searchLower)) {
+                    iterator.remove();
+                }
+            }
+        }
+
         addBoxes(result);
+        updateDistanceForAllBoxes(mContext.getLastLocation());
+
         mContext.updateBoxesInFragments();
+
+        Toast toast = Toast.makeText(mContext, "Scroll down to load more", Toast.LENGTH_LONG);
+        toast.show();
     }
 
     @Override
