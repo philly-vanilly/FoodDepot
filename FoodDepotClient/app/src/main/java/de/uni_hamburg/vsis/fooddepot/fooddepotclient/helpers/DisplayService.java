@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 /**
  * This class handles complicated display logic (not just string formatting, which can be done in
@@ -46,17 +46,14 @@ public class DisplayService {
         return result;
     }
 
-    /**
-     * Image to display as thumbnail for a food-box. Either transmitted value from server or icon
-     * based on content type or (if content not found) dummy content icon
-     * @return Image as Drawable
-     */
     public static Drawable getImageForBox(Box box, View itemView) {
-        Drawable drawable = box.getImage();
-        if(drawable == null) { //TODO: perhaps some test to check if valid drawable
-            String str = box.getContent();
+        Drawable drawable = null;
+        String str = box.getContent();
+        if (str == null || str == "") {//dummy image
+            drawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.ic_fruit_dummy, null);//dummy image
+        } else {
             char lastChar = str.charAt(str.length() - 1);
-            if (str != null && str.length() > 0 && (lastChar == 's' || lastChar == 'n')) { //german or english plural
+            if (lastChar == 's' || lastChar == 'n') { //german or english plural
                 str = str.substring(0, str.length() - 1);
             }
             str = str.toLowerCase();
@@ -67,19 +64,17 @@ public class DisplayService {
                 drawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.ic_fruit_dummy, null);
             }
         }
+
         return drawable;
     }
 
-    /**
-     * Image to display as thumbnail for a food-box. Either transmitted value from server or icon
-     * based on content type or (if content not found) dummy content icon
-     * @return Image as Drawable
-     */
+
     public static int getImageIdForBox(Box box, View itemView) {
         Integer resourceId = 0;
-        Drawable drawable = box.getImage();
-        if(drawable == null) { //TODO: perhaps some test to check if valid drawable
-            String str = box.getContent();
+        String str = box.getContent();
+        if(str == null || str == "") { //TODO: perhaps some test to check if valid drawable
+            resourceId = R.drawable.ic_fruit_dummy;
+        } else {
             char lastChar = str.charAt(str.length() - 1);
             if (str != null && str.length() > 0 && (lastChar == 's' || lastChar == 'n')) { //german or english plural
                 str = str.substring(0, str.length() - 1);

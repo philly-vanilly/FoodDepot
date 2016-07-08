@@ -1,22 +1,24 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import cz.msebera.android.httpclient.Header;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.Response;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Content;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Distance;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Response;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.RestClient;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.ResponseTuple;
 
 /**
  * Created by Phil on 05.07.2016.
@@ -35,15 +37,44 @@ public class BoxDaoOnline extends BoxDao {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (responseBody != null) {
                     String responseAsString = new String(responseBody);
-                    Log.d(TAG, "search box success:" + responseAsString);
 
-                    Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
-                    Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
+                    Type collectionType = new TypeToken<Response<Boolean, List<ResponseTuple<Content, Distance>>>>() {}.getType();
+                    Response<Boolean, List<ResponseTuple<Content, Distance>>> boxResponse = gson.fromJson(responseAsString, collectionType);
 
-                    // Java Object to pretty String:
-                    Gson prettyPrintGson = new GsonBuilder().setPrettyPrinting().create();
+                    List<Box> boxesToAdd = new ArrayList<>();
+                    for (ResponseTuple<Content, Distance> tuple : (ArrayList<ResponseTuple<Content, Distance>>) boxResponse.data) {
+                        Box boxToAdd = new Box();
+                        boxToAdd.setId(UUID.randomUUID());
+                        boxToAdd.setName(tuple.content.name);
+                        boxToAdd.setName(tuple.content.name);
+                        boxToAdd.setLatitude(tuple.content.latitude);
+                        boxToAdd.setLongitude(tuple.content.longitude);
+                        boxToAdd.setOwnerName(tuple.content.ownerName);
+                        boxToAdd.setOverallUserRating(tuple.content.userRatingCount);
+                        boxToAdd.setPrice((tuple.content.price == null || tuple.content.price == "") ? 0.0 : Float.valueOf(tuple.content.price));
+                        boxToAdd.setDistance(tuple.distance.value);
+                        boxesToAdd.add(boxToAdd);
+                    }
+
+                    addBoxes(boxesToAdd);
+
+                    mContext.updateBoxesInFragments();
+
+                    Toast toast = Toast.makeText(mContext, "Scroll down to load more", Toast.LENGTH_LONG);
+                    toast.show();
+
+//                    Gson prettyPrintGson = new GsonBuilder().setPrettyPrinting().create();
+//                    JsonParser parser = new JsonParser();
+//                    JsonElement el = parser.parse(responseAsString);
+//                    //String responseAsPrettyString = prettyPrintGson.toJson(el); // done
+//                    Log.d(TAG, "Received following Box List data from server:\n" + ));
+//                    //Log.d(TAG, "search box success:" + responseAsString);
+
+//                    Type collectionType = new TypeToken<Response<List<Box>>>() {}.getType();
+//                    Response<List<Box>> boxResponse = gson.fromJson(responseAsString, collectionType);
+
+
                     //method name says toJson but is actually toString:
-                    Log.d(TAG, "Received following Box List data from server:\n" + prettyPrintGson.toJson(boxResponse));
 
                     //addBoxes(boxResponse.data);
 

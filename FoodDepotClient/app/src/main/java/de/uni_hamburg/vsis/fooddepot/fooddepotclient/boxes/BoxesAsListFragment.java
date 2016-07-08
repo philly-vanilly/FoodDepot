@@ -3,7 +3,6 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import java.util.UUID;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.LinearLayoutManagerWithSmoothScroller;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
 
 public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterface {
     public static final String TAG = "BoxesAsListFragment";

@@ -3,11 +3,8 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 /**
  * Created by Phil on 19.06.2016.

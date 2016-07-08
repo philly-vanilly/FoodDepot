@@ -3,7 +3,6 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -13,13 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.util.UUID;
-
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
 
 /**

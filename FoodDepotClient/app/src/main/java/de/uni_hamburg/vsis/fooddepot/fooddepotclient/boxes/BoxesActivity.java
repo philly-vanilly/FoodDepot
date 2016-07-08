@@ -30,21 +30,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
 
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Account;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.openbox.OpenBoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.settings.SettingsActivity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 
 public class BoxesActivity extends AppCompatActivity implements LocationListener {

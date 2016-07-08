@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 /**
  * Created by Phil on 30.06.2016.

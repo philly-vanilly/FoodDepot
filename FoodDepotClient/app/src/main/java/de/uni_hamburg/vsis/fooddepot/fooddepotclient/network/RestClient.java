@@ -6,13 +6,10 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.loopj.android.http.*;
 
-import java.util.List;
-
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Account;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 
 /**
  * Created by paul on 24.04.16.

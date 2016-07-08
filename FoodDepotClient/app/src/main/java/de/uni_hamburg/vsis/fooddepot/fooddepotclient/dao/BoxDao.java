@@ -8,16 +8,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingService;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 /**
  * Created by Phil on 01.07.2016.

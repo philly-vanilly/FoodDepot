@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.value_objects.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 /**
  * Created by Phil on 01.07.2016.
