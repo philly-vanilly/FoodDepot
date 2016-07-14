@@ -12,6 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Price;
 
 /**
  * Created by Phil on 01.07.2016.
@@ -34,7 +35,7 @@ public class BoxDaoMock extends BoxDao {
         Random random = new Random();
         for(int i = 0; i < numberOfBoxes; i++){
             Box box = new Box();
-            box.setId(UUID.randomUUID());
+            box.setId(UUID.randomUUID().toString());
             box.setLatitude(ThreadLocalRandom.current().nextDouble(53.2, 53.6));
             box.setLongitude(ThreadLocalRandom.current().nextDouble(9.99, 10.0));
             box.setContent(food.get(random.nextInt(food.size()-1)));
@@ -42,7 +43,11 @@ public class BoxDaoMock extends BoxDao {
             box.setOwnerName("doedel_95");
             box.setOverallUserRating(random.nextDouble()*5);
             box.setUserRatingCount(random.nextInt(85));
-            box.setPrice(random.nextDouble()*100);
+            Price newPrice = new Price();
+            newPrice.setCent(50);
+            newPrice.setEuro(3);
+            newPrice.setCurrency("EURO");
+            box.setPrice(newPrice);
             box.setImage(null);
             box.setClicked(false);
             box.setAddress(null);

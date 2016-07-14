@@ -1,5 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -32,15 +33,15 @@ public class SortingService {
     };
     public static final Comparator<Box> sBoxPriceAscendingComparator = new Comparator<Box>() {
         public int compare(Box box1, Box box2) {
-            Double boxVal1 = box1.getPrice();
-            Double boxVal2 = box2.getPrice();
+            BigDecimal boxVal1 = box1.getPrice().getBigIntValue();
+            BigDecimal boxVal2 = box2.getPrice().getBigIntValue();
             return boxVal2.compareTo(boxVal1);
         }
     };
     public static final Comparator<Box> sBoxPriceDescendingComparator = new Comparator<Box>() {
         public int compare(Box box1, Box box2) {
-            Double boxVal1 = box1.getPrice();
-            Double boxVal2 = box2.getPrice();
+            BigDecimal boxVal1 = box1.getPrice().getBigIntValue();
+            BigDecimal boxVal2 = box2.getPrice().getBigIntValue();
             return boxVal1.compareTo(boxVal2);
         }
     };

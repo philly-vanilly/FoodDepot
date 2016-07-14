@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.util.UUID;
+
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
@@ -114,7 +116,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
 
                 if (box.isClicked() == true) {//dont zoom in on closing a card
                     BoxesActivity boxesActivity = (BoxesActivity) mBoxesAsListFragment.getActivity();
-                    boxesActivity.onBoxSelected(box.getId(), mBoxesAsListFragment.TAG);
+                    boxesActivity.onBoxSelected(UUID.fromString(box.getId()), mBoxesAsListFragment.TAG);
                 }
             }
         });
@@ -122,7 +124,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         mDetailsButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = BoxActivity.makeIntent(mBoxesAsListFragment.getContext(), box.getId());
+                Intent intent = BoxActivity.makeIntent(mBoxesAsListFragment.getContext(), UUID.fromString(box.getId()));
                 mBoxesAsListFragment.startActivity(intent);
             }
         });

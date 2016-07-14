@@ -99,7 +99,7 @@ public class BoxActivity extends AppCompatActivity {
         UUID boxId = null;
         if (currentBoxView != null){
             Box box = currentBoxView.getBox();
-            boxId = box.getId();
+            boxId = UUID.fromString(box.getId());
         }
         Intent boxesActivityIntent = BoxesActivity.makeIntent(this, boxId);
         startActivity(boxesActivityIntent);

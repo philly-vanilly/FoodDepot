@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Response<S, D> {
+public class Response<D> {
     @SerializedName("success")
     @Expose
-    public S success;
+    public boolean success;
     @SerializedName("data")
     @Expose
     public D data;

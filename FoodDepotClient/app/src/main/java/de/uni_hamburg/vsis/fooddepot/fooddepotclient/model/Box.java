@@ -11,9 +11,9 @@ public class Box {
     private static final transient String TAG = "Box";
 
     //DTO attributes for serialization and REST-communication:
-    @SerializedName("id")
+    @SerializedName("uuid")
     @Expose
-    private UUID mId;
+    private String mId;
     @SerializedName("name")
     @Expose
     private String mName;
@@ -28,7 +28,7 @@ public class Box {
     private double mOverallUserRating;
     @SerializedName("price")
     @Expose
-    private double mPrice;
+    private Price mPrice;
     @SerializedName("ownerName")
     @Expose
     private String mOwnerName;
@@ -38,24 +38,26 @@ public class Box {
     @SerializedName("userRatingCount")
     @Expose
     private int mUserRatingCount;
-    @SerializedName("lastFillingDate")
-    @Expose
-    public Object lastFillingDate;
     @SerializedName("fillingStatus")
     @Expose
-    public float fillingStatus;
+    public float mFillingStatus;
+    @SerializedName("address")
+    @Expose
+    private transient DepotAddress mAddress;
+    @SerializedName("smell")
+    @Expose
+    private transient String mSmell;
+    @Expose
+    @SerializedName("content")
+    private transient String mContent;
+
+
 
     //TODO: change REST interface!
-    @Expose(serialize = false, deserialize = false)
-    private transient String mContent;
     @Expose(serialize = false, deserialize = false)
     private transient double mWeight; //in Kg
     @Expose(serialize = false, deserialize = false)
     private transient Drawable mImage;
-    @Expose(serialize = false, deserialize = false)
-    private transient String mAddress;
-    @Expose(serialize = false, deserialize = false)
-    private transient String mSmell;
     @Expose(serialize = false, deserialize = false)
     private transient String mReservationExpiration;
 
@@ -72,10 +74,10 @@ public class Box {
 
     public Box(){}
 
-    public UUID getId() {
+    public String getId() {
         return mId;
     }
-    public void setId(UUID id) {
+    public void setId(String id) {
         mId = id;
     }
     public String getName() {
@@ -106,12 +108,12 @@ public class Box {
     }
     public Drawable getImage() { return mImage; }
     public void setImage(Drawable image) { mImage = image; }
-    public double getPrice() { return mPrice; }
-    public void setPrice(double price) { mPrice = price; }
-    public String getAddress() {
+    public Price getPrice() { return mPrice; }
+    public void setPrice(Price price) { mPrice = price; }
+    public DepotAddress getAddress() {
         return mAddress;
     }
-    public void setAddress(String address) {
+    public void setAddress(DepotAddress address) {
         mAddress = address;
     }
     public boolean isClicked() { return mIsClicked; }
@@ -149,6 +151,12 @@ public class Box {
     }
     public void setSmell(String smell) {
         mSmell = smell;
+    }
+    public float getFillingStatus() {
+        return mFillingStatus;
+    }
+    public void setFillingStatus(float fillingStatus) {
+        mFillingStatus = fillingStatus;
     }
 
     @Override

@@ -41,7 +41,7 @@ public abstract class BoxDao {
 
     public void addBoxes(List<Box> boxes){
         for (Box box : boxes) {
-            Integer positionInList = getPosition(box.getId());
+            Integer positionInList = getPosition(UUID.fromString(box.getId()));
             if (positionInList == null) {
                 mBoxes.add(box);
             } else {
@@ -117,11 +117,11 @@ public abstract class BoxDao {
      * @return Rounded Price for a Box as a String with the currency appended
      */
     public String getRoundedPriceForBox(Box box) {
-        double fullPrice = box.getPrice();
-
-        BigDecimal bd = new BigDecimal(fullPrice);
-        bd = bd.setScale(2, RoundingMode.HALF_UP);
-        return String.valueOf(bd + " FD");
+//        BigDecimal bd = box.getPrice().getBigIntValue();
+//        bd.divide(new BigDecimal(100));
+//        bd = bd.setScale(2, RoundingMode.HALF_UP);
+//        return String.valueOf(bd + " FD");
+        return box.getPrice().toString();
     }
 
     /**
