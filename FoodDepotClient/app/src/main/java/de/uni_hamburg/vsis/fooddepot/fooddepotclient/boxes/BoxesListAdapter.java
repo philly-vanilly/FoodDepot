@@ -52,9 +52,9 @@ public class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
     }
 
     public void collapseNonClickedRows(Box box) {
-        UUID clickedBoxId = box.getId();
+        UUID clickedBoxId = UUID.fromString(box.getId());
         for (Box boxIter : mBoxes){
-            UUID boxIterId = boxIter.getId();
+            UUID boxIterId = UUID.fromString(boxIter.getId());
             if(!clickedBoxId.equals(boxIterId) && boxIter.isClicked()){
                 boxIter.setClicked(false);
                 int boxIterPos = BoxFactory.getFactory(mBoxesAsListFragment.getActivity()).getBoxDao().getPosition(boxIterId);

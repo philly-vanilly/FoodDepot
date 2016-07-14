@@ -38,21 +38,24 @@ public class BoxDaoOnline extends BoxDao {
                 if (responseBody != null) {
                     String responseAsString = new String(responseBody);
 
-                    Type collectionType = new TypeToken<Response<Boolean, List<ResponseTuple<Content, Distance>>>>() {}.getType();
-                    Response<Boolean, List<ResponseTuple<Content, Distance>>> boxResponse = gson.fromJson(responseAsString, collectionType);
+                    Type collectionType = new TypeToken<List<Box>>() {}.getType();
+                    List<Box> boxResponse = gson.fromJson(responseAsString, collectionType);
 
                     List<Box> boxesToAdd = new ArrayList<>();
-                    for (ResponseTuple<Content, Distance> tuple : (ArrayList<ResponseTuple<Content, Distance>>) boxResponse.data) {
+                    for (Box boxIter : boxResponse) {
                         Box boxToAdd = new Box();
-                        boxToAdd.setId(UUID.randomUUID());
-                        boxToAdd.setName(tuple.content.name);
-                        boxToAdd.setName(tuple.content.name);
-                        boxToAdd.setLatitude(tuple.content.latitude);
-                        boxToAdd.setLongitude(tuple.content.longitude);
-                        boxToAdd.setOwnerName(tuple.content.ownerName);
-                        boxToAdd.setOverallUserRating(tuple.content.userRatingCount);
-                        boxToAdd.setPrice((tuple.content.price == null || tuple.content.price == "") ? 0.0 : Float.valueOf(tuple.content.price));
-                        boxToAdd.setDistance(tuple.distance.value);
+                        boxToAdd.setId(boxIter.getId());
+                        boxToAdd.setName(boxIter.getName());
+                        boxToAdd.setName(boxIter.getContent());
+                        boxToAdd.setLatitude(boxIter.getLatitude());
+                        boxToAdd.setLongitude(boxIter.getLongitude());
+                        boxToAdd.setOwnerName(boxIter.getOwnerName());
+                        boxToAdd.setOverallUserRating(boxIter.getOverallUserRating());
+                        boxToAdd.setPrice(boxIter.getPrice());
+                        boxToAdd.setAddress(boxIter.getAddress());
+                        boxToAdd.setTemperature(boxIter.getTemperature());
+                        boxToAdd.setFillingStatus(boxIter.getFillingStatus());
+                        boxToAdd.setSmell(boxIter.getSmell());
                         boxesToAdd.add(boxToAdd);
                     }
 

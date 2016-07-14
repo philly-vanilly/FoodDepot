@@ -57,6 +57,7 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     private TextView mTextViewDistance;
     private TextView mTextViewPrice;
     private TextView mTextViewTimeLeft;
+    private TextView mTextViewDepotName;
     private Button mButtonDirections;
     private Button mButtonReserve;
 
@@ -86,6 +87,7 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         mBoxPhotoFull = (ImageView) itemView.findViewById(R.id.boxPhotoFull);
         mScrollableFrameLayout = (View) itemView.findViewById(R.id.scrollableFrameLayout);
 
+        mTextViewDepotName = (TextView) itemView.findViewById(R.id.textViewDepotName);
 
         mTextViewBoxesContent = (TextView) itemView.findViewById(R.id.textViewContent);
         mRatingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
@@ -98,12 +100,13 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         mButtonDirections = (Button) itemView.findViewById((R.id.buttonDirections));
         mButtonReserve = (Button) itemView.findViewById((R.id.buttonReserve));
 
+        mTextViewDepotName.setText(mBox.getName());
         mTextViewBoxesContent.setText(mBox.getContent());
         mRatingBar.setRating(mBoxDao.getRoundedOverallRatingForBox(mBox));
         mTextViewOwnerName.setText(mBox.getOwnerName());
         mTextViewRatingCount.setText("(" + mBox.getUserRatingCount() + ")");
 
-        String addressString = mBox.getAddress();
+        String addressString = mBox.getAddress().toString();
         if(addressString == null){
             try {
                 Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());

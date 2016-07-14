@@ -142,7 +142,7 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
                 }
             });
 
-            mMapMarkers.put(box.getId(), marker);
+            mMapMarkers.put(UUID.fromString(box.getId()), marker);
         }
         zoomToBoxSelection();
     }
