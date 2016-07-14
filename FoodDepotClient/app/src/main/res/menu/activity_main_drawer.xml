@@ -3,10 +3,10 @@
 
     <group android:checkableBehavior="single"
         android:id="@+id/group_primary_items">
-        <item
-            android:id="@+id/nav_open_box"
-            android:icon="@drawable/ic_action_barcode_2"
-            android:title="@string/action_open_box" />
+        <!--<item-->
+            <!--android:id="@+id/nav_open_box"-->
+            <!--android:icon="@drawable/ic_action_barcode_2"-->
+            <!--android:title="@string/action_open_box" />-->
         <!--android:icon="@drawable/ic_menu_camera"-->
 
         <item

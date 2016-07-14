@@ -403,9 +403,9 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             case R.id.nav_switch_map_list:
                 switchFragments(menuItem);
                 break;
-            case R.id.nav_open_box:
-                startActivity(new Intent(this, OpenBoxActivity.class));
-                break;
+//            case R.id.nav_open_box:
+//                startActivity(new Intent(this, OpenBoxActivity.class));
+//                break;
             case R.id.nav_toggle_sell:
                 //TODO: implement
                 break;

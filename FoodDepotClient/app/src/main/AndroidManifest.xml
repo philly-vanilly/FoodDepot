@@ -11,11 +11,15 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.CAMERA" />
+
     <permission
         android:name="com.example.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.example.permission.MAPS_RECEIVE" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -35,7 +39,7 @@
             android:label="@string/app_name">
             <intent-filter>
 
-                 <!--<action android:name="android.intent.action.MAIN" />-->
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -44,7 +48,8 @@
             android:name=".boxes.BoxesActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -75,44 +80,51 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".boxes.BoxesActivity" />
         </activity>
-
         <activity
             android:name=".helpers.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-         <!--The API key for Google Maps-based APIs is defined as a string resource.-->
-         <!--(See the file "res/values/google_maps_api.xml").-->
-         <!--Note that the API key is linked to the encryption key used to sign the APK.-->
-         <!--You need a different API key for each encryption key, including the release key that is used to-->
-         <!--sign the APK for publishing. You can define the keys for the debug and release targets in src/debug/ and src/release/.-->
+        <!-- The API key for Google Maps-based APIs is defined as a string resource. -->
+        <!-- (See the file "res/values/google_maps_api.xml"). -->
+        <!-- Note that the API key is linked to the encryption key used to sign the APK. -->
+        <!-- You need a different API key for each encryption key, including the release key that is used to -->
+        <!-- sign the APK for publishing. You can define the keys for the debug and release targets in src/debug/ and src/release/. -->
 
 
-
-        <!--<meta-data-->
-            <!--android:name="com.google.android.gms.version"-->
-            <!--android:value="8489470" />-->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.gms.version" -->
+        <!-- android:value="8489470" /> -->
 
         <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
-
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDxAtujYy3RU-O87ZWmcuxlq8z0xXogwc8"/>
+            android:value="AIzaSyDxAtujYy3RU-O87ZWmcuxlq8z0xXogwc8" />
 
-        <!--<meta-data-->
-            <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="google_maps_key_phil"/>-->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="google_maps_key_phil"/> -->
 
-        <!--<meta-data-->
-        <!--android:name="com.google.android.geo.API_KEY"-->
-        <!--android:value="@string/google_maps_key_paul" />-->
 
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="@string/google_maps_key_paul" /> -->
+
+        <service android:name=".openbox.FDHostApduService" android:exported="true"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE"/>
+            </intent-filter>
+            <meta-data android:name="android.nfc.cardemulation.host_apdu_service"
+                android:resource="@xml/apduservice"/>
+        </service>
     </application>
 
 </manifest>

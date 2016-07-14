@@ -160,4 +160,8 @@
     <string name="bookmark_depot">Bookmark Depot</string>
     <string name="show_profile">Show Profile</string>
 
+
+    <string name="servicedesc">FD open box service</string>
+    <string name="aiddescription">FD open box service</string>
+
 </resources>
