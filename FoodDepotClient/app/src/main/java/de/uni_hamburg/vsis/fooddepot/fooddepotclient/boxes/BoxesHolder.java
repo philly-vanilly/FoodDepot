@@ -116,7 +116,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
 
                 if (box.isClicked() == true) {//dont zoom in on closing a card
                     BoxesActivity boxesActivity = (BoxesActivity) mBoxesAsListFragment.getActivity();
-                    boxesActivity.onBoxSelected(UUID.fromString(box.getId()), mBoxesAsListFragment.TAG);
+                    boxesActivity.onBoxSelected(box.getId(), mBoxesAsListFragment.TAG);
                 }
             }
         });
@@ -124,7 +124,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         mDetailsButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = BoxActivity.makeIntent(mBoxesAsListFragment.getContext(), UUID.fromString(box.getId()));
+                Intent intent = BoxActivity.makeIntent(mBoxesAsListFragment.getContext(), box.getId());
                 mBoxesAsListFragment.startActivity(intent);
             }
         });

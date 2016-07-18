@@ -75,17 +75,17 @@ public class BoxDaoMock extends BoxDao {
     }
 
     @Override
-    public List<Box> getNumberOfEmptyBoxes(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1) {
+    public List<Box> getNumberOfEmptyBoxes(String searchString, int fetchedBoxes, int numberOfBoxes, String queryId, double lat1, double lon1) {
         return null;
     }
 
     @Override
-    public Drawable getPhotoForBox(UUID boxId) {
+    public Drawable getPhotoForBox(String boxId) {
         return null;
     }
 
     @Override
-    public Box getBoxById(UUID boxId) {
+    public Box getBoxById(String boxId) {
         return null;
     }
 }

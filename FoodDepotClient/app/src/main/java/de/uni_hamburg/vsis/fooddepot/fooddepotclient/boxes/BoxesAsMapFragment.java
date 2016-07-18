@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
@@ -37,10 +38,10 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
 
     public final static String TAG = "BoxesAsMapFragment";
     private GoogleMap mMap;
-    private HashMap<UUID, Marker> mMapMarkers;
+    private HashMap<String, Marker> mMapMarkers;
 
     @Override
-    public void centerOnSelectedBox(UUID boxUUID) {
+    public void centerOnSelectedBox(String boxUUID) {
         Marker marker = mMapMarkers.get(boxUUID);
         LatLng markerLatLng = marker.getPosition();
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -137,21 +138,21 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
-                    Intent intent = BoxActivity.makeIntent(getContext(), getUUID(marker));
+                    Intent intent = BoxActivity.makeIntent(getContext(), getUUID(marker).toString());
                     startActivity(intent);
                 }
             });
 
-            mMapMarkers.put(UUID.fromString(box.getId()), marker);
+            mMapMarkers.put(box.getId(), marker);
         }
         zoomToBoxSelection();
     }
 
-    private UUID getUUID(Marker marker){
-        Iterator<Map.Entry<UUID,Marker>> iter = mMapMarkers.entrySet().iterator();
+    private String getUUID(Marker marker){
+        Iterator<Map.Entry<String,Marker>> iter = mMapMarkers.entrySet().iterator();
         while (iter.hasNext()) {
-            Map.Entry<UUID, Marker> entry = iter.next();
-            if (entry.getValue().getPosition().equals(marker.getPosition())) {
+            Map.Entry<String, Marker> entry = iter.next();
+            if (Objects.equals(entry.getValue().getPosition(), marker.getPosition())) {
                 return entry.getKey();
             }
         }

@@ -20,6 +20,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,6 +34,7 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.AnimationService;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.DepotAddress;
 
 /**
  * Created by Phil on 22.06.2016.
@@ -69,7 +71,8 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        UUID boxID = (UUID) getActivity().getIntent().getSerializableExtra(BoxActivity.EXTRA_BOX_ACTIVITY_ID);
+        Serializable serializableId = getActivity().getIntent().getSerializableExtra(BoxActivity.EXTRA_BOX_ACTIVITY_ID);
+        String boxID = (String) serializableId;
         mBoxFactory = BoxFactory.getFactory(getActivity());
         mBox = mBoxFactory.getBoxDao().getBox(boxID);
         mBoxDao = mBoxFactory.getBoxDao();
@@ -106,8 +109,11 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         mTextViewOwnerName.setText(mBox.getOwnerName());
         mTextViewRatingCount.setText("(" + mBox.getUserRatingCount() + ")");
 
-        String addressString = mBox.getAddress().toString();
-        if(addressString == null){
+        DepotAddress depotAddress = mBox.getAddress();
+        String addressString = "###";
+        if(depotAddress != null) {
+            addressString = depotAddress.toString();
+        }else {
             try {
                 Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
                 List<Address> addresses = geocoder.getFromLocation(mBox.getLatitude(), mBox.getLongitude(), 1);

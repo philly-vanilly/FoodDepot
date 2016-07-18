@@ -10,6 +10,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import java.util.Objects;
+
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 
 /**
@@ -63,7 +65,7 @@ public class FDepotApplication extends Application{
     public void loadUser(Activity activity){
         SharedPreferences settings = getSharedPreferences("accountPrefs", 0);
         String accountAsString = settings.getString("account", "");
-        if(!accountAsString.equals("")) {
+        if(!Objects.equals(accountAsString, "")) {
             Gson gson = new Gson();
 
             //Ugly JSON to pretty String:

@@ -33,7 +33,7 @@ public class BoxActivity extends AppCompatActivity {
      * Custom intent maker based on UUID which is the value Boxes are checked for uniqueness with, inside equals()
      * NOTE: an intent extra passes values from a calling to a called activity
      */
-    public static Intent makeIntent(Context context, UUID boxID) {
+    public static Intent makeIntent(Context context, String boxID) {
         Intent intent = new Intent(context, BoxActivity.class);
         intent.putExtra(EXTRA_BOX_ACTIVITY_ID, boxID);
         return intent;
@@ -96,10 +96,10 @@ public class BoxActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        UUID boxId = null;
+        String boxId = null;
         if (currentBoxView != null){
             Box box = currentBoxView.getBox();
-            boxId = UUID.fromString(box.getId());
+            boxId = box.getId();
         }
         Intent boxesActivityIntent = BoxesActivity.makeIntent(this, boxId);
         startActivity(boxesActivityIntent);

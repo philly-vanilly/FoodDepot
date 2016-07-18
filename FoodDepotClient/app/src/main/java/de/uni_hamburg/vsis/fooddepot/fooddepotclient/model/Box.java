@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Box {
@@ -167,6 +168,6 @@ public class Box {
     public boolean equals(Object obj) {
         if (!(obj instanceof Box))
             return false;
-        return this.getId().equals(((Box) obj).getId());
+        return Objects.equals(this.getId(), ((Box) obj).getId() );
     }
 }

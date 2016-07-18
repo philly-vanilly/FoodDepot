@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
@@ -52,13 +53,15 @@ public class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
     }
 
     public void collapseNonClickedRows(Box box) {
-        UUID clickedBoxId = UUID.fromString(box.getId());
+        String clickedBoxId = box.getId();
         for (Box boxIter : mBoxes){
-            UUID boxIterId = UUID.fromString(boxIter.getId());
-            if(!clickedBoxId.equals(boxIterId) && boxIter.isClicked()){
+            String boxIterId = boxIter.getId();
+            if(!Objects.equals(clickedBoxId, boxIterId) && boxIter.isClicked()){
                 boxIter.setClicked(false);
-                int boxIterPos = BoxFactory.getFactory(mBoxesAsListFragment.getActivity()).getBoxDao().getPosition(boxIterId);
-                notifyItemChanged(boxIterPos);
+                Integer boxIterPos = BoxFactory.getFactory(mBoxesAsListFragment.getActivity()).getBoxDao().getPosition(boxIterId);
+                if (boxIterPos != -1) {
+                    notifyItemChanged(boxIterPos);
+                }
             }
         }
     }

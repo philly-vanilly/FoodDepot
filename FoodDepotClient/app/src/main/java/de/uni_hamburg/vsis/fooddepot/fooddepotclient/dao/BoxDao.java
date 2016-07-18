@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
@@ -31,9 +32,9 @@ public abstract class BoxDao {
     }
 
     public abstract void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, String authToken, double lat1, double lon1);
-    public abstract List<Box> getNumberOfEmptyBoxes(String searchString, int fetchedBoxes, int numberOfBoxes, UUID queryId, double lat1, double lon1);
-    public abstract Drawable getPhotoForBox(UUID boxId);
-    public abstract Box getBoxById (UUID boxId);
+    public abstract List<Box> getNumberOfEmptyBoxes(String searchString, int fetchedBoxes, int numberOfBoxes, String queryId, double lat1, double lon1);
+    public abstract Drawable getPhotoForBox(String boxId);
+    public abstract Box getBoxById (String boxId);
 
     public void sortBySelection(SortingSelector selector) {
         SortingService.sortBySelection(selector, mBoxes);
@@ -41,8 +42,8 @@ public abstract class BoxDao {
 
     public void addBoxes(List<Box> boxes){
         for (Box box : boxes) {
-            Integer positionInList = getPosition(UUID.fromString(box.getId()));
-            if (positionInList == null) {
+            Integer positionInList = getPosition(box.getId());
+            if (positionInList == -1) {
                 mBoxes.add(box);
             } else {
                 mBoxes.set(positionInList, box);
@@ -51,8 +52,8 @@ public abstract class BoxDao {
         SortingService.sortBySelection(SortingSelector.NAME, mBoxes);
     }
 
-    public Integer getPosition(UUID id) {
-        Integer result = null;
+    public Integer getPosition(String id) {
+        Integer result = -1;
         Box box = getBox(id);
         if (box != null) {
             result = mBoxes.indexOf(box);
@@ -60,10 +61,10 @@ public abstract class BoxDao {
         return result;
     }
 
-    public Box getBox(UUID id) {
-        for (Box Box : mBoxes) {
-            if (Box.getId().equals(id)) { //equals returns true for String value, == returns true only for same object reference
-                return Box;
+    public Box getBox(String id) {
+        for (Box boxIter : mBoxes) {
+            if (Objects.equals(id, boxIter.getId())) {
+                return boxIter;
             }
         }
         return null;
@@ -78,9 +79,9 @@ public abstract class BoxDao {
             double lat2 = box.getLatitude();
 
             if (lat1 > 90 || lat1 < -90 || lon1 > 180 || lon1 < -180){
-                Log.e(TAG, "Device-User " + box.getId().toString() + " has invalid coordinates: " + lat1 + " and " + lon1);
+                Log.e(TAG, "Device-User " + box.getId() + " has invalid coordinates: " + lat1 + " and " + lon1);
             } else if (lat2 > 90 || lat2 < -90 || lon2 > 180 || lon2 < -180){
-                Log.e(TAG, "Box " + box.getId().toString() + " has invalid coordinates: " + lat2 + " and " + lon2);
+                Log.e(TAG, "Box " + box.getId() + " has invalid coordinates: " + lat2 + " and " + lon2);
             }
 
             Location locationA = new Location("User-Point");
@@ -139,7 +140,7 @@ public abstract class BoxDao {
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             bd = bd.divide(new BigDecimal(2.0f));
         } else {
-            Log.e(TAG, "Box " + box.getId().toString() + " has invalid rating: " + fullRating);
+            Log.e(TAG, "Box " + box.getId() + " has invalid rating: " + fullRating);
             bd = new BigDecimal(0);
         }
         return bd.floatValue();

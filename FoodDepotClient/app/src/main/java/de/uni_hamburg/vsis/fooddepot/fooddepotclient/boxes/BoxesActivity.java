@@ -8,8 +8,11 @@ import android.content.res.Configuration;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -30,10 +33,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-
-import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
@@ -41,7 +43,6 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.openbox.OpenBoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.settings.SettingsActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
@@ -63,7 +64,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private Menu mOptionsMenu;
 
     private BoxFactory mBoxFactory;
-    private UUID mIdOfCurrentlySelectedBox;
+    private String mIdOfCurrentlySelectedBox;
 
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
@@ -74,13 +75,13 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     //Serializable unique id to reference in other classes:
     public static final String EXTRA_BOXES_ACTIVITY_ID = "de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxesActivity_ID";
 
-    public static Intent makeIntent(Context context, UUID boxID) {
+    public static Intent makeIntent(Context context, String boxID) {
         Intent intent = new Intent(context, BoxesActivity.class);
         intent.putExtra(EXTRA_BOXES_ACTIVITY_ID, boxID);
         return intent;
     }
 
-    public void onBoxSelected(UUID boxUUID, String senderFragmentTag) {
+    public void onBoxSelected(String boxUUID, String senderFragmentTag) {
         Log.d(TAG, "============== onBoxSelected called ===============");
         mIdOfCurrentlySelectedBox = boxUUID;
         if (findViewById(R.id.fragment_boxes_container_2) != null) {
@@ -92,7 +93,9 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 Box clickedBox = mBoxFactory.getBoxDao().getBox(boxUUID);
                 clickedBox.setClicked(true);
                 int boxPosInList = mBoxFactory.getBoxDao().getPosition(boxUUID);
-                mBoxesAsListFragment.getBoxesListAdapter().notifyItemChanged(boxPosInList);
+                if (boxPosInList != -1) {
+                    mBoxesAsListFragment.getBoxesListAdapter().notifyItemChanged(boxPosInList);
+                }
                 mBoxesAsListFragment.getBoxesListAdapter().collapseNonClickedRows(clickedBox);
             }
         }
@@ -490,6 +493,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         mOptionsMenu = menu;
+        final Context context = this;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
@@ -528,8 +532,15 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 if (!searchView.isIconified()) {
                     searchView.setIconified(true);
                 }
-                //TODO: replace dummy auth tokem
-                mBoxFactory.getBoxDao().getNumberOfBoxesMatchingString(searchString, 0, 20, "DUMMY_AUTH_TOKEN", getLastLocation().getLatitude(), getLastLocation().getLongitude());
+
+                DownloadBoxesTask task = new DownloadBoxesTask(context);
+                Integer fetchedBoxes = 0;
+                Integer numberOfBoxes = 20;
+                String authToken = "DUMMY_AUTH_TOKEN"; //TODO: replace dummy auth tokem
+                Double latitude = getLastLocation().getLatitude();
+                Double longitude = getLastLocation().getLongitude();
+
+                task.execute(new DownloadBoxesParams(searchString, fetchedBoxes, numberOfBoxes, authToken, latitude, longitude));
                 return true; //true = query was handled, false = query not handled; perform default action
             }
         };
@@ -585,6 +596,35 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             searchView.setIconified(true);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private class DownloadBoxesTask extends AsyncTask<DownloadBoxesParams, Void, Void>{
+        private final Context mContext;
+        DownloadBoxesTask(Context context){
+            mContext = context;
+        }
+
+        @Override
+        protected Void doInBackground(DownloadBoxesParams... params) {
+            for(DownloadBoxesParams paramsIter: params){
+                mBoxFactory.getBoxDao().getNumberOfBoxesMatchingString(
+                        paramsIter.getSearchString(),
+                        paramsIter.getFetchedBoxes(),
+                        paramsIter.getNumberOfBoxes(),
+                        paramsIter.getAuthToken(),
+                        paramsIter.getLatitude(),
+                        paramsIter.getLongitude()
+                );
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            updateBoxesInFragments();
+            Toast toast = Toast.makeText(mContext, "Scroll down to load more", Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 }

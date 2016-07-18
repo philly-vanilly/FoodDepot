@@ -9,5 +9,5 @@ public interface BoxesFragmentInterface {
 
     void updateBoxList();
 
-    void centerOnSelectedBox(UUID boxUUID);
+    void centerOnSelectedBox(String boxUUID);
 }
