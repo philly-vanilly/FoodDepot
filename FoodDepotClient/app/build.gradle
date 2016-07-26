@@ -6,6 +6,7 @@ android {
 
     defaultConfig {
         applicationId "de.uni_hamburg.vsis.fooddepot.fooddepotclient"
+        multiDexEnabled true
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
@@ -28,4 +29,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.google.android.gms:play-services:9.0.1'
     compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.estimote:sdk:0.10.8@aar'
 }

@@ -25,6 +25,8 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
+
 /**
  * Created by paul on 05.06.16.
  */
@@ -35,7 +37,6 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
 
     private final String TAG = "FDepotGoogleApiClient";
     private static final int REQUEST_CHECK_SETTINGS = 123;
-    public static final int LOCATION_PERMISSION = 34;
 
     private GoogleApiClient mGoogleApiClient = null;
     private Activity mParentActivity;
@@ -133,7 +134,7 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         Log.i(TAG, "permission request received");
         switch (requestCode) {
-            case LOCATION_PERMISSION:
+            case FoodDepotPermissions.LOCATION_PERMISSION:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "we have location permission");

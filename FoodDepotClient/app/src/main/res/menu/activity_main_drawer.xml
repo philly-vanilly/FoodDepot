@@ -1,80 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single"
-        android:id="@+id/group_primary_items">
-        <!--<item-->
-            <!--android:id="@+id/nav_open_box"-->
-            <!--android:icon="@drawable/ic_action_barcode_2"-->
-            <!--android:title="@string/action_open_box" />-->
-        <!--android:icon="@drawable/ic_menu_camera"-->
-
-        <item
-        android:id="@+id/nav_switch_map_list"
-        android:icon="@drawable/ic_map_list"
-        android:title="@string/currently_list_mode_set_to_map" />
-    </group>
-
     <group
-        android:id="@+id/group_secondary_items"
-        android:checkableBehavior="single">
-            <item
-                android:id="@+id/nav_toggle_sell"
-                android:icon="@drawable/ic_action_drop"
-                android:title="@string/action_fill_a_box" />
-
-        <!--android:icon="@drawable/ic_add_shopping_cart_black_24dp"-->
+        android:checkableBehavior="single"
+        android:id="@+id/group_primary_items">
+        <item
+            android:id="@+id/nav_switch_map_list"
+            android:icon="@drawable/ic_map_list"
+            android:title="@string/currently_list_mode_set_to_map" />
+        <item
+            android:id="@+id/nav_activate_beacon"
+            android:icon="@drawable/user_location_marker"
+            android:title="@string/action_activate_beacon" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_face"
             android:title="@string/action_edit_profile" />
         <item
-                android:id="@+id/nav_manage"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="@string/action_edit_settings" />
-    <!--</group>-->
-
-    <!--<group-->
-        <!--android:id="@+id/group_tertiary_items"-->
-        <!--android:checkableBehavior="single">-->
-        <!--<item-->
-            <!--android:id="@+id/nav_switch_map_list_test"-->
-            <!--android:icon="@drawable/ic_menu_camera"-->
-            <!--android:title="@string/action_view_as_list" />-->
-        <!--android:icon="@drawable/ic_switch"-->
-
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/action_edit_settings" />
     </group>
-
-    <!--<group android:checkableBehavior="single">-->
-        <!--<item-->
-            <!--android:id="@+id/nav_camera"-->
-            <!--android:icon="@drawable/ic_menu_camera"-->
-            <!--android:title="Import" />-->
-        <!--<item-->
-            <!--android:id="@+id/nav_gallery"-->
-            <!--android:icon="@drawable/ic_menu_gallery"-->
-            <!--android:title="Gallery" />-->
-        <!--<item-->
-            <!--android:id="@+id/nav_slideshow"-->
-            <!--android:icon="@drawable/ic_menu_slideshow"-->
-            <!--android:title="Slideshow" />-->
-        <!--<item-->
-            <!--android:id="@+id/nav_manage"-->
-            <!--android:icon="@drawable/ic_menu_manage"-->
-            <!--android:title="Tools" />-->
-    <!--</group>-->
-
-    <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="Share" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_send"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="Send" />-->
-        <!--</menu>-->
-    <!--</item>-->
-
 </menu>

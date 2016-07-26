@@ -11,8 +11,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -35,9 +33,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.Region;
 import com.google.android.gms.location.LocationListener;
 
+import java.util.UUID;
+
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.CustomBeaconManager;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
@@ -108,22 +112,17 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         Criteria criteria = new Criteria();
         // Get the name of the best provider
         String provider = locationManager.getBestProvider(criteria, true);
-        // Get Current Location
-        // Here, thisActivity is the current activity
+
+        //request permission:
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+                //TODO: show an explanation for permission request
                 Log.d(TAG, "need to show rationale");
             } else {
                 Log.d(TAG, " no need to show rationale");
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FDepotGoogleApiClient.LOCATION_PERMISSION);
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FoodDepotPermissions.LOCATION_PERMISSION);
             }
         }
         mLastLocation = locationManager.getLastKnownLocation(provider);
@@ -175,9 +174,9 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         mNavigationViewDrawer = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(mNavigationViewDrawer);
         if (mIsMapMode){
-            mNavigationViewDrawer.getMenu().getItem(1).setTitle(R.string.currently_map_mode_set_to_list);   //getTitle() == getString(R.string.currently_list_mode_set_to_map)
+            mNavigationViewDrawer.getMenu().getItem(0).setTitle(R.string.currently_map_mode_set_to_list);
         } else {
-            mNavigationViewDrawer.getMenu().getItem(1).setTitle(R.string.currently_list_mode_set_to_map);
+            mNavigationViewDrawer.getMenu().getItem(0).setTitle(R.string.currently_list_mode_set_to_map);
         }
         setupAppBarLayout();
 
@@ -406,11 +405,18 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             case R.id.nav_switch_map_list:
                 switchFragments(menuItem);
                 break;
-//            case R.id.nav_open_box:
-//                startActivity(new Intent(this, OpenBoxActivity.class));
-//                break;
-            case R.id.nav_toggle_sell:
-                //TODO: implement
+            case R.id.nav_activate_beacon:
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                        //TODO: Explain why permission needed
+                    } else {
+                        // No explanation needed, we can request the permission.
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, FoodDepotPermissions.ACCESS_COARSE_LOCATION);
+                    }
+                }
+                //final BeaconManager beaconManager = new CustomBeaconManager(getApplicationContext());
+                final BeaconManager beaconManager = new CustomBeaconManager(this);
                 break;
             case R.id.nav_profile:
                 startActivity(new Intent(this, SettingsActivity.class));

@@ -88,7 +88,7 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
             Log.e(TAG, "no permission?");
         }
 
-        if (userLatLng != null || mMapMarkers.size() > 0) {
+        if (userLatLng != null) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             builder.include(userLatLng);
             for (Marker marker : mMapMarkers.values()) {
@@ -96,12 +96,16 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
             }
             final LatLngBounds bounds = builder.build();
 
-            //converting dip to px:
-            Resources r = getResources();
-            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, r.getDisplayMetrics());
-            final int padding = (int) px; // offset from edges of the map in pixels
+            // =========== set padding so you don't zoom in too much: ======================
+            int dip = 40; //when boxes on map
+            if (mMapMarkers.size() < 1){
+                dip = 0;
+                mMap.setPadding(1000, 1000, 1000, 1000);
+            }
 
-//            mMap.animateCamera(cameraUpdate);
+            //converting dip to px:
+            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, getResources().getDisplayMetrics());
+            final int padding = (int) px; // offset from edges of the map in pixels
 
             mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                 @Override
@@ -112,6 +116,8 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
             });
         }
     }
+
+
 
     @Override
     public void updateBoxList() {
