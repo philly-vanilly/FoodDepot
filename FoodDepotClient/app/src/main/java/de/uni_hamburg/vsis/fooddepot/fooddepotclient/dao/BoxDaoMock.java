@@ -12,6 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.DepotBeacon;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Price;
 
 /**
@@ -24,7 +25,7 @@ public class BoxDaoMock extends BoxDao {
     }
 
     @Override
-    public void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, String authToken, double lat1, double lon1) {
+    public Integer getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, String authToken, double lat1, double lon1) {
         List<Box> result = new ArrayList<>();
 
         List<String> food = new ArrayList<>();
@@ -51,6 +52,20 @@ public class BoxDaoMock extends BoxDao {
             box.setImage(null);
             box.setClicked(false);
             box.setAddress(null);
+            if (i == 0) {
+                DepotBeacon beacon = new DepotBeacon();
+                beacon.setMajor(23774);
+                beacon.setMinor(21333);
+                beacon.setUUID("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
+                box.setDepotBeacon(beacon);
+            }
+            if (i == 1) {
+                DepotBeacon beacon = new DepotBeacon();
+                beacon.setMajor(32018);
+                beacon.setMinor(41230);
+                beacon.setUUID("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
+                box.setDepotBeacon(beacon);
+            }
             result.add(box);
         }
 
@@ -72,6 +87,7 @@ public class BoxDaoMock extends BoxDao {
 
         Toast toast = Toast.makeText(mContext, "Scroll down to load more", Toast.LENGTH_LONG);
         toast.show();
+        return null;
     }
 
     @Override

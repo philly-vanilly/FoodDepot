@@ -24,17 +24,17 @@ public class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
 
     public BoxesListAdapter(BoxesAsListFragment boxesAsListFragment){
         mBoxesAsListFragment = boxesAsListFragment;
-        mBoxes = BoxFactory.getFactory(mBoxesAsListFragment.getActivity()).getBoxes();
+        mBoxes = BoxFactory.getFactory(mBoxesAsListFragment.getContext()).getBoxes();
     }
 
     public void updateBoxesInList(){
-        mBoxes = BoxFactory.getFactory(mBoxesAsListFragment.getActivity()).getBoxes();
+        mBoxes = BoxFactory.getFactory(mBoxesAsListFragment.getContext()).getBoxes();
         notifyDataSetChanged();
     }
 
     @Override
     public BoxesHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(mBoxesAsListFragment.getActivity());
+        LayoutInflater layoutInflater = LayoutInflater.from(mBoxesAsListFragment.getContext());
         View view = layoutInflater.inflate(R.layout.fragment_list_row, parent, false);
 
         BoxesHolder boxesHolder = new BoxesHolder(mBoxesAsListFragment, view, this);
@@ -58,7 +58,7 @@ public class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
             String boxIterId = boxIter.getId();
             if(!Objects.equals(clickedBoxId, boxIterId) && boxIter.isClicked()){
                 boxIter.setClicked(false);
-                Integer boxIterPos = BoxFactory.getFactory(mBoxesAsListFragment.getActivity()).getBoxDao().getPosition(boxIterId);
+                Integer boxIterPos = BoxFactory.getFactory(mBoxesAsListFragment.getContext()).getBoxDao().getPosition(boxIterId);
                 if (boxIterPos != -1) {
                     notifyItemChanged(boxIterPos);
                 }

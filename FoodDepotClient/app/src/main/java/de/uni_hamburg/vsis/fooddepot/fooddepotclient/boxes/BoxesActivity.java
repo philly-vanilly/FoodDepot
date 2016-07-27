@@ -34,10 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.estimote.sdk.BeaconManager;
-import com.estimote.sdk.Region;
+import com.google.android.gms.common.api.Result;
 import com.google.android.gms.location.LocationListener;
-
-import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.CustomBeaconManager;
@@ -68,13 +66,16 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private Menu mOptionsMenu;
 
     private BoxFactory mBoxFactory;
-    private String mIdOfCurrentlySelectedBox;
+    private BeaconManager mBeaconManager;
 
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private NavigationView mNavigationViewDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean mIsMapMode = false; // TODO: persist on pause, stop, ...
+    private String mIdOfCurrentlySelectedBox;
+    private boolean mIsBeaconScanActivated = false;
+
     private static final String IS_MAP_MODE = "IsMapMode";
     //Serializable unique id to reference in other classes:
     public static final String EXTRA_BOXES_ACTIVITY_ID = "de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxesActivity_ID";
@@ -88,19 +89,16 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     public void onBoxSelected(String boxUUID, String senderFragmentTag) {
         Log.d(TAG, "============== onBoxSelected called ===============");
         mIdOfCurrentlySelectedBox = boxUUID;
-        if (findViewById(R.id.fragment_boxes_container_2) != null) {
-            if (senderFragmentTag == BoxesAsListFragment.TAG && mBoxesAsMapFragment != null) {
+        if (senderFragmentTag == BoxesAsListFragment.TAG && mBoxesAsMapFragment != null) {
+            mBoxesAsMapFragment.centerOnSelectedBox(boxUUID);
+        } else if (senderFragmentTag == BoxesAsMapFragment.TAG && mBoxesAsListFragment != null) {
+            mBoxesAsListFragment.centerOnSelectedBox(boxUUID);
+        } else { // update both:
+            if (mBoxesAsMapFragment != null ) {
                 mBoxesAsMapFragment.centerOnSelectedBox(boxUUID);
-            } else if (senderFragmentTag == BoxesAsMapFragment.TAG && mBoxesAsListFragment != null) {
+            }
+            if (mBoxesAsListFragment != null ) {
                 mBoxesAsListFragment.centerOnSelectedBox(boxUUID);
-
-                Box clickedBox = mBoxFactory.getBoxDao().getBox(boxUUID);
-                clickedBox.setClicked(true);
-                int boxPosInList = mBoxFactory.getBoxDao().getPosition(boxUUID);
-                if (boxPosInList != -1) {
-                    mBoxesAsListFragment.getBoxesListAdapter().notifyItemChanged(boxPosInList);
-                }
-                mBoxesAsListFragment.getBoxesListAdapter().collapseNonClickedRows(clickedBox);
             }
         }
     }
@@ -117,7 +115,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                //TODO: show an explanation for permission request
                 Log.d(TAG, "need to show rationale");
             } else {
                 Log.d(TAG, " no need to show rationale");
@@ -126,6 +123,15 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             }
         }
         mLastLocation = locationManager.getLastKnownLocation(provider);
+
+//        Location location = mGoogleApiClient.getLastLocation();
+//        if (location == null) {
+//            mGoogleApiClient.connect();
+//            mGoogleApiClient.startLocationUpdates();
+//            mGoogleApiClient.createLocationRequest();
+//            location = mGoogleApiClient.getLastLocation();
+//        }
+//        mLastLocation = location;
 
         return mLastLocation;
     }
@@ -157,6 +163,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         setContentView(R.layout.activity_boxes);
 
+        mGoogleApiClient = new FDepotGoogleApiClient(this, this);
         mBoxFactory = BoxFactory.getFactory(this);
 
         //finding and setting up a toolbar to replace actionbar
@@ -235,8 +242,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                     .replace(R.id.fragment_boxes_container_2, (Fragment) mSecondBoxesView, fragmentTag)
                     .commit();
         }
-
-        mGoogleApiClient = new FDepotGoogleApiClient(this, this);
 
         Account account = FDepotApplication.getApplication().getCurrentAccount();
         if (account != null) {
@@ -406,17 +411,23 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 switchFragments(menuItem);
                 break;
             case R.id.nav_activate_beacon:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                        //TODO: Explain why permission needed
-                    } else {
-                        // No explanation needed, we can request the permission.
-                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, FoodDepotPermissions.ACCESS_COARSE_LOCATION);
+                mIsBeaconScanActivated = !mIsBeaconScanActivated;
+                if (mIsBeaconScanActivated) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // Should we show an explanation?
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                            //TODO: Explain why permission needed
+                        } else {
+                            // No explanation needed, we can request the permission.
+                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, FoodDepotPermissions.ACCESS_COARSE_LOCATION);
+                        }
+                    }
+                    mBeaconManager = new CustomBeaconManager(this);
+                } else {
+                    if (mBeaconManager != null) {
+                        mBeaconManager.disconnect();
                     }
                 }
-                //final BeaconManager beaconManager = new CustomBeaconManager(getApplicationContext());
-                final BeaconManager beaconManager = new CustomBeaconManager(this);
                 break;
             case R.id.nav_profile:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -521,19 +532,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
             public boolean onQueryTextSubmit(String searchString) {
                 mCurrentSearchString = searchString;
-
-                String displayedString = searchString.length() > 11? searchString.substring(0, 9)+ "..." : searchString;
-                setSupportActionBar(mToolbar);
-                getSupportActionBar().setTitle("Searching for: \"" + displayedString + "\"");
-
-                TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutSortList);
-                tabLayout.setVisibility(View.GONE);
-                mOptionsMenu.setGroupVisible(R.id.boxesActivityBarButtons, false);
-
-                ProgressBar progressBar = (ProgressBar) findViewById(R.id.boxesActivityProgressBar);
-                progressBar.setVisibility(View.VISIBLE);
-                progressBar.setIndeterminate(true);
-
                 SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
                 if (!searchView.isIconified()) {
                     searchView.setIconified(true);
@@ -564,20 +562,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     }
 
     public void updateBoxesInFragments() {
-        setActionBarTitleBasedOnQuery();
-
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.boxesActivityProgressBar);
-        progressBar.setVisibility(View.GONE);
-
-        int orientation = getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_LANDSCAPE){
-            mOptionsMenu.setGroupVisible(R.id.boxesActivityBarButtons, true);
-        }
-        if(orientation == Configuration.ORIENTATION_PORTRAIT && !mIsMapMode){
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutSortList);
-            tabLayout.setVisibility(View.VISIBLE);
-        }
-
+        Log.d(TAG, "========== updateBoxesInFragments called==============");
         if( mCurrentBoxesView != null) {
             mCurrentBoxesView.updateBoxList();
         }
@@ -605,32 +590,66 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         }
     }
 
-    private class DownloadBoxesTask extends AsyncTask<DownloadBoxesParams, Void, Void>{
+    private class DownloadBoxesTask extends AsyncTask<DownloadBoxesParams, Void, Integer>{
         private final Context mContext;
         DownloadBoxesTask(Context context){
             mContext = context;
         }
 
         @Override
-        protected Void doInBackground(DownloadBoxesParams... params) {
-            for(DownloadBoxesParams paramsIter: params){
-                mBoxFactory.getBoxDao().getNumberOfBoxesMatchingString(
-                        paramsIter.getSearchString(),
-                        paramsIter.getFetchedBoxes(),
-                        paramsIter.getNumberOfBoxes(),
-                        paramsIter.getAuthToken(),
-                        paramsIter.getLatitude(),
-                        paramsIter.getLongitude()
-                );
-            }
-            return null;
+        protected void onPreExecute(){
+            super.onPreExecute();
+            String displayedString = mCurrentSearchString.length() > 11? mCurrentSearchString.substring(0, 9)+ "..." : mCurrentSearchString;
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setTitle("Searching for: \"" + displayedString + "\"");
+
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutSortList);
+            tabLayout.setVisibility(View.GONE);
+            mOptionsMenu.setGroupVisible(R.id.boxesActivityBarButtons, false);
+
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.boxesActivityProgressBar);
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setIndeterminate(true);
         }
 
         @Override
-        protected void onPostExecute(Void unused) {
-            updateBoxesInFragments();
-            Toast toast = Toast.makeText(mContext, "Scroll down to load more", Toast.LENGTH_LONG);
-            toast.show();
+        protected Integer doInBackground(DownloadBoxesParams... params) {
+            DownloadBoxesParams paramsIter = params[0];
+            Integer numberOfAddedBoxes = mBoxFactory.getBoxDao().getNumberOfBoxesMatchingString(
+                    paramsIter.getSearchString(),
+                    paramsIter.getFetchedBoxes(),
+                    paramsIter.getNumberOfBoxes(),
+                    paramsIter.getAuthToken(),
+                    paramsIter.getLatitude(),
+                    paramsIter.getLongitude()
+            );
+            return numberOfAddedBoxes;
+        }
+
+        @Override
+        protected void onPostExecute(Integer isResultPulled) {
+            super.onPostExecute(isResultPulled);
+
+            setActionBarTitleBasedOnQuery();
+
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.boxesActivityProgressBar);
+            progressBar.setVisibility(View.GONE);
+
+            int orientation = getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                mOptionsMenu.setGroupVisible(R.id.boxesActivityBarButtons, true);
+            }
+            if (orientation == Configuration.ORIENTATION_PORTRAIT && !mIsMapMode) {
+                TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutSortList);
+                tabLayout.setVisibility(View.VISIBLE);
+            }
+//            try {
+//                pullThread.join();
+//            } catch (InterruptedException e) {
+//                Log.e(TAG, Log.getStackTraceString(e));
+//            }
+//            Toast toast = Toast.makeText(mContext, "Scroll down to load more", Toast.LENGTH_LONG);
+//            toast.show();
         }
     }
 }

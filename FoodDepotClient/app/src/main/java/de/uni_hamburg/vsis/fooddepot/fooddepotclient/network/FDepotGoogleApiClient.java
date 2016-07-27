@@ -33,6 +33,11 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermission
 public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermissionsResultCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     LocationRequest mLocationRequest = null;
+
+    public Location getLastLocation() {
+        return mLastLocation;
+    }
+
     Location mLastLocation = null;
 
     private final String TAG = "FDepotGoogleApiClient";
@@ -89,7 +94,7 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
         Log.e(TAG, "temporally disconnected from googleApiClient");
     }
 
-    protected void createLocationRequest() {
+    public void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
@@ -153,7 +158,7 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
         }
     }
 
-    protected void startLocationUpdates() {
+    public void startLocationUpdates() {
         try {
             if (mLocationRequest != null) {
                 Log.d(TAG, "requesting location updates");

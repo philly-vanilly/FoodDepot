@@ -52,6 +52,9 @@ public class Price {
 
     @Override
     public String toString(){
-        return getBigIntValue() + " " + mCurrency.substring(0, 2);
+        BigDecimal value = getBigIntValue();
+        value = value.divide(new BigDecimal(100));
+        value = value.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return value + " " + mCurrency;
     }
 }

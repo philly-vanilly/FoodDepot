@@ -14,6 +14,7 @@ import java.util.UUID;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.LinearLayoutManagerWithSmoothScroller;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterface {
     public static final String TAG = "BoxesAsListFragment";
@@ -59,9 +60,17 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
     @Override
     public void centerOnSelectedBox(String boxUUID) {
-        Integer position = BoxFactory.getFactory(getActivity()).getBoxDao().getPosition(boxUUID);
+        Integer position = BoxFactory.getFactory(getContext()).getBoxDao().getPosition(boxUUID);
         if (position != -1 ) {
             mBoxesListRecyclerView.smoothScrollToPosition(position);
         }
+
+        Box clickedBox = BoxFactory.getFactory(getContext()).getBoxDao().getBox(boxUUID);
+        clickedBox.setClicked(true);
+        int boxPosInList = BoxFactory.getFactory(getContext()).getBoxDao().getPosition(boxUUID);
+        if (boxPosInList != -1) {
+            getBoxesListAdapter().notifyItemChanged(boxPosInList);
+        }
+        getBoxesListAdapter().collapseNonClickedRows(clickedBox);
     }
 }

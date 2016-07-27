@@ -59,7 +59,7 @@ class BoxesHolder extends RecyclerView.ViewHolder{
         super(itemView);
         mBoxesAsListFragment = boxesAsListFragment;
         mItemView = itemView;
-        mBoxFactory = BoxFactory.getFactory(boxesAsListFragment.getActivity());
+        mBoxFactory = BoxFactory.getFactory(boxesAsListFragment.getContext());
         mBoxDao = mBoxFactory.getBoxDao();
 
         //basic content

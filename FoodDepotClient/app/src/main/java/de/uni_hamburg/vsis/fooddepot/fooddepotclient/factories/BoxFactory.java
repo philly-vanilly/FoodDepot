@@ -1,12 +1,14 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesFragmentInterface;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDaoOnline;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
@@ -19,7 +21,7 @@ public class BoxFactory {
     private static final String TAG = "BoxFactory";
 
     private List<Box> mBoxes;
-    private BoxesActivity mContext;
+    private BoxesActivity mBoxesActivity;
     private BoxDao mBoxDao;
 
     public List<Box> getBoxes() {
@@ -42,12 +44,19 @@ public class BoxFactory {
     //private Singleton constructor, instantiated by getter instead
     private BoxFactory(Context context) {
         try {
-            mContext = (BoxesActivity) context;
+            if (context instanceof BoxesActivity) {
+                mBoxesActivity = (BoxesActivity) context;
+            } else if (context instanceof FragmentActivity) {
+                mBoxesActivity = (BoxesActivity) ((FragmentActivity) context).getParent();
+            }
         } catch(Exception e){
-            Log.e(TAG, "Wrong context!\n" + Log.getStackTraceString(e));
+            Log.e(TAG, Log.getStackTraceString(e));
         }
+
+        mBoxesActivity.getLastLocation();
+
         mBoxes = new ArrayList<>();
-        mBoxDao = new BoxDaoOnline(mContext, mBoxes);
+        mBoxDao = new BoxDaoOnline(mBoxesActivity, mBoxes);
 
         // mBoxDao.getNumberOfBoxesMatchingString(null, 0, 20, "AUTH_TOKEN", 53.4, 9.999);
     }

@@ -18,7 +18,7 @@ public class RestClient {
 
     private final static String TAG = "RestClient";
     private final static String BASE_ADDRESS = "http://fdepot.herokuapp.com/";
-    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static SyncHttpClient client = new SyncHttpClient();
 
     private static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getAbsoluteUrl(url), params, responseHandler);

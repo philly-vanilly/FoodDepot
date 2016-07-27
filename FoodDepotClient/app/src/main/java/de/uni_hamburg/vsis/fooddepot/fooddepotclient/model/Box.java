@@ -51,7 +51,9 @@ public class Box {
     @Expose
     @SerializedName("content")
     private transient String mContent;
-
+    @Expose
+    @SerializedName("beacon")
+    private transient DepotBeacon mDepotBeacon;
 
 
     //TODO: change REST interface!
@@ -158,6 +160,12 @@ public class Box {
     }
     public void setFillingStatus(float fillingStatus) {
         mFillingStatus = fillingStatus;
+    }
+    public DepotBeacon getDepotBeacon() {
+        return mDepotBeacon;
+    }
+    public void setDepotBeacon(DepotBeacon depotBeacon) {
+        mDepotBeacon = depotBeacon;
     }
 
     @Override

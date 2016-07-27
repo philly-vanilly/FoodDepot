@@ -121,7 +121,7 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
 
     @Override
     public void updateBoxList() {
-        List<Box> boxList = BoxFactory.getFactory(getActivity()).getBoxes();
+        List<Box> boxList = BoxFactory.getFactory(getContext()).getBoxes();
         mMapMarkers = new HashMap<>();
         Log.d(TAG, "============= UPDATE BOX LIST CALLED ================");
         for (final Box box : boxList) {
@@ -135,7 +135,7 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    BoxesActivity boxesActivity = (BoxesActivity) getActivity();
+                    BoxesActivity boxesActivity = (BoxesActivity) getContext();
                     boxesActivity.onBoxSelected(getUUID(marker), TAG);
                     return false; //returning false = default onClick-behavior (center and open InfoWindow)
                 }

@@ -73,7 +73,7 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         super.onCreate(savedInstanceState);
         Serializable serializableId = getActivity().getIntent().getSerializableExtra(BoxActivity.EXTRA_BOX_ACTIVITY_ID);
         String boxID = (String) serializableId;
-        mBoxFactory = BoxFactory.getFactory(getActivity());
+        mBoxFactory = BoxFactory.getFactory(getContext());
         mBox = mBoxFactory.getBoxDao().getBox(boxID);
         mBoxDao = mBoxFactory.getBoxDao();
     }

@@ -31,7 +31,7 @@ public abstract class BoxDao {
         mBoxes = boxes;
     }
 
-    public abstract void getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, String authToken, double lat1, double lon1);
+    public abstract Integer getNumberOfBoxesMatchingString(String searchString, int fetchedBoxes, int numberOfBoxes, String authToken, double lat1, double lon1);
     public abstract List<Box> getNumberOfEmptyBoxes(String searchString, int fetchedBoxes, int numberOfBoxes, String queryId, double lat1, double lon1);
     public abstract Drawable getPhotoForBox(String boxId);
     public abstract Box getBoxById (String boxId);
@@ -63,6 +63,7 @@ public abstract class BoxDao {
 
     public Box getBox(String id) {
         for (Box boxIter : mBoxes) {
+            Log.e(TAG, "BoxIter " + boxIter.getId() + " and searchedBox: " + id);
             if (Objects.equals(id, boxIter.getId())) {
                 return boxIter;
             }
