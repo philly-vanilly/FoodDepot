@@ -26,7 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
@@ -83,12 +82,13 @@ public class BoxFragmentFilled extends Fragment implements BoxFragmentInterface 
         final View itemView = inflater.inflate(R.layout.fragment_box, parent, false);
 
         //set title of toolbar/actionbar of parent activity:
+        //noinspection ConstantConditions
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mBox.getName());
 
         mBoxPhotoThumb = (ImageButton) itemView.findViewById(R.id.boxPhotoThumb);
         mBoxPhotoThumb.setImageDrawable(getContext().getDrawable(R.drawable.fruitpaperbox)); //TODO: get thumbnail from server instead
         mBoxPhotoFull = (ImageView) itemView.findViewById(R.id.boxPhotoFull);
-        mScrollableFrameLayout = (View) itemView.findViewById(R.id.scrollableFrameLayout);
+        mScrollableFrameLayout = itemView.findViewById(R.id.scrollableFrameLayout);
 
         mTextViewDepotName = (TextView) itemView.findViewById(R.id.textViewDepotName);
 

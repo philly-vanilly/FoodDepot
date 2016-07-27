@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Created by Phil on 14.07.2016.
@@ -53,7 +54,7 @@ public class Price {
     @Override
     public String toString(){
         BigDecimal value = getBigIntValue();
-        value = value.divide(new BigDecimal(100));
+        value = value.divide(new BigDecimal(100), RoundingMode.HALF_UP);
         value = value.setScale(2, BigDecimal.ROUND_HALF_UP);
         return value + " " + mCurrency;
     }

@@ -43,15 +43,14 @@ public class DepotAddress {
 
     @Override
     public String toString(){
-        StringBuilder sb = new StringBuilder();
-        sb.append(getStreet());
-        sb.append("\n");
-        sb.append(getPostCode());
-        sb.append("\n");
-        sb.append(getCity());
-        sb.append("\n");
-        sb.append("(").append(getDescription()).append(")");
+        String sb = getStreet() +
+                "\n" +
+                getPostCode() +
+                "\n" +
+                getCity() +
+                "\n" +
+                "(" + getDescription() + ")";
 
-        return sb.toString();
+        return sb;
     }
 }

@@ -31,11 +31,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.estimote.sdk.BeaconManager;
-import com.google.android.gms.common.api.Result;
 import com.google.android.gms.location.LocationListener;
+
+import java.util.Objects;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.CustomBeaconManager;
@@ -46,7 +46,6 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.settings.SettingsActivity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 
 public class BoxesActivity extends AppCompatActivity implements LocationListener {
@@ -89,9 +88,9 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     public void onBoxSelected(String boxUUID, String senderFragmentTag) {
         Log.d(TAG, "============== onBoxSelected called ===============");
         mIdOfCurrentlySelectedBox = boxUUID;
-        if (senderFragmentTag == BoxesAsListFragment.TAG && mBoxesAsMapFragment != null) {
+        if (Objects.equals(senderFragmentTag, BoxesAsListFragment.TAG) && mBoxesAsMapFragment != null) {
             mBoxesAsMapFragment.centerOnSelectedBox(boxUUID);
-        } else if (senderFragmentTag == BoxesAsMapFragment.TAG && mBoxesAsListFragment != null) {
+        } else if (Objects.equals(senderFragmentTag, BoxesAsMapFragment.TAG) && mBoxesAsListFragment != null) {
             mBoxesAsListFragment.centerOnSelectedBox(boxUUID);
         } else { // update both:
             if (mBoxesAsMapFragment != null ) {
@@ -265,7 +264,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                return;
             }
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
@@ -415,6 +413,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 if (mIsBeaconScanActivated) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // Should we show an explanation?
+                        //noinspection StatementWithEmptyBody
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
                             //TODO: Explain why permission needed
                         } else {
@@ -520,6 +519,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 searchPlate.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark, getTheme()));
             } else {
+                //noinspection deprecation
                 searchPlate.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             }
             searchView.setIconifiedByDefault(true);
@@ -573,7 +573,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
     private void setActionBarTitleBasedOnQuery() {
         setSupportActionBar(mToolbar);
-        if (mCurrentSearchString != null && mCurrentSearchString != "") {
+        if (mCurrentSearchString != null && !Objects.equals(mCurrentSearchString, "")) {
             getSupportActionBar().setTitle(mBoxFactory.getBoxes().size() + " \"" + mCurrentSearchString + "\" found");
         } else {
             getSupportActionBar().setTitle(null);

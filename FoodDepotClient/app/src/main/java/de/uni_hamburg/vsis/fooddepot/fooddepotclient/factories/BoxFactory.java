@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesFragmentInterface;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDaoOnline;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;

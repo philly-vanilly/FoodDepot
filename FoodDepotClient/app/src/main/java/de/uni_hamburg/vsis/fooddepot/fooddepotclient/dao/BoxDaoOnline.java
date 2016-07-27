@@ -28,6 +28,13 @@ public class BoxDaoOnline extends BoxDao {
         super(context, boxes);
     }
 
+    public boolean isListOf(List<?> list, Class<?> c) {
+        for (Object o : list) {
+            if (!c.isInstance(o)) return false;
+        }
+        return true;
+    }
+
     @Override
     public Integer getNumberOfBoxesMatchingString(final String searchString, int fetchedBoxes, int numberOfBoxes, String authToken, final double latitude, final double longitude) {
         numberOfAddedBoxes = 0;
@@ -43,7 +50,12 @@ public class BoxDaoOnline extends BoxDao {
                         Log.d(TAG, gson.toJson(boxResponse));
 
                         List<Box> boxesToAdd = new ArrayList<>();
-                        for (Box boxIter : (List<Box>) boxResponse.getData()) {
+                        Object data = boxResponse.getData();
+                        List<Box> boxes = null;
+                        if (data instanceof List<?> && isListOf((List<?>) data, Box.class)) {
+                            boxes = (List<Box>) data;
+                        }
+                        for (Box boxIter : boxes) {
                             Box boxToAdd = new Box();
                             boxToAdd.setId(boxIter.getId());
                             boxToAdd.setName(boxIter.getName());
@@ -58,6 +70,7 @@ public class BoxDaoOnline extends BoxDao {
                             boxToAdd.setFillingStatus(boxIter.getFillingStatus());
                             boxToAdd.setSmell(boxIter.getSmell());
 
+                            //TODO: remove. just for testing purposes
                             if (boxToAdd.getName().equals("Abaton")) {
                                 DepotBeacon beacon = new DepotBeacon();
                                 beacon.setMajor(23774);

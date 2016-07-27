@@ -1,7 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,11 +19,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
@@ -144,7 +141,7 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
-                    Intent intent = BoxActivity.makeIntent(getContext(), getUUID(marker).toString());
+                    @SuppressWarnings("ConstantConditions") Intent intent = BoxActivity.makeIntent(getContext(), getUUID(marker));
                     startActivity(intent);
                 }
             });
@@ -155,9 +152,7 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
     }
 
     private String getUUID(Marker marker){
-        Iterator<Map.Entry<String,Marker>> iter = mMapMarkers.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<String, Marker> entry = iter.next();
+        for (Map.Entry<String, Marker> entry : mMapMarkers.entrySet()) {
             if (Objects.equals(entry.getValue().getPosition(), marker.getPosition())) {
                 return entry.getKey();
             }

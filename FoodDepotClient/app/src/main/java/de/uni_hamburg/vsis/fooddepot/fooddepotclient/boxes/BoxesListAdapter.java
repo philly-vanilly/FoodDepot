@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;

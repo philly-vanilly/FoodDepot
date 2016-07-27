@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.UUID;
-
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
@@ -52,7 +50,7 @@ public class BoxActivity extends AppCompatActivity {
 
         if(findViewById(R.id.fragment_box_container) != null && savedInstanceState == null && currentBoxView == null) {
             try{
-                if(true) {
+                if(true) {//TODO: if box has some values, make it filled
                     currentBoxView = new BoxFragmentFilled();
                 } else {
                     currentBoxView = new BoxFragmentEmpty();

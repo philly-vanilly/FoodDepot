@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.UUID;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
@@ -131,15 +130,14 @@ public abstract class BoxDao {
      * @return rating in float with one decimal places
      */
     public float getRoundedOverallRatingForBox(Box box) {
-        double fullRating = -1;
-        fullRating = box.getOverallUserRating();
+        double fullRating = box.getOverallUserRating();
 
-        BigDecimal bd = null;
+        BigDecimal bd;
         if (fullRating >= 0 && fullRating <= 5){ //allowed rating range
             bd = new BigDecimal(fullRating);
             bd = bd.multiply(new BigDecimal(2));
             bd = bd.setScale(2, RoundingMode.HALF_UP);
-            bd = bd.divide(new BigDecimal(2.0f));
+            bd = bd.divide(new BigDecimal(2.0f), RoundingMode.HALF_UP);
         } else {
             Log.e(TAG, "Box " + box.getId() + " has invalid rating: " + fullRating);
             bd = new BigDecimal(0);
@@ -152,7 +150,7 @@ public abstract class BoxDao {
         float distance = box.getDistance();
         if (distance >= 1000) {
             BigDecimal bd = new BigDecimal(distance);
-            bd = bd.divide(new BigDecimal(1000));
+            bd = bd.divide(new BigDecimal(1000), RoundingMode.HALF_UP);
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             result = String.valueOf(bd) + " km";
         } else {

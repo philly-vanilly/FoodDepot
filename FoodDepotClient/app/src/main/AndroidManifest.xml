@@ -28,6 +28,7 @@
         android:required="true" />
 
     <application
+        android:fullBackupContent="@xml/mybackupscheme"
         android:name=".network.FDepotApplication"
         android:allowBackup="true"
         android:icon="@drawable/fooddepot_logo"

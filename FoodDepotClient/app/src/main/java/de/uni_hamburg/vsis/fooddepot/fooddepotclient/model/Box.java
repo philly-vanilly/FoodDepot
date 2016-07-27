@@ -6,7 +6,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class Box {
     private static final transient String TAG = "Box";
@@ -174,8 +173,6 @@ public class Box {
     }
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Box))
-            return false;
-        return Objects.equals(this.getId(), ((Box) obj).getId() );
+        return obj instanceof Box && Objects.equals(this.getId(), ((Box) obj).getId());
     }
 }

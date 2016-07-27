@@ -8,23 +8,23 @@
             android:id="@+id/barButtonName"
             android:orderInCategory="1"
             android:title="@string/tab_name"
-            app:showAsAction="always"
+            app:showAsAction="ifRoom"
             android:checked="true"></item>
         <item
             android:id="@+id/barButtonPrice"
             android:orderInCategory="2"
             android:title="@string/tab_price"
-            app:showAsAction="always"></item>
+            app:showAsAction="ifRoom"></item>
         <item
             android:id="@+id/barButtonDistance"
             android:orderInCategory="3"
             android:title="@string/tab_distance"
-            app:showAsAction="always"></item>
+            app:showAsAction="ifRoom"></item>
         <item
             android:id="@+id/barButtonRating"
             android:orderInCategory="4"
             android:title="@string/tab_rating"
-            app:showAsAction="always"></item>
+            app:showAsAction="ifRoom"></item>
     </group>
     <item android:id="@+id/menu_search"
         android:title="@string/action_search"

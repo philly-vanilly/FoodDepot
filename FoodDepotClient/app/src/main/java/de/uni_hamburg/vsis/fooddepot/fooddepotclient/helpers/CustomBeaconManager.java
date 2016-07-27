@@ -1,8 +1,5 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers;
 
-import android.content.Context;
-import android.content.Intent;
-
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
@@ -11,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;

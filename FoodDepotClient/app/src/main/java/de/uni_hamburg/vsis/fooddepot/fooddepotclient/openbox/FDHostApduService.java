@@ -1,10 +1,7 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.openbox;
 
-import android.app.Service;
-import android.content.Intent;
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
-import android.os.IBinder;
 
 public class FDHostApduService extends HostApduService {
     @Override

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
@@ -47,9 +48,9 @@ public class DisplayService {
     }
 
     public static Drawable getImageForBox(Box box, View itemView) {
-        Drawable drawable = null;
+        Drawable drawable;
         String str = box.getContent();
-        if (str == null || str == "") {//dummy image
+        if (str == null || Objects.equals(str, "")) {//dummy image
             drawable = ResourcesCompat.getDrawable(itemView.getResources(), R.drawable.ic_fruit_dummy, null);//dummy image
         } else {
             char lastChar = str.charAt(str.length() - 1);
@@ -70,13 +71,13 @@ public class DisplayService {
 
 
     public static int getImageIdForBox(Box box, View itemView) {
-        Integer resourceId = 0;
+        Integer resourceId;
         String str = box.getContent();
-        if(str == null || str == "") { //TODO: perhaps some test to check if valid drawable
+        if(str == null || Objects.equals(str, "")) { //TODO: perhaps some test to check if valid drawable
             resourceId = R.drawable.ic_fruit_dummy;
         } else {
             char lastChar = str.charAt(str.length() - 1);
-            if (str != null && str.length() > 0 && (lastChar == 's' || lastChar == 'n')) { //german or english plural
+            if (str.length() > 0 && (lastChar == 's' || lastChar == 'n')) { //german or english plural
                 str = str.substring(0, str.length() - 1);
             }
             str = str.toLowerCase();
