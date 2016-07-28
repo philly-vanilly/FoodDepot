@@ -84,9 +84,8 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
-        if (mLastLocation != null) {
-            mLocationListener.onLocationChanged(mLastLocation);
-        }
+
+        mLocationListener.onLocationChanged(mLastLocation);
     }
 
     @Override

@@ -52,7 +52,7 @@ public class BoxFactory {
             Log.e(TAG, Log.getStackTraceString(e));
         }
 
-        mBoxesActivity.getLastLocation();
+        // mBoxesActivity.getLastLocation();
 
         mBoxes = new ArrayList<>();
         mBoxDao = new BoxDaoOnline(mBoxesActivity, mBoxes);

@@ -103,25 +103,25 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     }
 
     public Location getLastLocation() {
-        // Get LocationManager object from System Service LOCATION_SERVICE
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Create a criteria object to retrieve provider
-        Criteria criteria = new Criteria();
-        // Get the name of the best provider
-        String provider = locationManager.getBestProvider(criteria, true);
-
-        //request permission:
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Log.d(TAG, "need to show rationale");
-            } else {
-                Log.d(TAG, " no need to show rationale");
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FoodDepotPermissions.LOCATION_PERMISSION);
-            }
-        }
-        mLastLocation = locationManager.getLastKnownLocation(provider);
+//        // Get LocationManager object from System Service LOCATION_SERVICE
+//        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        // Create a criteria object to retrieve provider
+//        Criteria criteria = new Criteria();
+//        // Get the name of the best provider
+//        String provider = locationManager.getBestProvider(criteria, true);
+//
+//        //request permission:
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // Should we show an explanation?
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+//                Log.d(TAG, "need to show rationale");
+//            } else {
+//                Log.d(TAG, " no need to show rationale");
+//                // No explanation needed, we can request the permission.
+//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FoodDepotPermissions.LOCATION_PERMISSION);
+//            }
+//        }
+//        mLastLocation = locationManager.getLastKnownLocation(provider);
 
 //        Location location = mGoogleApiClient.getLastLocation();
 //        if (location == null) {
@@ -131,6 +131,12 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 //            location = mGoogleApiClient.getLastLocation();
 //        }
 //        mLastLocation = location;
+
+        if (mLastLocation == null) { //TODO: replace with some better null location handler
+            mLastLocation = new Location("dummyprovider");
+            mLastLocation.setLatitude(53.4);
+            mLastLocation.setLongitude(9.999);
+        }
 
         return mLastLocation;
     }
@@ -555,7 +561,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "new location received");
+        Log.d(TAG, "=================== new location received =========================");
         mLastLocation = location;
         mBoxFactory.getBoxDao().updateDistanceForAllBoxes(mLastLocation);
         updateBoxesInFragments();
