@@ -22,11 +22,11 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
  */
 public abstract class BoxDao {
     private static final String TAG = "BoxDao";
-    protected BoxesActivity mContext;
+    protected BoxesActivity mBoxesActivity;
     protected List<Box> mBoxes;
 
-    public BoxDao(BoxesActivity context, List<Box> boxes) {
-        mContext = context;
+    public BoxDao(BoxesActivity boxesActivity, List<Box> boxes) {
+        mBoxesActivity = boxesActivity;
         mBoxes = boxes;
     }
 

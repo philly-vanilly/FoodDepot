@@ -52,8 +52,10 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     private final static String TAG = "BoxesActivity";
 
     private FDepotGoogleApiClient mGoogleApiClient;
+    public FDepotGoogleApiClient getGoogleApiClient() {
+        return mGoogleApiClient;
+    }
 
-    private Location mLastLocation;
     private String mCurrentSearchString = "";
 
     private BoxesFragmentInterface mCurrentBoxesView;
@@ -100,45 +102,6 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 mBoxesAsListFragment.centerOnSelectedBox(boxUUID);
             }
         }
-    }
-
-    public Location getLastLocation() {
-//        // Get LocationManager object from System Service LOCATION_SERVICE
-//        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        // Create a criteria object to retrieve provider
-//        Criteria criteria = new Criteria();
-//        // Get the name of the best provider
-//        String provider = locationManager.getBestProvider(criteria, true);
-//
-//        //request permission:
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // Should we show an explanation?
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-//                Log.d(TAG, "need to show rationale");
-//            } else {
-//                Log.d(TAG, " no need to show rationale");
-//                // No explanation needed, we can request the permission.
-//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FoodDepotPermissions.LOCATION_PERMISSION);
-//            }
-//        }
-//        mLastLocation = locationManager.getLastKnownLocation(provider);
-
-//        Location location = mGoogleApiClient.getLastLocation();
-//        if (location == null) {
-//            mGoogleApiClient.connect();
-//            mGoogleApiClient.startLocationUpdates();
-//            mGoogleApiClient.createLocationRequest();
-//            location = mGoogleApiClient.getLastLocation();
-//        }
-//        mLastLocation = location;
-
-        if (mLastLocation == null) { //TODO: replace with some better null location handler
-            mLastLocation = new Location("dummyprovider");
-            mLastLocation.setLatitude(53.4);
-            mLastLocation.setLongitude(9.999);
-        }
-
-        return mLastLocation;
     }
 
     @Override
@@ -547,8 +510,8 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 Integer fetchedBoxes = 0;
                 Integer numberOfBoxes = 20;
                 String authToken = "DUMMY_AUTH_TOKEN"; //TODO: replace dummy auth tokem
-                Double latitude = getLastLocation().getLatitude();
-                Double longitude = getLastLocation().getLongitude();
+                Double latitude = mGoogleApiClient.getLastLocation().getLatitude();
+                Double longitude = mGoogleApiClient.getLastLocation().getLongitude();
 
                 task.execute(new DownloadBoxesParams(searchString, fetchedBoxes, numberOfBoxes, authToken, latitude, longitude));
                 return true; //true = query was handled, false = query not handled; perform default action
@@ -562,13 +525,11 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "=================== new location received =========================");
-        mLastLocation = location;
-        mBoxFactory.getBoxDao().updateDistanceForAllBoxes(mLastLocation);
+        mBoxFactory.getBoxDao().updateDistanceForAllBoxes(location);
         updateBoxesInFragments();
     }
 
     public void updateBoxesInFragments() {
-        Log.d(TAG, "========== updateBoxesInFragments called==============");
         if( mCurrentBoxesView != null) {
             mCurrentBoxesView.updateBoxList();
         }
@@ -649,13 +610,9 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayoutSortList);
                 tabLayout.setVisibility(View.VISIBLE);
             }
-//            try {
-//                pullThread.join();
-//            } catch (InterruptedException e) {
-//                Log.e(TAG, Log.getStackTraceString(e));
-//            }
-//            Toast toast = Toast.makeText(mContext, "Scroll down to load more", Toast.LENGTH_LONG);
-//            toast.show();
+
+            mBoxFactory.getBoxDao().updateDistanceForAllBoxes(getGoogleApiClient().getLastLocation());
+            updateBoxesInFragments();
         }
     }
 }

@@ -82,11 +82,11 @@ public class BoxDaoMock extends BoxDao {
         }
 
         addBoxes(result);
-        updateDistanceForAllBoxes(mContext.getLastLocation());
+        updateDistanceForAllBoxes(mBoxesActivity.getGoogleApiClient().getLastLocation());
 
-        mContext.updateBoxesInFragments();
+        mBoxesActivity.updateBoxesInFragments();
 
-        Toast toast = Toast.makeText(mContext, "Scroll down to load more", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(mBoxesActivity, "Scroll down to load more", Toast.LENGTH_LONG);
         toast.show();
         return null;
     }

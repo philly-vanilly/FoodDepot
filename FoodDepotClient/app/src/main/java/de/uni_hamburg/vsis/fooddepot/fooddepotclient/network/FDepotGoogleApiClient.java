@@ -38,7 +38,7 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
         return mLastLocation;
     }
 
-    Location mLastLocation = null;
+    private Location mLastLocation = null;
 
     private final String TAG = "FDepotGoogleApiClient";
     private static final int REQUEST_CHECK_SETTINGS = 123;
@@ -82,8 +82,7 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         mLocationListener.onLocationChanged(mLastLocation);
     }

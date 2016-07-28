@@ -71,7 +71,7 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
             // Enable MyLocation Layer of Google Map
             mMap.setMyLocationEnabled(true);
 
-            Location myLocation = ((BoxesActivity) getActivity()).getLastLocation();
+            Location myLocation = ((BoxesActivity) getActivity()).getGoogleApiClient().getLastLocation();
 
             // set map type
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

@@ -43,18 +43,9 @@ public class FDepotApplication extends Application{
         this.currentAccount = currentAccount;
     }
 
-
-    // Gson is a Java library that can be used to convert Java Objects into their JSON representation.
-    // It can also be used to convert a JSON string to an equivalent Java object.
-
     public void saveUser(Activity activity){
         SharedPreferences settings = getSharedPreferences("accountPrefs", 0);
         SharedPreferences.Editor editor = settings.edit();
-
-        // Java Object to pretty String:
-        Gson prettyPrintGson = new GsonBuilder().setPrettyPrinting().create();
-        //method name says toJson but is actually toString:
-        Log.d(TAG, "Putting following data into SharedPreferences.Editor (accountPrefs.account): " + prettyPrintGson.toJson(currentAccount));
 
         Gson compactPrintGson = new Gson();
         String jsonStringAccount = compactPrintGson.toJson(currentAccount);
@@ -67,14 +58,6 @@ public class FDepotApplication extends Application{
         String accountAsString = settings.getString("account", "");
         if(!Objects.equals(accountAsString, "")) {
             Gson gson = new Gson();
-
-            //Ugly JSON to pretty String:
-            JsonParser jp = new JsonParser();
-            JsonElement accountAsJsonElement = jp.parse(accountAsString);
-            Gson prettyPrintGson = new GsonBuilder().setPrettyPrinting().create();
-            //method name says toJson but is actually toString:
-            Log.d(TAG, "Getting following data from SharedPreferences.Editor (accountPrefs.account): " + prettyPrintGson.toJson(accountAsJsonElement));
-
             currentAccount = gson.fromJson(accountAsString, Account.class);
         }
     }

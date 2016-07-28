@@ -19,8 +19,6 @@ public class SettingsActivity extends AppCompatActivity {
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
-
     //for the items in the AppBar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
