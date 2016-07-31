@@ -1,5 +1,7 @@
-package de.uni_hamburg.vsis.fooddepot.fooddepotclient.settings;
+package de.uni_hamburg.vsis.fooddepot.fooddepotclient.configuration;
 
+import android.content.Intent;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.os.Bundle;
 
@@ -16,9 +18,6 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.preferences);
+        addPreferencesFromResource(R.xml.settings_prefs);
     }
-
 }

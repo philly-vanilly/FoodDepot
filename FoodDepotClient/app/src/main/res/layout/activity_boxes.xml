@@ -10,24 +10,17 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
-
     <!--LinearLayout representing contents of the screen-->
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <!--Action bar displayed at the top plus floating action button-->
+        android:layout_height="match_parent">
+        <!--Action bar displayed at the top-->
         <include
             layout="@layout/app_bar_boxes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
-
-    </LinearLayout>
-
-
-    <!--Navigation drawer coming from the left itself-->
+    </FrameLayout>
+    <!--Navigation drawer coming from the left-->
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

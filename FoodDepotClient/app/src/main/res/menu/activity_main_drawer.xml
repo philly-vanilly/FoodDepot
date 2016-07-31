@@ -10,14 +10,14 @@
             android:title="@string/currently_list_mode_set_to_map" />
         <item
             android:id="@+id/nav_activate_beacon"
-            android:icon="@drawable/user_location_marker"
+            android:icon="@drawable/ic_bluetooth"
             android:title="@string/action_activate_beacon" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_face"
             android:title="@string/action_edit_profile" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/action_edit_settings" />
     </group>

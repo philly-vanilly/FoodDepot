@@ -31,28 +31,20 @@
         android:fullBackupContent="@xml/mybackupscheme"
         android:name=".network.FDepotApplication"
         android:allowBackup="true"
-        android:icon="@drawable/fooddepot_logo"
+        android:icon="@drawable/ic_carrot"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".login.LoginActivity"
             android:label="@string/app_name">
-            <intent-filter>
-
-                <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".boxes.BoxesActivity" />
         </activity>
         <activity
             android:name=".boxes.BoxesActivity"
             android:label="@string/app_name">
-            <intent-filter>
-
-                <!-- <action android:name="android.intent.action.MAIN" /> -->
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".box.BoxActivity"
@@ -61,11 +53,20 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
+                android:value=".boxes.BoxesActivity"/>
+        </activity>
+        <activity
+            android:name=".configuration.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".boxes.BoxesActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value=".boxes.BoxesActivity" />
         </activity>
         <activity
-            android:name=".settings.SettingsActivity"
-            android:label="@string/title_activity_settings"
+            android:name=".configuration.ProfileActivity"
+            android:label="@string/title_activity_profile"
             android:parentActivityName=".boxes.BoxesActivity"
             android:theme="@style/AppTheme">
             <meta-data
@@ -86,7 +87,6 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

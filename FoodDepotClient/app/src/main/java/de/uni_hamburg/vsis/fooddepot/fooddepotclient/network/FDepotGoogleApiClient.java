@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.Manifest;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
 
 /**
@@ -32,23 +33,31 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermission
  */
 public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermissionsResultCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    LocationRequest mLocationRequest = null;
+    private LocationRequest mLocationRequest;
+
+    private static FDepotGoogleApiClient sFDepotGoogleApiClient;
 
     public Location getLastLocation() {
         return mLastLocation;
     }
 
-    private Location mLastLocation = null;
+    private Location mLastLocation;
 
     private final String TAG = "FDepotGoogleApiClient";
     private static final int REQUEST_CHECK_SETTINGS = 123;
 
-    private GoogleApiClient mGoogleApiClient = null;
+    private GoogleApiClient mGoogleApiClient;
     private Activity mParentActivity;
     private LocationListener mLocationListener;
 
+    public static FDepotGoogleApiClient getFDepotGoogleApiClient(FragmentActivity context, LocationListener locationListener){
+        if (sFDepotGoogleApiClient == null){
+            sFDepotGoogleApiClient = new FDepotGoogleApiClient(context, locationListener);
+        }
+        return sFDepotGoogleApiClient;
+    }
 
-    public FDepotGoogleApiClient(FragmentActivity context, LocationListener locationListener){
+    private FDepotGoogleApiClient(FragmentActivity context, LocationListener locationListener){
         mParentActivity = context;
         mLocationListener = locationListener;
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -72,16 +81,14 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
         Log.d(TAG, "connected to googleApiClient");
         createLocationRequest();
         Context context = FDepotApplication.getApplication().getApplicationContext();
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+//        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ){
+//            ActivityCompat.requestPermissions(mParentActivity, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, FoodDepotPermissions.ACCESS_FINE_LOCATION);
+//        }
+
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(mParentActivity, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, FoodDepotPermissions.ACCESS_COARSE_LOCATION);
         }
+
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         mLocationListener.onLocationChanged(mLastLocation);
@@ -147,6 +154,7 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
                     // functionality that depends on this permission.
                 }
                 break;
+
             default:
                 Log.d(TAG, "we have unknown permission");
                 break;

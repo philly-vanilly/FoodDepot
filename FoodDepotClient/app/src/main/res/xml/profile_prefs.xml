@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory
         android:title="@string/pref_personal_settings_title"
         android:key="pref_key_personal_settings">
@@ -10,32 +11,29 @@
         <EditTextPreference
             android:key="pref_key_last_name"
             android:title="@string/pref_title_last_name"
-            android:defaultValue="true" />
+            android:defaultValue="" />
         <EditTextPreference
             android:key="pref_key_email"
             android:title="@string/pref_title_email"
-            android:defaultValue="true" />
+            android:defaultValue="" />
+        <EditTextPreference
+            android:key="pref_key_password"
+            android:title="@string/pref_title_password"
+            android:defaultValue="" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_notify_title"
-        android:key="pref_key_notification_settings">
-        <CheckBoxPreference
-            android:key="pref_key_notify_food"
-            android:summary="@string/pref_summary_notify_food"
-            android:title="@string/pref_title_notify_food"
-            android:defaultValue="true" />
-        <CheckBoxPreference
-            android:key="pref_key_notify_box"
-            android:summary="@string/pref_summary_notify_box"
-            android:title="@string/pref_title_notify_box"
-            android:defaultValue="true" />
-        <CheckBoxPreference
-            android:key="pref_key_notify_new"
-            android:summary="@string/pref_summary_notify_new"
-            android:title="@string/pref_title_notify_new"
-            android:defaultValue="true" />
+        android:title="@string/pref_public_settings_title"
+        android:key="pref_key_public">
+        <EditTextPreference
+            android:key="pref_key_username"
+            android:title="@string/pref_title_username"
+            android:defaultValue="" />
+        <Preference
+            android:key="pref_profile_pic"
+            android:title="@string/pref_profile_pic"/>
     </PreferenceCategory>
+
     <PreferenceCategory
         android:title="@string/pref_category_delete_account"
         android:key="pref_key_delete_account_settings">
@@ -46,14 +44,4 @@
             android:defaultValue="true" />
     </PreferenceCategory>
 
-
-
-
-    <!--android:dependency="pref_key_notify_food"-->
-
-
-    <!--<Preference android:title="test" >-->
-        <!--<intent android:action="android.intent.action.VIEW"-->
-            <!--android:data="http://www.example.com" />-->
-    <!--</Preference>-->
 </PreferenceScreen>

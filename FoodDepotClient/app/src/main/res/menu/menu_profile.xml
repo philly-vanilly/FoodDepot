@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".configuration.SettingsActivity">
     <item
-        android:id="@+id/action_save_settings"
+        android:id="@+id/action_save_profile"
         android:orderInCategory="100"
         android:title="@string/action_save"
         android:icon="@drawable/ic_done_white_24"

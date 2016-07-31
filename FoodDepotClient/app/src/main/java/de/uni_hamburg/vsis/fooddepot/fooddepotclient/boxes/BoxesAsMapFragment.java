@@ -27,6 +27,7 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.box.BoxActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.DisplayService;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
 
 /**
  * Created by paul on 05.06.16.
@@ -66,24 +67,24 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
     }
 
     private void zoomToBoxSelection() {
-        LatLng userLatLng = null;
         try {
             // Enable MyLocation Layer of Google Map
             mMap.setMyLocationEnabled(true);
-
-            Location myLocation = ((BoxesActivity) getActivity()).getGoogleApiClient().getLastLocation();
-
-            // set map type
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            // Get latitude of the current location
-            double latitude = myLocation.getLatitude();
-            // Get longitude of the current location
-            double longitude = myLocation.getLongitude();
-            // Create a LatLng object for the current location
-            userLatLng = new LatLng(latitude, longitude);
         } catch (SecurityException e) {
             Log.e(TAG, "no permission?");
         }
+
+        BoxesActivity boxesActivity = (BoxesActivity) getActivity();
+        FDepotGoogleApiClient googleApiClient = boxesActivity.getGoogleApiClient();
+        Location myLocation = googleApiClient.getLastLocation();
+        // set map type
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        // Get latitude of the current location
+        double latitude = myLocation.getLatitude();
+        // Get longitude of the current location
+        double longitude = myLocation.getLongitude();
+        // Create a LatLng object for the current location
+        final LatLng userLatLng = new LatLng(latitude, longitude);
 
         if (userLatLng != null) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -93,22 +94,23 @@ public class BoxesAsMapFragment extends SupportMapFragment implements OnMapReady
             }
             final LatLngBounds bounds = builder.build();
 
-            // =========== set padding so you don't zoom in too much: ======================
-            int dip = 40; //when boxes on map
-            if (mMapMarkers.size() < 1){
-                dip = 0;
-                mMap.setPadding(1000, 1000, 1000, 1000);
-            }
-
             //converting dip to px:
+            int dip = 40;
             float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, getResources().getDisplayMetrics());
             final int padding = (int) px; // offset from edges of the map in pixels
 
             mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                 @Override
                 public void onMapLoaded() {
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                    mMap.animateCamera(cameraUpdate);
+                    if (mMapMarkers.size() > 0) {
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                        //animateCamera for smooth zoom, moveCamera for jump to position
+                        mMap.animateCamera(cameraUpdate);
+                    } else {
+                        //if there is only user position, dont zoom in too close:
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(userLatLng, 14);
+                        mMap.animateCamera(cameraUpdate);
+                    }
                 }
             });
         }

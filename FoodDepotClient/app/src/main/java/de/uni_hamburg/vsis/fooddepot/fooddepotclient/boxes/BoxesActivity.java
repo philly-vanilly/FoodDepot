@@ -1,13 +1,13 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +38,7 @@ import com.google.android.gms.location.LocationListener;
 import java.util.Objects;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.configuration.ProfileActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.CustomBeaconManager;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
@@ -45,7 +46,7 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.settings.SettingsActivity;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.configuration.SettingsActivity;
 
 
 public class BoxesActivity extends AppCompatActivity implements LocationListener {
@@ -131,7 +132,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
 
         setContentView(R.layout.activity_boxes);
 
-        mGoogleApiClient = new FDepotGoogleApiClient(this, this);
+        mGoogleApiClient = FDepotGoogleApiClient.getFDepotGoogleApiClient(this, this);
         mBoxFactory = BoxFactory.getFactory(this);
 
         //finding and setting up a toolbar to replace actionbar
@@ -283,31 +284,26 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         String fragmentTag = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        try {
-            if (menuItem.getTitle() == getString(R.string.currently_list_mode_set_to_map)){
-                mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(BoxesAsMapFragment.TAG), fragmentManager);
-                if(mCurrentBoxesView == null) {
-                    mCurrentBoxesView = new BoxesAsMapFragment();
-                    mBoxesAsMapFragment = (BoxesAsMapFragment) mCurrentBoxesView;
-                }
-                fragmentTag = BoxesAsMapFragment.TAG;
-                menuItem.setTitle(R.string.currently_map_mode_set_to_list);
-                mIsMapMode = true;
-                setupAppBarLayout();
-            } else if (menuItem.getTitle() == getString(R.string.currently_map_mode_set_to_list)) {
-                mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(BoxesAsListFragment.TAG), fragmentManager);
-                if(mCurrentBoxesView == null) {
-                    mCurrentBoxesView = new BoxesAsListFragment();
-                    mBoxesAsListFragment = (BoxesAsListFragment) mCurrentBoxesView;
-                }
-                fragmentTag = BoxesAsListFragment.TAG;
-                menuItem.setTitle(R.string.currently_list_mode_set_to_map);
-                mIsMapMode = false;
-                setupAppBarLayout();
+        if (menuItem.getTitle() == getString(R.string.currently_list_mode_set_to_map)){
+            mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(BoxesAsMapFragment.TAG), fragmentManager);
+            if(mCurrentBoxesView == null) {
+                mCurrentBoxesView = new BoxesAsMapFragment();
+                mBoxesAsMapFragment = (BoxesAsMapFragment) mCurrentBoxesView;
             }
-        } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            fragmentTag = BoxesAsMapFragment.TAG;
+            menuItem.setTitle(R.string.currently_map_mode_set_to_list);
+            mIsMapMode = true;
+        } else if (menuItem.getTitle() == getString(R.string.currently_map_mode_set_to_list)) {
+            mCurrentBoxesView = recreateFragment(fragmentManager.findFragmentByTag(BoxesAsListFragment.TAG), fragmentManager);
+            if(mCurrentBoxesView == null) {
+                mCurrentBoxesView = new BoxesAsListFragment();
+                mBoxesAsListFragment = (BoxesAsListFragment) mCurrentBoxesView;
+            }
+            fragmentTag = BoxesAsListFragment.TAG;
+            menuItem.setTitle(R.string.currently_list_mode_set_to_map);
+            mIsMapMode = false;
         }
+        setupAppBarLayout();
 
         //stop showing menu title as toolbar title
         setActionBarTitleBasedOnQuery();
@@ -380,6 +376,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
             case R.id.nav_activate_beacon:
                 mIsBeaconScanActivated = !mIsBeaconScanActivated;
                 if (mIsBeaconScanActivated) {
+                    menuItem.setTitle(R.string.action_deactivate_beacon);
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // Should we show an explanation?
                         //noinspection StatementWithEmptyBody
@@ -392,21 +389,42 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                     }
                     mBeaconManager = new CustomBeaconManager(this);
                 } else {
+                    menuItem.setTitle(R.string.action_activate_beacon);
                     if (mBeaconManager != null) {
                         mBeaconManager.disconnect();
                     }
                 }
                 break;
             case R.id.nav_profile:
-                startActivity(new Intent(this, SettingsActivity.class));
+                //MODE_PRIVATE = opened SharedPreferences-file is accessible only by my app
+                SharedPreferences profileSharedPreferences = getSharedPreferences("food_depot_profile_shared_preferences", Activity.MODE_PRIVATE);
+                String defaultValue = "";
+                String username = profileSharedPreferences.getString(getString(R.string.saved_profile_username), defaultValue);
+                String firstname = profileSharedPreferences.getString(getString(R.string.saved_profile_firstname), defaultValue);
+                String lastname = profileSharedPreferences.getString(getString(R.string.saved_profile_firstname), defaultValue);
+                String email = profileSharedPreferences.getString(getString(R.string.saved_profile_firstname), defaultValue);
+                String password = profileSharedPreferences.getString(getString(R.string.saved_profile_firstname), defaultValue);
+
+                if (
+                        username == null || username.equals("")
+                        || firstname == null || firstname.equals("")
+                        || lastname == null || lastname.equals("")
+                        || email == null || email.equals("")
+                        || password == null || password.equals("") ) {
+
+                }
+
+                startActivity(new Intent(this, ProfileActivity.class));
                 break;
-            case R.id.nav_manage:
+            case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             default:
                 Log.e(TAG, "Selected drawer item is not implemented.");
         }
-        menuItem.setChecked(true);
+
+        menuItem.setChecked(false); //doesnt work ....?
+
         setTitle(menuItem.getTitle());
         mDrawerLayout.closeDrawers();
     }
