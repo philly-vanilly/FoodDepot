@@ -47,8 +47,8 @@
     <!-- Strings related to Settings -->
 
     <string name="pref_personal_settings_title">Personal Information (not visible to other users)</string>
-    <string name="pref_title_first_name">Forename</string>
-    <string name="pref_title_last_name">Surname</string>
+    <string name="pref_title_first_name">First Name</string>
+    <string name="pref_title_last_name">Last Name</string>
     <string name="pref_title_email">E-Mail</string>
 
     <string name="pref_notify_title">Allow us to notify you when something interesting happens</string>

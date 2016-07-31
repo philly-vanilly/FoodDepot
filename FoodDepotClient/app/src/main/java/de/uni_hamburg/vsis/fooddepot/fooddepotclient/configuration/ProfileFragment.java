@@ -28,21 +28,35 @@ public class ProfileFragment extends PreferenceFragment {
         Preference pref_profile_pic = findPreference("pref_profile_pic");
         pref_profile_pic.setOnPreferenceClickListener (new Preference.OnPreferenceClickListener(){
             public boolean onPreferenceClick(Preference preference){
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                int PICK_IMAGE = 1;
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-                return true;
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            int PICK_IMAGE = 1;
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+            return true;
             }
         });
 
+        String defaultValue = "";
+        SharedPreferences profileSharedPreferences = getActivity().getSharedPreferences("food_depot_profile_shared_preferences", Activity.MODE_PRIVATE);
         EditTextPreference username = (EditTextPreference) findPreference("pref_key_username");
-        SharedPreferences profileSharedPreferences = getActivity().getSharedPreferences("profile_shared_preferences", Activity.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = profileSharedPreferences.edit();
-//                editor.putString("myCustomPref", "The preference has been clicked");
-//                editor.commit();
-        username.setText("doedel_1995");
+        username.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_username), defaultValue));
+        EditTextPreference firstname = (EditTextPreference) findPreference("pref_key_firstname");
+        firstname.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_firstname), defaultValue));
+        EditTextPreference lastname = (EditTextPreference) findPreference("pref_key_lastname");
+        lastname.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_lastname), defaultValue));
+        EditTextPreference email = (EditTextPreference) findPreference("pref_key_email");
+        email.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_email), defaultValue));
+        EditTextPreference password = (EditTextPreference) findPreference("pref_key_password");
+        password.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_password), defaultValue));
+
+        username.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                return true;
+            }
+        });
 
 //        Preference pref_title_username = findPreference("pref_key_username");
 //        pref_title_username.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

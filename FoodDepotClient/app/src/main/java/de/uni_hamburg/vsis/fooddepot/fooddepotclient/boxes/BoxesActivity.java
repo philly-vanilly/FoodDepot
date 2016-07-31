@@ -1,10 +1,8 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -41,6 +39,7 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.configuration.ProfileActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.CustomBeaconManager;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.login.LoginActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.SortingSelector;
@@ -396,25 +395,18 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                 }
                 break;
             case R.id.nav_profile:
-                //MODE_PRIVATE = opened SharedPreferences-file is accessible only by my app
-                SharedPreferences profileSharedPreferences = getSharedPreferences("food_depot_profile_shared_preferences", Activity.MODE_PRIVATE);
-                String defaultValue = "";
-                String username = profileSharedPreferences.getString(getString(R.string.saved_profile_username), defaultValue);
-                String firstname = profileSharedPreferences.getString(getString(R.string.saved_profile_firstname), defaultValue);
-                String lastname = profileSharedPreferences.getString(getString(R.string.saved_profile_firstname), defaultValue);
-                String email = profileSharedPreferences.getString(getString(R.string.saved_profile_firstname), defaultValue);
-                String password = profileSharedPreferences.getString(getString(R.string.saved_profile_firstname), defaultValue);
-
-                if (
-                        username == null || username.equals("")
-                        || firstname == null || firstname.equals("")
-                        || lastname == null || lastname.equals("")
-                        || email == null || email.equals("")
-                        || password == null || password.equals("") ) {
-
+                FDepotApplication fDepotApplication = FDepotApplication.getApplication();
+                fDepotApplication.loadUser();
+                Account account = fDepotApplication.getCurrentAccount();
+                if (    account.getUsername().equals("") ||
+                        account.getFirstName().equals("") ||
+                        account.getLastName().equals("") ||
+                        account.getEmail().equals("") ||
+                        account.getPassword().equals("") ) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                } else {
+                    startActivity(new Intent(this, ProfileActivity.class));
                 }
-
-                startActivity(new Intent(this, ProfileActivity.class));
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

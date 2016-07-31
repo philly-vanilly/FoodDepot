@@ -1,51 +1,42 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.model;
 
 public class Account {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String username;
-    private String password;
+    private String mFirstName;
+    private String mLastName;
+    private String mEmail;
+    private String mUsername;
+    private String mPassword;
 
     public Account() {}
 
     public String getFirstName() {
-        return firstName;
+        return mFirstName;
     }
-
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        mFirstName = firstName;
     }
-
     public String getLastName() {
-        return lastName;
+        return mLastName;
     }
-
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        mLastName = lastName;
     }
-
     public String getEmail() {
-        return email;
+        return mEmail;
     }
-
     public void setEmail(String email) {
-        this.email = email;
+        mEmail = email;
     }
-
     public String getUsername() {
-        return username;
+        return mUsername;
     }
-
     public void setUsername(String username) {
-        this.username = username;
+        mUsername = username;
     }
-
     public String getPassword() {
-        return password;
+        return mPassword;
     }
-
     public void setPassword(String password) {
-        this.password = password;
+        mPassword = password;
     }
 }

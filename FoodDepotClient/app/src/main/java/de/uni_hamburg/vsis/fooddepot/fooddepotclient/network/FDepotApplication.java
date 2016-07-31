@@ -3,15 +3,12 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.network;
 import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import java.util.Objects;
 
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 
 /**
@@ -27,7 +24,7 @@ public class FDepotApplication extends Application{
         return application;
     }
 
-    private Account currentAccount = null;
+    private Account mCurrentAccount;
 
     @Override
     public void onCreate(){
@@ -36,29 +33,38 @@ public class FDepotApplication extends Application{
     }
 
     public Account getCurrentAccount(){
-        return currentAccount;
+        if (mCurrentAccount == null){
+            setCurrentAccount(new Account());
+            loadUser();
+        }
+        return mCurrentAccount;
     }
 
     public void setCurrentAccount(Account currentAccount){
-        this.currentAccount = currentAccount;
+        mCurrentAccount = currentAccount;
     }
 
-    public void saveUser(Activity activity){
-        SharedPreferences settings = getSharedPreferences("accountPrefs", 0);
-        SharedPreferences.Editor editor = settings.edit();
-
-        Gson compactPrintGson = new Gson();
-        String jsonStringAccount = compactPrintGson.toJson(currentAccount);
-        editor.putString("account", jsonStringAccount);
+    public void saveUser(){
+        //TODO: replace dummy values
+        //TODO: save password not accessible and not in plaintext
+        //MODE_PRIVATE = opened SharedPreferences-file is accessible only by my app
+        SharedPreferences profileSharedPreferences = getSharedPreferences("food_depot_profile_shared_preferences", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = profileSharedPreferences.edit();
+        editor.putString(getString(R.string.saved_profile_username), mCurrentAccount.getUsername());
+        editor.putString(getString(R.string.saved_profile_firstname), mCurrentAccount.getFirstName());
+        editor.putString(getString(R.string.saved_profile_lastname), mCurrentAccount.getLastName());
+        editor.putString(getString(R.string.saved_profile_email), mCurrentAccount.getEmail());
+        editor.putString(getString(R.string.saved_profile_password), mCurrentAccount.getPassword());
         editor.commit();
     }
 
-    public void loadUser(Activity activity){
-        SharedPreferences settings = getSharedPreferences("accountPrefs", 0);
-        String accountAsString = settings.getString("account", "");
-        if(!Objects.equals(accountAsString, "")) {
-            Gson gson = new Gson();
-            currentAccount = gson.fromJson(accountAsString, Account.class);
-        }
+    public void loadUser(){
+        SharedPreferences profileSharedPreferences = getSharedPreferences("food_depot_profile_shared_preferences", Activity.MODE_PRIVATE);
+        String defaultValue = "";
+        mCurrentAccount.setUsername(profileSharedPreferences.getString(getString(R.string.saved_profile_username), defaultValue));
+        mCurrentAccount.setFirstName(profileSharedPreferences.getString(getString(R.string.saved_profile_firstname), defaultValue));
+        mCurrentAccount.setLastName(profileSharedPreferences.getString(getString(R.string.saved_profile_lastname), defaultValue));
+        mCurrentAccount.setEmail(profileSharedPreferences.getString(getString(R.string.saved_profile_email), defaultValue));
+        mCurrentAccount.setPassword(profileSharedPreferences.getString(getString(R.string.saved_profile_password), defaultValue));
     }
 }
