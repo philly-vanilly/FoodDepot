@@ -126,6 +126,20 @@
             <meta-data android:name="android.nfc.cardemulation.host_apdu_service"
                 android:resource="@xml/apduservice"/>
         </service>
+
+        <receiver
+            android:icon="@drawable/ic_carrot"
+            android:label="FoodDepot Widget"
+            android:name=".widget.FoodDepotWidgetProvider" >
+            <intent-filter >
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/fooddepot_appwidget_info" />
+        </receiver>
+
     </application>
 
 </manifest>
