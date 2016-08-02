@@ -132,7 +132,7 @@
     <!-- List View Strings -->
     <string name="food_content_description">Box Content</string>
     <string name="expand_list_details">Show Details</string>
-    <string name="dummy_price">0FD</string>
+    <string name="dummy_price">0 EUR</string>
     <string name="dummy_distance">0m</string>
     <string name="myown_dummyfruit">Dummy</string>
     <string name="dummy_string">####</string>
@@ -174,8 +174,11 @@
     <string name="saved_profile_lastname"/>
     <string name="saved_profile_email"/>
     <string name="saved_profile_password"/>
-
-
+    <string name="dummy_content">FruitMix</string>
+    <string name="dummy_expiration">Expires in: 10 hours</string>
+    <string name="dummy_owner">doedel_1995</string>
+    <string name="dummy_ratingcount">(12)</string>
+    <string name="dummy_stars">*****</string>
 
 
 </resources>

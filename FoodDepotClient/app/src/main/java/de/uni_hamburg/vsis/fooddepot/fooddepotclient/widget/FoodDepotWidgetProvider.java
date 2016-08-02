@@ -31,16 +31,15 @@ public class FoodDepotWidgetProvider extends AppWidgetProvider {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             Log.w("WidgetExample", String.valueOf(number));
             // Set the text
-            remoteViews.setTextViewText(R.id.update, String.valueOf(number));
+            remoteViews.setTextViewText(R.id.textViewNameWidget, String.valueOf(number));
 
             // Register an onClickListener
             Intent intent = new Intent(context, FoodDepotWidgetProvider.class);
-
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.update, pendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.textViewNameWidget, pendingIntent);
+
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
     }
