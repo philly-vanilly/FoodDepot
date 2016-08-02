@@ -23,11 +23,11 @@ public class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
 
     public BoxesListAdapter(BoxesAsListFragment boxesAsListFragment){
         mBoxesAsListFragment = boxesAsListFragment;
-        mBoxes = BoxFactory.getFactory(mBoxesAsListFragment.getContext()).getBoxes();
+        mBoxes = BoxFactory.getFactory().getBoxes(); //mBoxesAsListFragment.getContext()
     }
 
     public void updateBoxesInList(){
-        mBoxes = BoxFactory.getFactory(mBoxesAsListFragment.getContext()).getBoxes();
+        mBoxes = BoxFactory.getFactory().getBoxes(); //mBoxesAsListFragment.getContext()
         notifyDataSetChanged();
     }
 
@@ -57,7 +57,7 @@ public class BoxesListAdapter extends RecyclerView.Adapter<BoxesHolder>{
             String boxIterId = boxIter.getId();
             if(!Objects.equals(clickedBoxId, boxIterId) && boxIter.isClicked()){
                 boxIter.setClicked(false);
-                Integer boxIterPos = BoxFactory.getFactory(mBoxesAsListFragment.getContext()).getBoxDao().getPosition(boxIterId);
+                Integer boxIterPos = BoxFactory.getFactory().getBoxDao().getPosition(boxIterId); //mBoxesAsListFragment.getContext()
                 if (boxIterPos != -1) {
                     notifyItemChanged(boxIterPos);
                 }

@@ -58,14 +58,14 @@ public class BoxesAsListFragment extends Fragment implements BoxesFragmentInterf
 
     @Override
     public void centerOnSelectedBox(String boxUUID) {
-        Integer position = BoxFactory.getFactory(getContext()).getBoxDao().getPosition(boxUUID);
+        Integer position = BoxFactory.getFactory().getBoxDao().getPosition(boxUUID);
         if (position != -1 ) {
             mBoxesListRecyclerView.smoothScrollToPosition(position);
         }
 
-        Box clickedBox = BoxFactory.getFactory(getContext()).getBoxDao().getBox(boxUUID);
+        Box clickedBox = BoxFactory.getFactory().getBoxDao().getBox(boxUUID); //getContext()
         clickedBox.setClicked(true);
-        int boxPosInList = BoxFactory.getFactory(getContext()).getBoxDao().getPosition(boxUUID);
+        int boxPosInList = BoxFactory.getFactory().getBoxDao().getPosition(boxUUID); //getContext()
         if (boxPosInList != -1) {
             getBoxesListAdapter().notifyItemChanged(boxPosInList);
         }

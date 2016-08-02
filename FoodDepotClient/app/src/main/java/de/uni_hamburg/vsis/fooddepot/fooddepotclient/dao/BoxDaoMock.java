@@ -15,14 +15,15 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.DepotBeacon;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Price;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotGoogleApiClient;
 
 /**
  * Created by Phil on 01.07.2016.
  */
 public class BoxDaoMock extends BoxDao {
 
-    public BoxDaoMock(BoxesActivity context, List<Box> boxes) {
-        super(context, boxes);
+    public BoxDaoMock(List<Box> boxes) {
+        super(boxes);
     }
 
     @Override
@@ -80,15 +81,8 @@ public class BoxDaoMock extends BoxDao {
                 }
             }
         }
-
         addBoxes(result);
-        updateDistanceForAllBoxes(mBoxesActivity.getGoogleApiClient().getLastLocation());
-
-        mBoxesActivity.updateBoxesInFragments();
-
-        Toast toast = Toast.makeText(mBoxesActivity, "Scroll down to load more", Toast.LENGTH_LONG);
-        toast.show();
-        return null;
+        return numberOfBoxes;
     }
 
     @Override

@@ -33,28 +33,32 @@ public class BoxFactory {
 
     //Singleton getter = constructor for a single class in whole app:
     //you have to provide the right context (of BoxesActivity) to access it
-    public static BoxFactory getFactory(Context context) {
+    public static BoxFactory getFactory() {
         if (sBoxFactory == null) {
-            sBoxFactory = new BoxFactory(context);
+            sBoxFactory = new BoxFactory();
         }
         return sBoxFactory;
     }
 
     //private Singleton constructor, instantiated by getter instead
-    private BoxFactory(Context context) {
-        try {
-            if (context instanceof BoxesActivity) {
-                mBoxesActivity = (BoxesActivity) context;
-            } else if (context instanceof FragmentActivity) {
-                mBoxesActivity = (BoxesActivity) ((FragmentActivity) context).getParent();
-            }
-        } catch(Exception e){
-            Log.e(TAG, Log.getStackTraceString(e));
-        }
-
+    private BoxFactory() {
         mBoxes = new ArrayList<>();
-        mBoxDao = new BoxDaoOnline(mBoxesActivity, mBoxes);
-
+        mBoxDao = new BoxDaoOnline(mBoxes);
         // mBoxDao.getNumberOfBoxesMatchingString(null, 0, 20, "AUTH_TOKEN", 53.4, 9.999);
     }
+
+//    private BoxFactory(Context context) {
+//        try {
+//            if (context instanceof BoxesActivity) {
+//                mBoxesActivity = (BoxesActivity) context;
+//            } else if (context instanceof FragmentActivity) {
+//                mBoxesActivity = (BoxesActivity) ((FragmentActivity) context).getParent();
+//            }
+//        } catch(Exception e){
+//            Log.e(TAG, Log.getStackTraceString(e));
+//        }
+//
+//        mBoxes = new ArrayList<>();
+//        mBoxDao = new BoxDaoOnline(mBoxes);
+//    }
 }

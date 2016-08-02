@@ -24,8 +24,8 @@ public class BoxDaoOnline extends BoxDao {
     private static final String TAG = "BoxDaoOnline";
     private Integer numberOfAddedBoxes;
 
-    public BoxDaoOnline(BoxesActivity context, List<Box> boxes) {
-        super(context, boxes);
+    public BoxDaoOnline(List<Box> boxes) {
+        super(boxes);
     }
 
     public boolean isListOf(List<?> list, Class<?> c) {

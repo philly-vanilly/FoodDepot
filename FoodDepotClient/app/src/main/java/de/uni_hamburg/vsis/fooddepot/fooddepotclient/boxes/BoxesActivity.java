@@ -132,7 +132,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         setContentView(R.layout.activity_boxes);
 
         mGoogleApiClient = FDepotGoogleApiClient.getFDepotGoogleApiClient(this, this);
-        mBoxFactory = BoxFactory.getFactory(this);
+        mBoxFactory = BoxFactory.getFactory(); //this
 
         //finding and setting up a toolbar to replace actionbar
         mToolbar = (Toolbar) findViewById(R.id.boxesActivityToolbar);

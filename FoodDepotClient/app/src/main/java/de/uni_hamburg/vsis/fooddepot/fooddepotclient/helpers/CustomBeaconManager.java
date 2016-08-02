@@ -38,7 +38,7 @@ public class CustomBeaconManager extends BeaconManager {
 //                Intent intent = BoxActivity.makeIntent(boxesActivity, BoxFactory.getFactory(boxesActivity).getBoxes().get(0).getId());
 //                boxesActivity.startActivity(intent);
 //                boxesActivity.onBoxSelected(BoxFactory.getFactory(boxesActivity).getBoxes().get(0).getId(), null);
-                List<Box> boxes = BoxFactory.getFactory(boxesActivity).getBoxes();
+                List<Box> boxes = BoxFactory.getFactory().getBoxes(); //boxesActivity
                 for (Beacon beacon : beaconList){
                     String beaconUUID = beacon.getProximityUUID().toString().toUpperCase();
                     int beaconMinor = beacon.getMinor();
