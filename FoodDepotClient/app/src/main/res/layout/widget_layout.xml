@@ -25,8 +25,8 @@
         android:layout_alignBaseline="@+id/imageViewFruitWidget"
         android:id="@+id/textViewNameWidget"
         style="@android:style/TextAppearance.Medium"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="@string/dummy_depot_name" >
     </TextView>
@@ -35,10 +35,11 @@
         android:id="@+id/textViewContentWidget"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_toEndOf="@+id/imageViewFruitWidget"
+        android:layout_alignStart="@+id/textViewNameWidget"
         android:layout_below="@+id/textViewNameWidget"
         android:padding="5dp"
-        android:text="@string/dummy_content"/>
+        android:text="@string/dummy_content">
+    </TextView>
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
