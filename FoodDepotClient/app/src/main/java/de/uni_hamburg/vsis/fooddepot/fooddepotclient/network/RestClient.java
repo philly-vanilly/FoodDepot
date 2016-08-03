@@ -8,6 +8,7 @@ import com.loopj.android.http.*;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 
@@ -95,6 +96,8 @@ public class RestClient {
         RequestParams params = new RequestParams("keys", searchString);
         params.add("latitude", ""+latitude);
         params.add("longitude", ""+longitude);
+
+        Log.d("search",  "searchBox" + latitude + ":" + longitude);
 
         get("searchBox", params, handler);
     }

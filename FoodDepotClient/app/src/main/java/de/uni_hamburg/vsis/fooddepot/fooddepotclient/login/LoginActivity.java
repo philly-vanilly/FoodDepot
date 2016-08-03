@@ -3,10 +3,13 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -30,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -38,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.DownloadBoxesParams;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Response;
@@ -61,8 +66,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final String[] DUMMY_CREDENTIALS = new String[]{"foo@example.com:hello", "bar@example.com:world" };
 
     /**
-     * Keep track of the login task to ensure we can cancel it if requested.
+     * Keep track of the login and register tasks to ensure we can cancel it if requested.
      */
+    private UserCreateTask mRegisterTask = null;
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -169,7 +175,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void attemptRegister() {
-        if (mAuthTask != null) {
+        if (mRegisterTask != null) {
             return;
         }
 
@@ -210,27 +216,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-//            mAuthTask = new UserLoginTask(email, password);
-//            mAuthTask.execute((Void) null);
-            RestClient.createAccount("testUser4", password, email, new BaseResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    Log.d("REGISTER RESULT", new String(responseBody));
+            mRegisterTask = new UserCreateTask(email, password);
+            mRegisterTask.execute((Void) null);
 
-                    showProgress(false);
-                    Response response = (new Gson()).fromJson(new String(responseBody), Response.class);
-
-                    if(response.success){
-                        FDepotApplication.getApplication().saveUser();
-                        Intent intent = new Intent(LoginActivity.this, BoxesActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        mPasswordView.setError(getString(R.string.error_incorrect_password));
-                        mPasswordView.requestFocus();
-                    }
-                }
-            });
         }
     }
 
@@ -281,27 +269,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-//            mAuthTask = new UserLoginTask(email, password);
-//            mAuthTask.execute((Void) null);
-            RestClient.login(email, password, new BaseResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Log.d("LOGIN RESULT", new String(responseBody));
+            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask.execute((Void) null);
 
-                showProgress(false);
-                Response response = (new Gson()).fromJson(new String(responseBody), Response.class);
-
-                if(response.success){
-                    FDepotApplication.getApplication().saveUser();
-                    Intent intent = new Intent(LoginActivity.this, BoxesActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    mPasswordView.requestFocus();
-                }
-                }
-            });
         }
     }
 
@@ -400,7 +370,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Represents an asynchronous login task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
@@ -415,23 +385,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+            RestClient.login(mEmail, mPassword, new BaseResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.d("LOGIN RESULT", new String(responseBody));
+
+                    showProgress(false);
+                    Response response = (new Gson()).fromJson(new String(responseBody), Response.class);
+
+                    success = response.success;
+
                 }
-            }
-
-            // TODO: register the new account here.
+            });
+//            // TODO: attempt authentication against a network service.
+//            try {
+//                // Simulate network access.
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                return false;
+//            }
+//
+//            for (String credential : DUMMY_CREDENTIALS) {
+//                String[] pieces = credential.split(":");
+//                if (pieces[0].equals(mEmail)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+//            }
+//
+//            // TODO: register the new account here.
             return true;
         }
 
@@ -441,6 +424,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                FDepotApplication.getApplication().saveUser();
+                Intent intent = new Intent(LoginActivity.this, BoxesActivity.class);
+                startActivity(intent);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -454,4 +440,61 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+
+
+    public static boolean success = false;
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class UserCreateTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mEmail;
+        private final String mPassword;
+
+        UserCreateTask(String email, String password) {
+            mEmail = email;
+            mPassword = password;
+        }
+
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            RestClient.createAccount("testUser4", mPassword, mEmail, new BaseResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.d("REGISTER RESULT", new String(responseBody));
+
+                    showProgress(false);
+                    Response response = (new Gson()).fromJson(new String(responseBody), Response.class);
+
+                    success = response.success;
+                }
+            });
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            showProgress(false);
+
+            if (success) {
+                FDepotApplication.getApplication().saveUser();
+                Intent intent = new Intent(LoginActivity.this, BoxesActivity.class);
+                startActivity(intent);
+            } else {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
 }

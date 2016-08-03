@@ -41,10 +41,10 @@ public class ProfileFragment extends PreferenceFragment {
         SharedPreferences profileSharedPreferences = getActivity().getSharedPreferences("food_depot_profile_shared_preferences", Activity.MODE_PRIVATE);
         EditTextPreference username = (EditTextPreference) findPreference("pref_key_username");
         username.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_username), defaultValue));
-        EditTextPreference firstname = (EditTextPreference) findPreference("pref_key_firstname");
-        firstname.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_firstname), defaultValue));
-        EditTextPreference lastname = (EditTextPreference) findPreference("pref_key_lastname");
-        lastname.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_lastname), defaultValue));
+//        EditTextPreference firstname = (EditTextPreference) findPreference("pref_key_firstname");
+//        firstname.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_firstname), defaultValue));
+//        EditTextPreference lastname = (EditTextPreference) findPreference("pref_key_lastname");
+//        lastname.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_lastname), defaultValue));
         EditTextPreference email = (EditTextPreference) findPreference("pref_key_email");
         email.setText(profileSharedPreferences.getString(getActivity().getString(R.string.saved_profile_email), defaultValue));
         EditTextPreference password = (EditTextPreference) findPreference("pref_key_password");
