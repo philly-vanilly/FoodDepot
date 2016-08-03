@@ -567,6 +567,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         }
     }
 
+    //TODO: move somewhere to be usable by other app components
     private class DownloadBoxesTask extends AsyncTask<DownloadBoxesParams, Void, Integer>{
         private final Context mContext;
         DownloadBoxesTask(Context context){
@@ -593,12 +594,12 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
         protected Integer doInBackground(DownloadBoxesParams... params) {
             DownloadBoxesParams paramsIter = params[0];
             Integer numberOfAddedBoxes = mBoxFactory.getBoxDao().getNumberOfBoxesMatchingString(
-                    paramsIter.getSearchString(),
-                    paramsIter.getFetchedBoxes(),
-                    paramsIter.getNumberOfBoxes(),
-                    paramsIter.getAuthToken(),
-                    paramsIter.getLatitude(),
-                    paramsIter.getLongitude()
+                paramsIter.getSearchString(),
+                paramsIter.getFetchedBoxes(),
+                paramsIter.getNumberOfBoxes(),
+                paramsIter.getAuthToken(),
+                paramsIter.getLatitude(),
+                paramsIter.getLongitude()
             );
             return numberOfAddedBoxes;
         }

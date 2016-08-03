@@ -17,30 +17,21 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
  * Created by Phil on 31.07.2016.
  */
 public class FoodDepotWidgetProvider extends AppWidgetProvider {
-    private static final String ACTION_CLICK = "ACTION_CLICK";
+    private static final String TAG = "FoodDepotWidgetProvider";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.e(TAG, "======== onUpdate ========");
+
         // Get all ids
         ComponentName thisWidget = new ComponentName(context, FoodDepotWidgetProvider.class);
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        for (int widgetId : allWidgetIds) {
-            // create some random data
-            int number = (new Random().nextInt(100));
 
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-            Log.w("WidgetExample", String.valueOf(number));
-            // Set the text
-            remoteViews.setTextViewText(R.id.textViewNameWidget, String.valueOf(number));
+        // Build the intent to call the service
+        Intent intent = new Intent(context.getApplicationContext(), UpdateWidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
 
-            // Register an onClickListener
-            Intent intent = new Intent(context, FoodDepotWidgetProvider.class);
-            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.textViewNameWidget, pendingIntent);
-
-            appWidgetManager.updateAppWidget(widgetId, remoteViews);
-        }
+        // Update the widgets via the service
+        context.startService(intent);
     }
 }

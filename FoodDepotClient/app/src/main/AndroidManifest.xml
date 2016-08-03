@@ -127,10 +127,14 @@
                 android:resource="@xml/apduservice"/>
         </service>
 
+
+
+        <service android:name=".widget.UpdateWidgetService"></service>
+
         <receiver
             android:icon="@drawable/ic_carrot"
             android:label="FoodDepot Widget"
-            android:name=".widget.FoodDepotWidgetProvider" >
+            android:name=".widget.FoodDepotWidgetProvider">
             <intent-filter >
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
