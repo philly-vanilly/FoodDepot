@@ -38,7 +38,7 @@ import java.util.Objects;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.configuration.ProfileActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.CustomBeaconManager;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotConstants;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.login.LoginActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
@@ -383,7 +383,7 @@ public class BoxesActivity extends AppCompatActivity implements LocationListener
                             //TODO: Explain why permission needed
                         } else {
                             // No explanation needed, we can request the permission.
-                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, FoodDepotPermissions.ACCESS_COARSE_LOCATION);
+                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, FoodDepotConstants.ACCESS_COARSE_LOCATION);
                         }
                     }
                     mBeaconManager = new CustomBeaconManager(this);

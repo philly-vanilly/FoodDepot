@@ -28,7 +28,7 @@ import java.util.Random;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.dao.BoxDao;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.factories.BoxFactory;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotConstants;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 /**
@@ -145,7 +145,7 @@ public class UpdateWidgetService extends Service implements GoogleApiClient.Conn
             PermissionRequester.requestPermissions(
                     this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    FoodDepotPermissions.PERM_REQUEST_LOCATION_NOTIFICATION,
+                    FoodDepotConstants.PERM_REQUEST_LOCATION_NOTIFICATION,
                     "FoodDepot Permission Request",
                     "Blease gib Permission!",
                     R.drawable.ic_carrot

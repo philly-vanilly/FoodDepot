@@ -14,7 +14,7 @@ import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotConstants;
 
 public class PermissionRequester {
     private static final String TAG = "PermissionRequester";
@@ -23,16 +23,16 @@ public class PermissionRequester {
         ResultReceiver resultReceiver = new ResultReceiver(new Handler(Looper.getMainLooper())) {
             @Override
             protected void onReceiveResult (int resultCode, Bundle resultData) {
-                String[] resultPermissions = resultData.getStringArray(FoodDepotPermissions.PERMISSIONS);
-                int[] grantedResults = resultData.getIntArray(FoodDepotPermissions.GRANTED_RESULTS);
+                String[] resultPermissions = resultData.getStringArray(FoodDepotConstants.PERMISSIONS);
+                int[] grantedResults = resultData.getIntArray(FoodDepotConstants.GRANTED_RESULTS);
                 context.onRequestPermissionsResult(resultCode, resultPermissions, grantedResults);
             }
         };
 
         Intent permIntent = new Intent(context, PermissionRequestActivity.class);
-        permIntent.putExtra(FoodDepotPermissions.RESULT_RECEIVER, resultReceiver);
-        permIntent.putExtra(FoodDepotPermissions.PERMISSIONS, permissions);
-        permIntent.putExtra(FoodDepotPermissions.REQUEST_CODE, requestCode);
+        permIntent.putExtra(FoodDepotConstants.RESULT_RECEIVER, resultReceiver);
+        permIntent.putExtra(FoodDepotConstants.PERMISSIONS, permissions);
+        permIntent.putExtra(FoodDepotConstants.REQUEST_CODE, requestCode);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntent(permIntent);
@@ -62,8 +62,8 @@ public class PermissionRequester {
         @Override
         public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantedResults) {
             Bundle resultData = new Bundle();
-            resultData.putStringArray(FoodDepotPermissions.PERMISSIONS, permissions);
-            resultData.putIntArray(FoodDepotPermissions.GRANTED_RESULTS, grantedResults);
+            resultData.putStringArray(FoodDepotConstants.PERMISSIONS, permissions);
+            resultData.putIntArray(FoodDepotConstants.GRANTED_RESULTS, grantedResults);
             resultReceiver.send(requestCode, resultData);
             finish();
         }
@@ -72,9 +72,9 @@ public class PermissionRequester {
         protected void onStart() {
             super.onStart();
 
-            resultReceiver = this.getIntent().getParcelableExtra(FoodDepotPermissions.RESULT_RECEIVER);
-            permissions = this.getIntent().getStringArrayExtra(FoodDepotPermissions.PERMISSIONS);
-            requestCode = this.getIntent().getIntExtra(FoodDepotPermissions.REQUEST_CODE, 0);
+            resultReceiver = this.getIntent().getParcelableExtra(FoodDepotConstants.RESULT_RECEIVER);
+            permissions = this.getIntent().getStringArrayExtra(FoodDepotConstants.PERMISSIONS);
+            requestCode = this.getIntent().getIntExtra(FoodDepotConstants.REQUEST_CODE, 0);
 
             ActivityCompat.requestPermissions(this, permissions, requestCode);
         }

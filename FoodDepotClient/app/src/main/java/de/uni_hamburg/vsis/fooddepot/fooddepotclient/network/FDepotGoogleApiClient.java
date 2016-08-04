@@ -25,8 +25,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.Manifest;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotPermissions;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotConstants;
 
 /**
  * Created by paul on 05.06.16.
@@ -82,11 +81,11 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
         createLocationRequest();
         Context context = FDepotApplication.getApplication().getApplicationContext();
 //        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ){
-//            ActivityCompat.requestPermissions(mParentActivity, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, FoodDepotPermissions.ACCESS_FINE_LOCATION);
+//            ActivityCompat.requestPermissions(mParentActivity, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, FoodDepotConstants.ACCESS_FINE_LOCATION);
 //        }
 
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(mParentActivity, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, FoodDepotPermissions.ACCESS_COARSE_LOCATION);
+            ActivityCompat.requestPermissions(mParentActivity, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, FoodDepotConstants.ACCESS_COARSE_LOCATION);
         }
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -143,7 +142,7 @@ public class FDepotGoogleApiClient implements ActivityCompat.OnRequestPermission
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         Log.i(TAG, "permission request received");
         switch (requestCode) {
-            case FoodDepotPermissions.LOCATION_PERMISSION:
+            case FoodDepotConstants.LOCATION_PERMISSION:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "we have location permission");
