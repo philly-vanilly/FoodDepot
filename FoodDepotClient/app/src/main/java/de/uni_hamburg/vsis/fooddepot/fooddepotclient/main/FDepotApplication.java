@@ -1,12 +1,8 @@
-package de.uni_hamburg.vsis.fooddepot.fooddepotclient.network;
+package de.uni_hamburg.vsis.fooddepot.fooddepotclient.main;
 
 import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
-
-import com.google.gson.Gson;
-
-import java.util.Objects;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
@@ -24,12 +20,20 @@ public class FDepotApplication extends Application{
         return application;
     }
 
+    private Activity mCurrentActivity = null;
     private Account mCurrentAccount;
 
     @Override
     public void onCreate(){
-        super.onCreate();
         application = this;
+        super.onCreate();
+    }
+
+    public Activity getCurrentActivity(){
+        return mCurrentActivity;
+    }
+    public void setCurrentActivity(Activity mCurrentActivity){
+        this.mCurrentActivity = mCurrentActivity;
     }
 
     public Account getCurrentAccount(){
@@ -42,6 +46,7 @@ public class FDepotApplication extends Application{
 
     public void setCurrentAccount(Account currentAccount){
         mCurrentAccount = currentAccount;
+        saveUser();
     }
 
     public void saveUser(){

@@ -1,5 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.box;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.main.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
 
 /**
@@ -20,6 +22,7 @@ import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Box;
  */
 public class BoxActivity extends AppCompatActivity {
     private static final String TAG = "BoxActivity";
+    private FDepotApplication mThisApp;
 
     //Serializable unique id to reference in other classes:
     public static final String EXTRA_BOX_ACTIVITY_ID = "de.uni_hamburg.vsis.fooddepot.fooddepotclient.BoxActivity_ID";
@@ -40,6 +43,8 @@ public class BoxActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mThisApp = (FDepotApplication) this.getApplicationContext();
+
         setContentView(R.layout.activity_box);
 
         //finding and setting up a toolbar to replace actionbar
@@ -69,6 +74,30 @@ public class BoxActivity extends AppCompatActivity {
                     .addToBackStack(null) //to save and restore state of fragment when going back/forth with fragments
                     .commit();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mThisApp.setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        clearReferences();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearReferences();
+        super.onDestroy();
+    }
+
+    private void clearReferences(){
+        Activity currActivity = mThisApp.getCurrentActivity();
+        if (this.equals(currActivity))
+            mThisApp.setCurrentActivity(null);
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotConstants;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.main.FDepotApplication;
 
 /**
  * Created by paul on 05.06.16.

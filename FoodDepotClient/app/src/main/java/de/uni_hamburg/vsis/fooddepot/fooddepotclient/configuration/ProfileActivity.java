@@ -1,5 +1,6 @@
 package de.uni_hamburg.vsis.fooddepot.fooddepotclient.configuration;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,12 +13,41 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.main.FDepotApplication;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    private FDepotApplication mThisApp;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mThisApp.setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        clearReferences();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearReferences();
+        super.onDestroy();
+    }
+
+    private void clearReferences(){
+        Activity currActivity = mThisApp.getCurrentActivity();
+        if (this.equals(currActivity))
+            mThisApp.setCurrentActivity(null);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mThisApp = (FDepotApplication) this.getApplicationContext();
+
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_profile);
         setSupportActionBar(toolbar);

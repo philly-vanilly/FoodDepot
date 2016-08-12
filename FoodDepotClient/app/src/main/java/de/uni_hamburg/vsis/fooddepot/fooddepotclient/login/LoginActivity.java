@@ -3,6 +3,7 @@ package de.uni_hamburg.vsis.fooddepot.fooddepotclient.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -41,7 +42,7 @@ import cz.msebera.android.httpclient.Header;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.helpers.FoodDepotConstants;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Response;
-import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.FDepotApplication;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.main.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.R;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.boxes.BoxesActivity;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.network.BaseResponseHandler;
@@ -72,9 +73,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private FDepotApplication mThisApp;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mThisApp.setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        clearReferences();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearReferences();
+        super.onDestroy();
+    }
+
+    private void clearReferences(){
+        Activity currActivity = mThisApp.getCurrentActivity();
+        if (this.equals(currActivity))
+            mThisApp.setCurrentActivity(null);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mThisApp = (FDepotApplication) this.getApplicationContext();
 
         setContentView(R.layout.activity_login);
 

@@ -179,6 +179,7 @@
     <string name="dummy_owner">doedel_1995</string>
     <string name="dummy_ratingcount">(12)</string>
     <string name="dummy_stars">*****</string>
-
+    <string name="action_activate_speech">Activate Speech Control</string>
+    <string name="action_deactivate_speech">Deactivate Speech Control</string>
 
 </resources>

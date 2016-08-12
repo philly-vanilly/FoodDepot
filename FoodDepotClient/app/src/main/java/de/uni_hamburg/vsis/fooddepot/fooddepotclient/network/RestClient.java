@@ -8,8 +8,8 @@ import com.loopj.android.http.*;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
-import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import de.uni_hamburg.vsis.fooddepot.fooddepotclient.main.FDepotApplication;
 import de.uni_hamburg.vsis.fooddepot.fooddepotclient.model.Account;
 
 /**

@@ -14,4 +14,5 @@ public class FoodDepotConstants {
     public static final String REQUEST_CODE = "FoodDepotConstants.KeyRequestCode";
     public static final int PERM_REQUEST_LOCATION_NOTIFICATION = 777;
     public static final int VOICE_RECOGNITION_REQUEST_CODE = 1337;
+    public static final int RECORD_AUDIO = 113;
 }
